@@ -1,0 +1,8 @@
+#!/usr/bin/env haxe
+--dead-code-elimination
+--js-modern
+-lib html5
+-D haxe3
+-D debug
+-main jascii.Main
+-js jascii.js
