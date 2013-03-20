@@ -1,9 +1,12 @@
 package jascii.views;
 
+import jascii.display.Animation;
+
 class Login extends jascii.display.Sprite
 {
-    private var car:jascii.display.Animation;
-    private var dragon:jascii.display.Animation;
+    private var car:Animation;
+    private var dragon:Animation;
+    private var dragon_head:Animation;
     private var delta:Int;
 
     public function new()
@@ -12,17 +15,23 @@ class Login extends jascii.display.Sprite
 
         this.delta = 0;
 
-        this.car = jascii.display.Animation.from_file("gfx/car.cat");
+        this.car = Animation.from_file("gfx/car.cat");
         this.car.x = 20;
         this.car.y = 25;
         this.car.factor = 5;
         this.add_child(this.car);
 
-        this.dragon = jascii.display.Animation.from_file("gfx/dragon.cat");
+        this.dragon = Animation.from_file("gfx/dragon.cat");
         this.dragon.x = 0;
         this.dragon.y = 10;
         this.dragon.factor = 50;
         this.add_child(this.dragon);
+
+        this.dragon_head = Animation.from_file("gfx/dragon_head.cat");
+        this.dragon_head.x = 39;
+        this.dragon_head.y = 2;
+        this.dragon_head.factor = 50;
+        this.dragon.add_child(this.dragon_head);
     }
 
     public override function update():Void
