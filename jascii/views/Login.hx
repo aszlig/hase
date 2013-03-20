@@ -12,6 +12,7 @@ class Login extends jascii.display.Sprite
     public function new()
     {
         super();
+        this.autoresize = false;
 
         this.delta = 0;
 

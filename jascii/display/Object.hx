@@ -13,6 +13,7 @@ class Object
     public var parent:ObjectContainer;
     public var surface(get_surface, null):ISurface;
 
+    public var autoresize:Bool;
     public var dirty:Bool;
 
     public function new()
@@ -24,6 +25,7 @@ class Object
 
         this.parent = null;
 
+        this.autoresize = true;
         this.dirty = true;
     }
 
@@ -39,16 +41,42 @@ class Object
         return this.y = val;
     }
 
-    private inline function set_width(val:Int):Int
+    private function autogrow_width():Void
     {
-        this.dirty = true;
-        return this.width = val;
+        if (this.parent == null || !this.parent.autoresize)
+            return;
+
+        if (this.x + this.width > this.parent.width)
+            this.parent.width = this.x + this.width;
     }
 
-    private inline function set_height(val:Int):Int
+    private function autogrow_height():Void
+    {
+        if (this.parent == null || !this.parent.autoresize)
+            return;
+
+        if (this.y + this.height > this.parent.height)
+            this.parent.height = this.y + this.height;
+    }
+
+    private function set_width(val:Int):Int
     {
         this.dirty = true;
-        return this.height = val;
+
+        this.width = val;
+        this.autogrow_width();
+
+        return this.width;
+    }
+
+    private function set_height(val:Int):Int
+    {
+        this.dirty = true;
+
+        this.height = val;
+        this.autogrow_height();
+
+        return this.height;
     }
 
     private function get_absolute_x():Int
@@ -67,6 +95,12 @@ class Object
             return cast this;
         else
             return this.parent.surface;
+    }
+
+    public function autogrow():Void
+    {
+        this.autogrow_width();
+        this.autogrow_height();
     }
 
     public function update():Void
