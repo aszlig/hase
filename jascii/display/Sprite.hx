@@ -34,7 +34,7 @@ class Sprite extends ObjectContainer
             this.ascii = ascii;
 
         for (yi in 0...this.ascii.length) {
-            for (xi in 0...this.ascii[y].length) {
+            for (xi in 0...this.ascii[yi].length) {
                 if (ascii[yi][xi] == 0)
                     continue;
 
