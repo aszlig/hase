@@ -7,6 +7,9 @@ class Object
     public var width(default, set_width):Int;
     public var height(default, set_height):Int;
 
+    public var absolute_x(get_absolute_x, null):Int;
+    public var absolute_y(get_absolute_y, null):Int;
+
     public var parent:ObjectContainer;
     public var surface(get_surface, null):ISurface;
 
@@ -46,6 +49,16 @@ class Object
     {
         this.dirty = true;
         return this.height = val;
+    }
+
+    private function get_absolute_x():Int
+    {
+        return this.x + (this.parent == null ? 0 : this.parent.absolute_x);
+    }
+
+    private function get_absolute_y():Int
+    {
+        return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
     }
 
     private function get_surface():ISurface
