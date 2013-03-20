@@ -32,8 +32,8 @@ class Animation extends Image
         this.data = this.frames[this.current];
         super.update();
 
-        if (++this.td == this.factor) {
-            if (++this.current == this.frames.length)
+        if (++this.td >= this.factor) {
+            if (++this.current >= this.frames.length)
                 this.current = 0;
 
             this.td = 0;
