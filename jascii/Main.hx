@@ -5,7 +5,6 @@ import js.Dom;
 class Main
 {
     private var tc:TermCanvas;
-    private var car:jascii.sprites.Car;
 
     public function new()
     {

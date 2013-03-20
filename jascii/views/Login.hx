@@ -2,8 +2,8 @@ package jascii.views;
 
 class Login extends jascii.display.Sprite
 {
-    private var car:jascii.sprites.Car;
-    private var dragon:jascii.sprites.Dragon;
+    private var car:jascii.display.Animation;
+    private var dragon:jascii.display.Animation;
     private var delta:Int;
 
     public function new()
@@ -12,13 +12,13 @@ class Login extends jascii.display.Sprite
 
         this.delta = 0;
 
-        this.car = new jascii.sprites.Car();
+        this.car = jascii.display.Animation.from_file("gfx/car.cat");
         this.car.x = 20;
         this.car.y = 25;
         this.car.factor = 5;
         this.add_child(this.car);
 
-        this.dragon = new jascii.sprites.Dragon();
+        this.dragon = jascii.display.Animation.from_file("gfx/dragon.cat");
         this.dragon.x = 0;
         this.dragon.y = 10;
         this.dragon.factor = 50;
