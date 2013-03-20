@@ -10,6 +10,8 @@ class Animation extends Image
     private var td:Int;
     public var factor:Int;
 
+    public var loopback:Bool;
+
     public function new(?frames = null)
     {
         super();
@@ -22,6 +24,8 @@ class Animation extends Image
 
         this.td = 0;
         this.factor = 1;
+
+        this.loopback = false;
     }
 
     @:macro public static function from_file(path:String):Expr
@@ -88,12 +92,19 @@ class Animation extends Image
         if (this.frames.length == 0)
             return;
 
-        this.data = this.frames[this.current];
+        this.data = this.frames[
+            this.current < 0 ? -this.current : this.current
+        ];
+
         super.update();
 
         if (++this.td >= this.factor) {
-            if (++this.current >= this.frames.length)
-                this.current = 0;
+            if (++this.current >= this.frames.length) {
+                if (this.loopback)
+                    this.current = -this.frames.length + 1;
+                else
+                    this.current = 0;
+            }
 
             this.td = 0;
         }
