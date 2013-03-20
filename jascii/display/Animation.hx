@@ -36,7 +36,7 @@ class Animation extends Image
             if (frame_id == null)
                 continue;
 
-            var content:String = line.substr(delim);
+            var content:String = line.substr(delim + 1);
 
             if (frames[frame_id] == null)
                 frames.insert(frame_id, [content]);
