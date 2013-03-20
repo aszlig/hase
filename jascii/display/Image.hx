@@ -28,7 +28,7 @@ class Image extends Sprite
 
     public override function update():Void
     {
-        super.update();
         this.draw_block(this.x, this.y, this.data);
+        super.update();
     }
 }
