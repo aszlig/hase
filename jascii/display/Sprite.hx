@@ -17,8 +17,8 @@ class Sprite extends ObjectContainer
                                          ):Bool
     {
         return (this.x + x <= this.parent.width
-            &&  this.x + x - width >= this.parent.x)
-            || (this.y + y <= this.parent.height
+            &&  this.y + y <= this.parent.height)
+            || (this.x + x - width >= this.parent.x
             &&  this.y + y - height >= this.parent.y);
     }
 
