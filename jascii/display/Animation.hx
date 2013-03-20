@@ -2,7 +2,7 @@ package jascii.display;
 
 import haxe.macro.Expr;
 
-class Animation extends Image
+class Animation extends Sprite
 {
     private var frames:Array<Array<Array<Int>>>;
     private var current:Int;
@@ -26,6 +26,8 @@ class Animation extends Image
         this.factor = 1;
 
         this.loopback = false;
+
+        this.grow_sprite();
     }
 
     @:macro public static function from_file(path:String):Expr
@@ -101,9 +103,34 @@ class Animation extends Image
         };
     }
 
+    private inline function grow_sprite():Void
+    {
+        var width:Int = 0;
+        var height:Int = 0;
+
+        for (frame in this.frames) {
+            var new_width = Lambda.fold(
+                frame,
+                function(row:Array<Int>, acc:Int)
+                    return row.length > acc ? row.length : acc,
+                0
+            );
+
+            width = new_width > width ? new_width : width;
+            height = frame.length > height ? frame.length : height;
+        }
+
+        if (width > this.width)
+            this.width = width;
+
+        if (height > this.height)
+            this.height = height;
+    }
+
     public inline function add_frame(frame:Array<Array<Int>>):Array<Array<Int>>
     {
         this.frames.push(frame);
+        this.grow_sprite();
         return frame;
     }
 
@@ -112,9 +139,9 @@ class Animation extends Image
         if (this.frames.length == 0)
             return;
 
-        this.data = this.frames[
+        this.blit(this.frames[
             this.current < 0 ? -this.current : this.current
-        ];
+        ]);
 
         super.update();
 
