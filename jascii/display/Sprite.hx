@@ -2,19 +2,37 @@ package jascii.display;
 
 class Sprite extends ObjectContainer
 {
-    public inline function draw_string(x:Int, y:Int, value:String):Void
+    private inline function check_culling( x:Int
+                                         , y:Int
+                                         , ?width:Int = 0
+                                         , ?height:Int = 0
+                                         ):Bool
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in 0...value.length)
-                this.surface.draw_char(this.parent.absolute_x + x + i,
-                                       this.parent.absolute_y + y,
-                                       value.charCodeAt(i));
+        return (this.x + x <= this.parent.width
+            &&  this.x + x - width >= this.parent.x)
+            || (this.y + y <= this.parent.height
+            &&  this.y + y - height >= this.parent.y);
     }
 
-    public inline function draw_block(x:Int, y:Int, values:Array<String>):Void
+    public function blit( ascii:Array<Array<Int>>
+                        , ?x:Int = 0
+                        , ?y:Int = 0
+                        ):Void
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in values)
-                this.draw_string(x, ++y, i);
+        if (!this.check_culling(x, y))
+            return;
+
+        for (yi in 0...ascii.length) {
+            for (xi in 0...ascii[y].length) {
+                if (ascii[yi][xi] == 0)
+                    continue;
+
+                this.surface.draw_char(
+                    this.parent.absolute_x + this.x + xi + x,
+                    this.parent.absolute_y + this.y + yi + y,
+                    ascii[yi][xi]
+                );
+            }
+        }
     }
 }

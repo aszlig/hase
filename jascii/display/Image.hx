@@ -2,18 +2,18 @@ package jascii.display;
 
 class Image extends Sprite
 {
-    public var data(default, set_data):Array<String>;
+    public var data(default, set_data):Array<Array<Int>>;
 
-    public function new(?data:Array<String> = null)
+    public function new(?data:Array<Array<Int>> = null)
     {
         super();
         this.data = data;
     }
 
-    private inline function set_data(data:Array<String>):Array<String>
+    private inline function set_data(data:Array<Array<Int>>):Array<Array<Int>>
     {
         if (data != null) {
-            this.width = Lambda.fold(data, function(row:String, acc:Int) {
+            this.width = Lambda.fold(data, function(row:Array<Int>, acc:Int) {
                 return row.length > acc ? row.length : acc;
             }, 0);
             this.height = data.length;
@@ -28,7 +28,7 @@ class Image extends Sprite
 
     public override function update():Void
     {
-        this.draw_block(this.x, this.y, this.data);
+        this.blit(this.data);
         super.update();
     }
 }
