@@ -1,4 +1,6 @@
 #!/usr/bin/env haxe
+--macro jascii.test.Main.main()
+--next
 --dead-code-elimination
 --js-modern
 -lib html5
