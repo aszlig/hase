@@ -29,6 +29,7 @@ class TermCanvas extends jascii.display.ObjectContainer,
         this.canvas = canvas;
         this.width = Std.int(canvas.width / Font.cwidth);
         this.height = Std.int(canvas.height / Font.cheight);
+        this.autoresize = false;
         this.ctx = canvas.getContext("2d");
     }
 

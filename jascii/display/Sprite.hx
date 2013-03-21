@@ -2,19 +2,48 @@ package jascii.display;
 
 class Sprite extends ObjectContainer
 {
-    public inline function draw_string(x:Int, y:Int, value:String):Void
+    private var ascii:Array<Array<Int>>;
+
+    public function new()
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in 0...value.length)
-                this.surface.draw_char(this.parent.absolute_x + x + i,
-                                       this.parent.absolute_y + y,
-                                       value.charCodeAt(i));
+        super();
+        this.ascii = null;
     }
 
-    public inline function draw_block(x:Int, y:Int, values:Array<String>):Void
+    private inline function check_culling( x:Int
+                                         , y:Int
+                                         , ?width:Int = 0
+                                         , ?height:Int = 0
+                                         ):Bool
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in values)
-                this.draw_string(x, ++y, i);
+        return (this.x + x <= this.parent.width
+            &&  this.y + y <= this.parent.height)
+            || (this.x + x - width >= this.parent.x
+            &&  this.y + y - height >= this.parent.y);
+    }
+
+    public function blit( ?ascii:Array<Array<Int>>
+                        , ?x:Int = 0
+                        , ?y:Int = 0
+                        ):Void
+    {
+        if (!this.check_culling(x, y))
+            return;
+
+        if (ascii != null)
+            this.ascii = ascii;
+
+        for (yi in 0...this.ascii.length) {
+            for (xi in 0...this.ascii[yi].length) {
+                if (ascii[yi][xi] == 0)
+                    continue;
+
+                this.surface.draw_char(
+                    this.parent.absolute_x + this.x + xi + x,
+                    this.parent.absolute_y + this.y + yi + y,
+                    this.ascii[yi][xi]
+                );
+            }
+        }
     }
 }

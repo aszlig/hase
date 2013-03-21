@@ -13,6 +13,7 @@ class ObjectContainer extends Object
     public inline function add_child(child:Object):Object
     {
         child.parent = this;
+        child.autogrow();
         this.children.push(child);
         return child;
     }
