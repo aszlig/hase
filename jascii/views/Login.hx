@@ -36,12 +36,21 @@ class Login extends jascii.display.Sprite
         this.dragon_head.factor = 50;
         this.dragon.add_child(this.dragon_head);
 
-        this.dragon_wing = Animation.from_file("gfx/dragon_wing.cat");
+        this.dragon_wing = Animation.from_file("gfx/dragon_wing_top.cat");
         this.dragon_wing.x = 34;
         this.dragon_wing.y = 2;
         this.dragon_wing.factor = 10;
         this.dragon_wing.loopback = true;
         this.dragon.add_child(this.dragon_wing);
+
+        this.dragon_wing = Animation.from_file("gfx/dragon_wing_bottom.cat");
+        this.dragon_wing.x = 38;
+        this.dragon_wing.y = 2;
+        this.dragon_wing.factor = 10;
+        this.dragon_wing.loopback = true;
+        this.dragon.add_child(this.dragon_wing);
+
+        this.dragon_wing.z = -1;
     }
 
     public override function update():Void
