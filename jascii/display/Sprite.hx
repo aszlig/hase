@@ -40,8 +40,8 @@ class Sprite extends Object
         var height:Int = this.ascii.length;
 
         var new_rect:Rect = new Rect(
-            this.parent.absolute_x + this.x,
-            this.parent.absolute_y + this.y,
+            this.parent.absolute_x + this.x - this.center_x,
+            this.parent.absolute_y + this.y - this.center_y,
             width, height
         );
 

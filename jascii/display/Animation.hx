@@ -71,6 +71,13 @@ class Animation extends Sprite
 
     private function set_frame_options(opts:AnimOptions):Void
     {
+        if (opts.refpoint_x != null && opts.refpoint_y != null) {
+            this.center_x = opts.refpoint_x;
+            this.center_y = opts.refpoint_y;
+        } else {
+            this.center_x = 0;
+            this.center_y = 0;
+        }
     }
 
     public override function update():Void

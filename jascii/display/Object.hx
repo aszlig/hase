@@ -8,6 +8,10 @@ class Object
     public var x:Int;
     public var y:Int;
     public var z:Int;
+
+    public var center_x:Int;
+    public var center_y:Int;
+
     public var width(default, set_width):Int;
     public var height(default, set_height):Int;
 
@@ -27,6 +31,10 @@ class Object
         this.x = 0;
         this.y = 0;
         this.z = 0;
+
+        this.center_x = 0;
+        this.center_y = 0;
+
         this.width = 0;
         this.height = 0;
 

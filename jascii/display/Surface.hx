@@ -67,8 +67,8 @@ class Surface extends Object
                     continue;
 
                 this.draw_char(
-                    sprite.parent.absolute_x + sprite.x + xi,
-                    sprite.parent.absolute_y + sprite.y + yi,
+                    sprite.parent.absolute_x + sprite.x - sprite.center_x + xi,
+                    sprite.parent.absolute_y + sprite.y - sprite.center_y + yi,
                     sprite.ascii[yi][xi]
                 );
             }

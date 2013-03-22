@@ -209,4 +209,46 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             ], 0, 0, 13, 6
         );
     }
+
+    public function test_centering()
+    {
+        var circle:jascii.display.Animation = this.create_animation([
+            [ "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ]
+        ]);
+
+        var rect:jascii.display.Animation = this.create_animation([
+            [ ",-------."
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "`-------'"
+            ]
+        ]);
+
+        rect.add_child(circle);
+        this.root.add_child(rect);
+
+        rect.x = 4;
+        rect.y = 1;
+
+        circle.center_x = 4;
+        circle.center_y = 1;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "   _._       "
+            , " .' ,-`.----."
+            , " :  |  ;    |"
+            , "  `-.-'     |"
+            , "    |       |"
+            , "    `-------'"
+            ], 0, 0, 13, 6
+        );
+    }
 }
