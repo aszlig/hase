@@ -32,15 +32,9 @@ class Sprite extends Object
         return super.set_surface(val);
     }
 
-    public function blit(?ascii:Array<Array<Int>>):Void
+    public function blit(ascii:Array<Array<Int>>):Void
     {
-        if (!this.dirty)
-            return;
-
-        this.dirty = false;
-
-        if (ascii != null)
-            this.ascii = ascii;
+        this.ascii = ascii;
 
         var width:Int = this.calculate_width();
         var height:Int = this.ascii.length;

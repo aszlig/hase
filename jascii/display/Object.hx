@@ -5,9 +5,9 @@ class Object
     public var parent:Object;
     public var children:Array<Object>;
 
-    public var x(default, set_x):Int;
-    public var y(default, set_y):Int;
-    public var z(default, set_z):Int;
+    public var x:Int;
+    public var y:Int;
+    public var z:Int;
     public var width(default, set_width):Int;
     public var height(default, set_height):Int;
 
@@ -15,11 +15,9 @@ class Object
     public var absolute_y(get_absolute_y, null):Int;
 
     public var surface(default, set_surface):Surface;
+    public var is_surface:Bool;
 
     public var autoresize:Bool;
-    public var dirty(default, set_dirty):Bool;
-
-    public var is_surface:Bool;
 
     public function new()
     {
@@ -32,11 +30,10 @@ class Object
         this.width = 0;
         this.height = 0;
 
-        this.autoresize = true;
-        this.dirty = true;
-
         this.is_surface = false;
         this.surface = null;
+
+        this.autoresize = true;
     }
 
     public inline function add_child(child:Object):Object
@@ -62,24 +59,6 @@ class Object
         return child;
     }
 
-    private inline function set_x(val:Int):Int
-    {
-        this.dirty = true;
-        return this.x = val;
-    }
-
-    private inline function set_y(val:Int):Int
-    {
-        this.dirty = true;
-        return this.y = val;
-    }
-
-    private inline function set_z(val:Int):Int
-    {
-        this.dirty = true;
-        return this.z = val;
-    }
-
     private function autogrow_width():Void
     {
         if (this.parent == null || !this.parent.autoresize)
@@ -100,8 +79,6 @@ class Object
 
     private function set_width(val:Int):Int
     {
-        this.dirty = true;
-
         this.width = val;
         this.autogrow_width();
 
@@ -110,21 +87,10 @@ class Object
 
     private function set_height(val:Int):Int
     {
-        this.dirty = true;
-
         this.height = val;
         this.autogrow_height();
 
         return this.height;
-    }
-
-    private function set_dirty(val:Bool):Bool
-    {
-        if (val)
-            for (child in this.children)
-                child.dirty = true;
-
-        return this.dirty = val;
     }
 
     private function get_absolute_x():Int

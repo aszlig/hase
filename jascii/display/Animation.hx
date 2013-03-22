@@ -154,7 +154,6 @@ class Animation extends Sprite
             }
 
             this.td = 0;
-            this.dirty = true;
         }
     }
 }
