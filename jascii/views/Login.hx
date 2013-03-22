@@ -56,7 +56,7 @@ class Login extends jascii.display.Sprite
 
         if (this.delta % 8 == 0) {
             this.dragon.x++;
-            this.dragon.y = Std.int(Math.sin(this.dragon.x) * 2 + 10);
+            this.dragon.y = Std.int(Math.sin(this.dragon.x / 3) * 2 + 10);
         }
 
         if (this.dragon.x > this.width)
