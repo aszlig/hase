@@ -26,7 +26,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_simple_move_x()
+    public function test_move_x()
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -49,6 +49,37 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             , "       `-.-'  "
             , "              "
             ], 0, 0, 14, 5
+        );
+    }
+
+    public function test_move_y()
+    {
+        var anim:jascii.display.Animation = this.create_animation([
+            [ "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ]
+        ]);
+
+        this.root.add_child(anim);
+        this.root.update();
+        anim.y = 5;
+        this.root.update();
+
+        this.assert_area(
+            [ "         "
+            , "         "
+            , "         "
+            , "         "
+            , "         "
+            , "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ], 0, 0, 9, 10
         );
     }
 }

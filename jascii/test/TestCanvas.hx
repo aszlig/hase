@@ -10,7 +10,7 @@ class TestCanvas implements jascii.display.ISurface
     public function new()
     {
         this.width = 40;
-        this.height = 10;
+        this.height = 15;
 
         this.area = new Array();
 

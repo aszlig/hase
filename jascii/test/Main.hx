@@ -6,6 +6,7 @@ class Main
     {
         var runner = new haxe.unit.TestRunner();
         runner.add(new jascii.test.cases.SpriteTest());
+        runner.add(new jascii.test.cases.AnimationTest());
         runner.run();
     }
 }
