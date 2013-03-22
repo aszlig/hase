@@ -1,6 +1,6 @@
 package jascii.display;
 
-class Surface extends ObjectContainer
+class Surface extends Object
 {
     private var provider:ISurface;
 

@@ -1,6 +1,6 @@
 package jascii.display;
 
-class Sprite extends ObjectContainer
+class Sprite extends Object
 {
     private var ascii:Array<Array<Int>>;
     private var rect:Rect;

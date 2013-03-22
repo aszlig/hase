@@ -11,7 +11,9 @@ class Object
     public var absolute_x(get_absolute_x, null):Int;
     public var absolute_y(get_absolute_y, null):Int;
 
-    public var parent:ObjectContainer;
+    public var parent:Object;
+    public var children:Array<Object>;
+
     public var surface(get_surface, null):Surface;
 
     public var autoresize:Bool;
@@ -26,9 +28,25 @@ class Object
         this.height = 0;
 
         this.parent = null;
+        this.children = new Array();
 
         this.autoresize = true;
         this.dirty = true;
+    }
+
+    public inline function add_child(child:Object):Object
+    {
+        child.parent = this;
+        child.autogrow();
+        this.children.push(child);
+        return child;
+    }
+
+    public inline function remove_child(child:Object):Object
+    {
+        child.parent = null;
+        this.children.remove(child);
+        return child;
     }
 
     private inline function set_x(val:Int):Int
@@ -114,6 +132,10 @@ class Object
     public function update():Void
     {
         this.dirty = false;
+
+        for (child in this.children)
+            if (child.dirty)
+                child.update();
     }
 
     public function toString():String
