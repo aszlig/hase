@@ -136,14 +136,14 @@ class Animation extends Sprite
 
     public override function update():Void
     {
+        super.update();
+
         if (this.frames.length == 0)
             return;
 
         this.blit(this.frames[
             this.current < 0 ? -this.current : this.current
         ]);
-
-        super.update();
 
         if (++this.td >= this.factor) {
             if (++this.current >= this.frames.length) {
