@@ -14,10 +14,12 @@ class Object
     public var absolute_x(get_absolute_x, null):Int;
     public var absolute_y(get_absolute_y, null):Int;
 
-    public var surface(get_surface, null):Surface;
+    public var surface(default, set_surface):Surface;
 
     public var autoresize:Bool;
     public var dirty(default, set_dirty):Bool;
+
+    public var is_surface:Bool;
 
     public function new()
     {
@@ -32,12 +34,21 @@ class Object
 
         this.autoresize = true;
         this.dirty = true;
+
+        this.is_surface = false;
+        this.surface = null;
     }
 
     public inline function add_child(child:Object):Object
     {
         child.parent = this;
         child.autogrow();
+
+        if (this.is_surface)
+            child.surface = cast this;
+        else if (this.surface != null)
+            child.surface = this.surface;
+
         this.children.push(child);
         return child;
     }
@@ -124,12 +135,13 @@ class Object
         return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
     }
 
-    private function get_surface():Surface
+    private function set_surface(val:Surface):Surface
     {
-        if (this.parent == null)
-            return cast this;
-        else
-            return this.parent.surface;
+        if (val != null)
+            for (child in this.children)
+                child.surface = val;
+
+        return this.surface = val;
     }
 
     public function autogrow():Void

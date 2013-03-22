@@ -7,6 +7,7 @@ class Surface extends Object
     public function new(provider:ISurface)
     {
         super();
+        this.is_surface = true;
         this.provider = provider;
         this.width = provider.width;
         this.height = provider.height;
