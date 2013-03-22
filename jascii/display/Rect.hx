@@ -33,4 +33,10 @@ class Rect
              (other.y >= this.y && other.y < this.y + this.height))
         );
     }
+
+    public function toString():String
+    {
+        return "<Rectangle x: " + this.x + "; y: " + this.y +
+               "; size: " + this.width + "x" + this.height + ">";
+    }
 }
