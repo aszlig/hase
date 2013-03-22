@@ -19,9 +19,11 @@ class Rect
     {
         var x = other.x > this.x ? this.x : other.x;
         var y = other.y > this.y ? this.y : other.y;
-        var width = other.width > this.width ? other.width : this.width;
-        var height = other.height > this.height ? other.height : this.height;
-        return new Rect(x, y, width, height);
+        var width = other.x + other.width > this.x + this.width
+                  ? other.x + other.width : this.x + this.width;
+        var height = other.y + other.height > this.y + this.height
+                   ? other.y + other.height : this.y + this.height;
+        return new Rect(x, y, width - x, height - y);
     }
 
     public function intersects(other:Rect):Bool
@@ -37,6 +39,6 @@ class Rect
     public function toString():String
     {
         return "<Rectangle x: " + this.x + "; y: " + this.y +
-               "; size: " + this.width + "x" + this.height + ">";
+               "; width: " + this.width + "; height: " + this.height + ">";
     }
 }
