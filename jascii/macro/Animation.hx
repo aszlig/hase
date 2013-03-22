@@ -25,6 +25,47 @@ class Animation
         return data;
     }
 
+    public static function
+        flood_fill(x:Int, y:Int, frame:Array<Array<Int>>):Array<Array<Int>>
+    {
+        var queue:Array<{ x:Int, y:Int }> = new Array();
+
+        queue.push({ x: x, y: y });
+
+        while (queue.length > 0) {
+            var current:{ x:Int, y:Int } = queue.pop();
+            var x = current.x;
+            var y = current.y;
+
+            if (frame[y][x] == " ".code) {
+                frame[y][x] = 0;
+
+                if (x < frame[y].length - 1)
+                    queue.push({ x: x + 1, y: y });
+                if (x > 0)
+                    queue.push({ x: x - 1, y: y });
+                if (y < frame.length - 1)
+                    queue.push({ x: x, y: y + 1 });
+                if (y > 0)
+                    queue.push({ x: x, y: y - 1 });
+            }
+        }
+
+        return frame;
+    }
+
+    public static function
+        apply_alpha(frame:Array<Array<Int>>):Array<Array<Int>>
+    {
+        // start from one of the corners
+        for (y in [0, frame.length - 1])
+            for (x in [0, frame[y].length - 1])
+                if (frame[y][x] == " ".code)
+                    return Animation.flood_fill(x, y, frame);
+
+        return frame;
+    }
+
     public static function parse_file(path:String):Array<AnimData>
     {
         var lines:Array<String> = sys.io.File.getContent(path).split("\n");
@@ -50,14 +91,8 @@ class Animation
 
             var row:Array<Int> = new Array();
 
-            for (pos in 0...content.length) {
-                var char:Int = content.charCodeAt(pos);
-
-                if (char == " ".code)
-                    row.push(0);
-                else
-                    row.push(char);
-            }
+            for (pos in 0...content.length)
+                row.push(content.charCodeAt(pos));
 
             if (data[frame_id] == null)
                 data.insert(frame_id, {
@@ -73,6 +108,9 @@ class Animation
 
         for (i in 0...data.length)
             data[i] = Animation.apply_options(data[i]);
+
+        for (i in 0...data.length)
+            data[i].frame = Animation.apply_alpha(data[i].frame);
 
         return data;
     }
