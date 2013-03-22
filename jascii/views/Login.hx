@@ -24,9 +24,9 @@ class Login extends jascii.display.Sprite
         this.add_child(this.car);
 
         this.dragon = Animation.from_file("gfx/dragon.cat");
-        this.dragon.x = 0;
+        this.dragon.x = -700;
         this.dragon.y = 10;
-        this.dragon.factor = 8;
+        this.dragon.factor = 3;
         this.dragon.loopback = true;
         this.add_child(this.dragon);
 
@@ -54,12 +54,10 @@ class Login extends jascii.display.Sprite
         if (this.delta % 5 == 0)
             this.car.x++;
 
-        if (this.delta % 8 == 0) {
-            this.dragon.x++;
-            this.dragon.y = Std.int(Math.sin(this.dragon.x / 3) * 2 + 10);
-        }
+        this.dragon.x++;
+        this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4 + 10);
 
-        if (this.dragon.x > this.width)
+        if (this.dragon.x > this.width + 10)
             this.remove_child(this.dragon);
     }
 }
