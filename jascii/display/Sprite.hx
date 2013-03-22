@@ -39,6 +39,11 @@ class Sprite extends Object
                         , ?y:Int = 0
                         ):Void
     {
+        if (!this.dirty)
+            return;
+
+        this.dirty = false;
+
         if (!this.check_culling(x, y))
             return;
 

@@ -2,6 +2,9 @@ package jascii.display;
 
 class Object
 {
+    public var parent:Object;
+    public var children:Array<Object>;
+
     public var x(default, set_x):Int;
     public var y(default, set_y):Int;
     public var z(default, set_z):Int;
@@ -11,24 +14,21 @@ class Object
     public var absolute_x(get_absolute_x, null):Int;
     public var absolute_y(get_absolute_y, null):Int;
 
-    public var parent:Object;
-    public var children:Array<Object>;
-
     public var surface(get_surface, null):Surface;
 
     public var autoresize:Bool;
-    public var dirty:Bool;
+    public var dirty(default, set_dirty):Bool;
 
     public function new()
     {
+        this.parent = null;
+        this.children = new Array();
+
         this.x = 0;
         this.y = 0;
         this.z = 0;
         this.width = 0;
         this.height = 0;
-
-        this.parent = null;
-        this.children = new Array();
 
         this.autoresize = true;
         this.dirty = true;
@@ -105,6 +105,15 @@ class Object
         return this.height;
     }
 
+    private function set_dirty(val:Bool):Bool
+    {
+        if (val)
+            for (child in this.children)
+                child.dirty = true;
+
+        return this.dirty = val;
+    }
+
     private function get_absolute_x():Int
     {
         return this.x + (this.parent == null ? 0 : this.parent.absolute_x);
@@ -131,11 +140,8 @@ class Object
 
     public function update():Void
     {
-        this.dirty = false;
-
         for (child in this.children)
-            if (child.dirty)
-                child.update();
+            child.update();
     }
 
     public function toString():String
