@@ -2,8 +2,8 @@ package jascii.display;
 
 class Sprite extends Object
 {
-    private var ascii:Array<Array<Int>>;
-    private var rect:Rect;
+    public var ascii(default, null):Array<Array<Int>>;
+    public var rect(default, null):Rect;
 
     public function new()
     {
@@ -24,14 +24,14 @@ class Sprite extends Object
             &&  this.y + y - height >= this.parent.y);
     }
 
-    private function fill_rect(?char:Int = " ".code):Void
+    private function calculate_width():Int
     {
-        if (this.rect == null)
-            return;
+        var width:Int = 0;
 
-        for (y in this.rect.y...(this.rect.y + this.rect.height))
-            for (x in this.rect.x...(this.rect.x + this.rect.width))
-                this.surface.draw_char(x, y, char);
+        for (row in this.ascii)
+            width = row.length > width ? row.length : width;
+
+        return width;
     }
 
     private override function set_surface(val:Surface):Surface
@@ -40,13 +40,11 @@ class Sprite extends Object
             val.register_sprite(this);
         else if (this.surface != null)
             this.surface.unregister_sprite(this);
+
         return super.set_surface(val);
     }
 
-    public function blit( ?ascii:Array<Array<Int>>
-                        , ?x:Int = 0
-                        , ?y:Int = 0
-                        ):Void
+    public function blit(?ascii:Array<Array<Int>>):Void
     {
         if (!this.dirty)
             return;
@@ -59,31 +57,22 @@ class Sprite extends Object
         if (ascii != null)
             this.ascii = ascii;
 
-        this.fill_rect();
-
-        var width:Int = 0;
+        var width:Int = this.calculate_width();
         var height:Int = this.ascii.length;
 
-        for (yi in 0...this.ascii.length) {
-            if (this.ascii[yi].length > width)
-                width = this.ascii[yi].length;
-
-            for (xi in 0...this.ascii[yi].length) {
-                if (ascii[yi][xi] == 0)
-                    continue;
-
-                this.surface.draw_char(
-                    this.parent.absolute_x + this.x + xi + x,
-                    this.parent.absolute_y + this.y + yi + y,
-                    this.ascii[yi][xi]
-                );
-            }
-        }
-
-        this.rect = new Rect(
-            this.parent.absolute_x + this.x + x,
-            this.parent.absolute_y + this.y + y,
+        var new_rect:Rect = new Rect(
+            this.parent.absolute_x + this.x,
+            this.parent.absolute_y + this.y,
             width, height
         );
+
+        var union:Rect = new_rect;
+
+        if (this.rect != null)
+            union = new_rect.union(this.rect);
+
+        this.surface.redraw_rect(union);
+
+        this.rect = new_rect;
     }
 }

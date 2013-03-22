@@ -43,6 +43,7 @@ class Object
     {
         child.parent = this;
         child.autogrow();
+        child.z = this.z + 1;
 
         if (this.is_surface)
             child.surface = cast this;

@@ -31,9 +31,47 @@ class Surface extends Object
         return sprite;
     }
 
-    public inline function draw_char(x:Int, y:Int, ordinal:Int):Void
+    private inline function fill_rect(rect:Rect, ?char:Int = " ".code):Void
+    {
+        for (y in rect.y...(rect.y + rect.height))
+            for (x in rect.x...(rect.x + rect.width))
+                this.draw_char(x, y, char);
+    }
+
+    public function redraw_rect(rect:Rect):Void
+    {
+        this.fill_rect(rect);
+
+        for (sprite in this.sprites)
+            if (sprite.rect == null || sprite.rect.intersects(rect))
+                this.blit(sprite);
+    }
+
+    private inline function draw_char(x:Int, y:Int, ordinal:Int):Void
     {
         if (x <= this.width && y <= this.height)
             this.provider.draw_char(x, y, ordinal);
+    }
+
+    private function blit(sprite:Sprite):Void
+    {
+        if (sprite.ascii == null)
+            return;
+
+        for (yi in 0...sprite.ascii.length) {
+            if (sprite.ascii[yi].length > width)
+                width = sprite.ascii[yi].length;
+
+            for (xi in 0...sprite.ascii[yi].length) {
+                if (sprite.ascii[yi][xi] == 0)
+                    continue;
+
+                this.draw_char(
+                    sprite.parent.absolute_x + sprite.x + xi,
+                    sprite.parent.absolute_y + sprite.y + yi,
+                    sprite.ascii[yi][xi]
+                );
+            }
+        }
     }
 }
