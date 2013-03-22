@@ -7,6 +7,7 @@ class Login extends jascii.display.Sprite
     private var car:Animation;
     private var dragon:Animation;
     private var dragon_head:Animation;
+    private var dragon_wing:Animation;
     private var delta:Int;
 
     public function new()
@@ -34,6 +35,13 @@ class Login extends jascii.display.Sprite
         this.dragon_head.y = 2;
         this.dragon_head.factor = 50;
         this.dragon.add_child(this.dragon_head);
+
+        this.dragon_wing = Animation.from_file("gfx/dragon_wing.cat");
+        this.dragon_wing.x = 34;
+        this.dragon_wing.y = 5;
+        this.dragon_wing.factor = 10;
+        this.dragon_wing.loopback = true;
+        this.dragon.add_child(this.dragon_wing);
     }
 
     public override function update():Void
@@ -46,8 +54,10 @@ class Login extends jascii.display.Sprite
         if (this.delta % 5 == 0)
             this.car.x++;
 
-        if (this.delta % 8 == 0)
+        if (this.delta % 8 == 0) {
             this.dragon.x++;
+            this.dragon.y = Std.int(Math.sin(this.dragon.x) * 2 + 10);
+        }
 
         if (this.dragon.x > this.width)
             this.remove_child(this.dragon);
