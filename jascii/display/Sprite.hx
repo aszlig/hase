@@ -12,18 +12,6 @@ class Sprite extends Object
         this.rect = null;
     }
 
-    private inline function check_culling( x:Int
-                                         , y:Int
-                                         , ?width:Int = 0
-                                         , ?height:Int = 0
-                                         ):Bool
-    {
-        return (this.x + x <= this.parent.width
-            &&  this.y + y <= this.parent.height)
-            || (this.x + x - width >= this.parent.x
-            &&  this.y + y - height >= this.parent.y);
-    }
-
     private function calculate_width():Int
     {
         var width:Int = 0;
@@ -50,9 +38,6 @@ class Sprite extends Object
             return;
 
         this.dirty = false;
-
-        if (!this.check_culling(x, y))
-            return;
 
         if (ascii != null)
             this.ascii = ascii;
