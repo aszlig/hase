@@ -32,13 +32,13 @@ class Login extends jascii.display.Sprite
 
         this.dragon_head = Animation.from_file("gfx/dragon_head.cat");
         this.dragon_head.x = 38;
-        this.dragon_head.y = 2;
+        this.dragon_head.y = -2;
         this.dragon_head.factor = 50;
         this.dragon.add_child(this.dragon_head);
 
         this.dragon_wing = Animation.from_file("gfx/dragon_wing.cat");
         this.dragon_wing.x = 34;
-        this.dragon_wing.y = 5;
+        this.dragon_wing.y = 2;
         this.dragon_wing.factor = 10;
         this.dragon_wing.loopback = true;
         this.dragon.add_child(this.dragon_wing);
