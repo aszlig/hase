@@ -86,10 +86,10 @@ class SurfaceTestCase extends haxe.unit.TestCase
                 match = false;
 
         if (!match) {
-            currentTest.success = false;
-            currentTest.error = this.format_expect(expect, fraction);
-            currentTest.posInfos = pi;
-            throw currentTest;
+            this.currentTest.success = false;
+            this.currentTest.error = this.format_expect(expect, fraction);
+            this.currentTest.posInfos = pi;
+            throw this.currentTest;
         };
     }
 }
