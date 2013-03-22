@@ -1,10 +1,16 @@
 package jascii.display;
 
 import haxe.macro.Expr;
+import jascii.macro.Types;
+
+typedef AnimOptions = {
+    ?reference:String,
+};
 
 class Animation extends Sprite
 {
     private var frames:Array<Array<Array<Int>>>;
+    private var frame_options:Array<AnimOptions>;
     private var current:Int;
 
     private var td:Int;
@@ -12,7 +18,7 @@ class Animation extends Sprite
 
     public var loopback:Bool;
 
-    public function new(?frames = null)
+    public function new(?frames = null, ?options:Array<AnimOptions>)
     {
         super();
 
@@ -20,6 +26,7 @@ class Animation extends Sprite
             frames = new Array();
 
         this.frames = frames;
+        this.frame_options = options;
         this.current = 0;
 
         this.td = 0;
@@ -28,79 +35,6 @@ class Animation extends Sprite
         this.loopback = false;
 
         this.grow_sprite();
-    }
-
-    @:macro public static function from_file(path:String):Expr
-    {
-        var lines:Array<String> = sys.io.File.getContent(path).split("\n");
-
-        var frames:Array<Array<Array<Int>>> = new Array();
-
-        for (line in lines) {
-            var delim:Int = line.indexOf(" ");
-            var frame_id:Null<Int> = Std.parseInt(line.substr(0, delim));
-            if (frame_id == null)
-                continue;
-
-            var content:String = line.substr(delim + 1);
-
-            var row:Array<Int> = new Array();
-
-            for (pos in 0...content.length) {
-                var char:Int = content.charCodeAt(pos);
-
-                if (char == " ".code)
-                    row.push(0);
-                else
-                    row.push(char);
-            }
-
-            if (frames[frame_id] == null)
-                frames.insert(frame_id, [row]);
-            else
-                frames[frame_id].push(row);
-        }
-
-        var expr_array:Array<Expr> = new Array();
-
-        for (frame in frames) {
-            var row_array:Array<Expr> = new Array();
-
-            for (row in frame) {
-                var col_array:Array<Expr> = new Array();
-
-                for (col in row) {
-                    col_array.push({
-                        expr: EConst(CInt(Std.string(col))),
-                        pos: haxe.macro.Context.currentPos()
-                    });
-                }
-
-                row_array.push({
-                    expr: EArrayDecl(col_array),
-                    pos: haxe.macro.Context.currentPos()
-                });
-            }
-
-            expr_array.push({
-                expr: EArrayDecl(row_array),
-                pos: haxe.macro.Context.currentPos()
-            });
-        }
-
-        var frames_expr:Expr = {
-            expr: EArrayDecl(expr_array),
-            pos: haxe.macro.Context.currentPos()
-        };
-
-        return {
-            expr: ENew({
-                name: "Animation",
-                pack: ["jascii", "display"],
-                params: []
-            }, [frames_expr]),
-            pos: haxe.macro.Context.currentPos()
-        };
     }
 
     private inline function grow_sprite():Void
@@ -155,5 +89,76 @@ class Animation extends Sprite
 
             this.td = 0;
         }
+    }
+
+    @:macro public static function from_file(path:String):Expr
+    {
+        var data:Array<AnimData> = jascii.macro.Animation.parse_file(path);
+
+        var frames_array:Array<Expr> = new Array();
+        var opts_array:Array<Expr> = new Array();
+
+        for (item in data) {
+            var row_array:Array<Expr> = new Array();
+
+            for (row in item.frame) {
+                var col_array:Array<Expr> = new Array();
+
+                for (col in row) {
+                    col_array.push({
+                        expr: EConst(CInt(Std.string(col))),
+                        pos: haxe.macro.Context.currentPos()
+                    });
+                }
+
+                row_array.push({
+                    expr: EArrayDecl(col_array),
+                    pos: haxe.macro.Context.currentPos()
+                });
+            }
+
+            frames_array.push({
+                expr: EArrayDecl(row_array),
+                pos: haxe.macro.Context.currentPos()
+            });
+
+            var opt_fields:Array<{field:String, expr:Expr}> = new Array();
+
+            for (key in item.options.keys()) {
+                opt_fields.push({
+                    field: key,
+                    expr: {
+                        expr: EConst(CString(item.options.get(key))),
+                        pos: haxe.macro.Context.currentPos()
+                    }
+                });
+            }
+
+            var opts:Expr = {
+                expr: EObjectDecl(opt_fields),
+                pos: haxe.macro.Context.currentPos()
+            };
+
+            opts_array.push(opts);
+        }
+
+        var frames_expr:Expr = {
+            expr: EArrayDecl(frames_array),
+            pos: haxe.macro.Context.currentPos()
+        };
+
+        var options_expr:Expr = {
+            expr: EArrayDecl(opts_array),
+            pos: haxe.macro.Context.currentPos()
+        };
+
+        return {
+            expr: ENew({
+                name: "Animation",
+                pack: ["jascii", "display"],
+                params: []
+            }, [frames_expr, options_expr]),
+            pos: haxe.macro.Context.currentPos()
+        };
     }
 }
