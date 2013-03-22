@@ -56,6 +56,7 @@ class Object
     public inline function remove_child(child:Object):Object
     {
         child.parent = null;
+        child.surface = null;
         this.children.remove(child);
         return child;
     }
@@ -137,9 +138,8 @@ class Object
 
     private function set_surface(val:Surface):Surface
     {
-        if (val != null)
-            for (child in this.children)
-                child.surface = val;
+        for (child in this.children)
+            child.surface = val;
 
         return this.surface = val;
     }

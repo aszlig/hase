@@ -34,6 +34,15 @@ class Sprite extends Object
                 this.surface.draw_char(x, y, char);
     }
 
+    private override function set_surface(val:Surface):Surface
+    {
+        if (val != null)
+            val.register_sprite(this);
+        else if (this.surface != null)
+            this.surface.unregister_sprite(this);
+        return super.set_surface(val);
+    }
+
     public function blit( ?ascii:Array<Array<Int>>
                         , ?x:Int = 0
                         , ?y:Int = 0
