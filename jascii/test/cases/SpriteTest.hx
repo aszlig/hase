@@ -4,7 +4,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 {
     public function test_simple():Void
     {
-        var anim:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Animation = this.create_animation([
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
@@ -13,7 +13,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             ]
         ]);
 
-        this.root.add_child(anim);
+        this.root.add_child(circle);
         this.root.update();
 
         this.assert_area(
@@ -28,7 +28,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_move_x()
     {
-        var anim:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Animation = this.create_animation([
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
@@ -37,9 +37,9 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             ]
         ]);
 
-        this.root.add_child(anim);
+        this.root.add_child(circle);
         this.root.update();
-        anim.x = 5;
+        circle.x = 5;
         this.root.update();
 
         this.assert_area(
@@ -54,7 +54,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_move_y()
     {
-        var anim:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Animation = this.create_animation([
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
@@ -63,9 +63,9 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             ]
         ]);
 
-        this.root.add_child(anim);
+        this.root.add_child(circle);
         this.root.update();
-        anim.y = 5;
+        circle.y = 5;
         this.root.update();
 
         this.assert_area(
@@ -80,6 +80,52 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             , "  `-.-'  "
             , "         "
             ], 0, 0, 9, 10
+        );
+    }
+
+    public function test_overlay()
+    {
+        var circle:jascii.display.Animation = this.create_animation([
+            [ "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ]
+        ]);
+
+        var rect:jascii.display.Animation = this.create_animation([
+            [ ",-------."
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "`-------'"
+            ]
+        ]);
+
+        var dot:jascii.display.Animation = this.create_animation([
+            [ "     "
+            , "     "
+            , "    ^"
+            ],
+        ]);
+
+        rect.add_child(circle);
+        circle.add_child(dot);
+        this.root.add_child(rect);
+
+        circle.y = 1;
+        this.root.update();
+
+        this.assert_area(
+            [ ",-------."
+            , "|  _._  |"
+            , "|.'   `.|"
+            , "|:  ^  ;|"
+            , "| `-.-' |"
+            , "`-------'"
+            ], 0, 0, 9, 6
         );
     }
 }
