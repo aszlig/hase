@@ -4,7 +4,8 @@ import haxe.macro.Expr;
 import jascii.macro.Types;
 
 typedef AnimOptions = {
-    ?reference:String,
+    ?refpoint_x:Int,
+    ?refpoint_y:Int,
 };
 
 class Animation extends Sprite
@@ -68,6 +69,10 @@ class Animation extends Sprite
         return frame;
     }
 
+    private function set_frame_options(opts:AnimOptions):Void
+    {
+    }
+
     public override function update():Void
     {
         super.update();
@@ -75,9 +80,12 @@ class Animation extends Sprite
         if (this.frames.length == 0)
             return;
 
-        this.blit(this.frames[
-            this.current < 0 ? -this.current : this.current
-        ]);
+        var frame_id:Int = this.current < 0 ? -this.current : this.current;
+
+        if (this.frame_options != null)
+            this.set_frame_options(this.frame_options[frame_id]);
+
+        this.blit(this.frames[frame_id]);
 
         if (++this.td >= this.factor) {
             if (++this.current >= this.frames.length) {
@@ -128,7 +136,7 @@ class Animation extends Sprite
                 opt_fields.push({
                     field: key,
                     expr: {
-                        expr: EConst(CString(item.options.get(key))),
+                        expr: item.options.get(key),
                         pos: haxe.macro.Context.currentPos()
                     }
                 });
