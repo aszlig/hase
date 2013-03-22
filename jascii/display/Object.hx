@@ -4,6 +4,7 @@ class Object
 {
     public var x(default, set_x):Int;
     public var y(default, set_y):Int;
+    public var z(default, set_z):Int;
     public var width(default, set_width):Int;
     public var height(default, set_height):Int;
 
@@ -20,6 +21,7 @@ class Object
     {
         this.x = 0;
         this.y = 0;
+        this.z = 0;
         this.width = 0;
         this.height = 0;
 
@@ -39,6 +41,12 @@ class Object
     {
         this.dirty = true;
         return this.y = val;
+    }
+
+    private inline function set_z(val:Int):Int
+    {
+        this.dirty = true;
+        return this.z = val;
     }
 
     private function autogrow_width():Void
