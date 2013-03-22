@@ -1,20 +1,57 @@
 package jascii.display;
 
-class Sprite extends ObjectContainer
+class Sprite extends Object
 {
-    public inline function draw_string(x:Int, y:Int, value:String):Void
+    public var ascii(default, null):Array<Array<Int>>;
+    public var rect(default, null):Rect;
+
+    public function new()
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in 0...value.length)
-                this.surface.draw_char(this.parent.absolute_x + x + i,
-                                       this.parent.absolute_y + y,
-                                       value.charCodeAt(i));
+        super();
+        this.ascii = null;
+        this.rect = null;
     }
 
-    public inline function draw_block(x:Int, y:Int, values:Array<String>):Void
+    private function calculate_width():Int
     {
-        if (x <= this.parent.width && y <= this.parent.height)
-            for (i in values)
-                this.draw_string(x, ++y, i);
+        var width:Int = 0;
+
+        for (row in this.ascii)
+            width = row.length > width ? row.length : width;
+
+        return width;
+    }
+
+    private override function set_surface(val:Surface):Surface
+    {
+        if (val != null)
+            val.register_sprite(this);
+        else if (this.surface != null)
+            this.surface.unregister_sprite(this);
+
+        return super.set_surface(val);
+    }
+
+    public function blit(ascii:Array<Array<Int>>):Void
+    {
+        this.ascii = ascii;
+
+        var width:Int = this.calculate_width();
+        var height:Int = this.ascii.length;
+
+        var new_rect:Rect = new Rect(
+            this.parent.absolute_x + this.x,
+            this.parent.absolute_y + this.y,
+            width, height
+        );
+
+        var union:Rect = new_rect;
+
+        if (this.rect != null)
+            union = new_rect.union(this.rect);
+
+        this.surface.redraw_rect(union);
+
+        this.rect = new_rect;
     }
 }

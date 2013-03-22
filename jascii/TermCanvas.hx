@@ -16,16 +16,17 @@ private class Font
     public inline static var cheight:Int = 16;
 }
 
-class TermCanvas extends jascii.display.ObjectContainer,
-                 implements jascii.display.ISurface
+class TermCanvas implements jascii.display.ISurface
 {
     private var canvas:Canvas;
     private var ctx:CanvasRenderingContext2D;
     private var font:Image;
 
+    public var width:Int;
+    public var height:Int;
+
     public function new(canvas:Canvas)
     {
-        super();
         this.canvas = canvas;
         this.width = Std.int(canvas.width / Font.cwidth);
         this.height = Std.int(canvas.height / Font.cheight);
@@ -68,9 +69,6 @@ class TermCanvas extends jascii.display.ObjectContainer,
 
     public function draw_char(x:Int, y:Int, ordinal:Int):Void
     {
-        if (x > width || y > height)
-            return;
-
         var cleft:Int = (ordinal % 32) * Font.cwidth + Font.xpadding;
         var ctop:Int = Std.int(ordinal / 32) * Font.cheight + Font.ypadding;
 

@@ -2,53 +2,95 @@ package jascii.display;
 
 class Object
 {
-    public var x(default, set_x):Int;
-    public var y(default, set_y):Int;
+    public var parent:Object;
+    public var children:Array<Object>;
+
+    public var x:Int;
+    public var y:Int;
+    public var z:Int;
     public var width(default, set_width):Int;
     public var height(default, set_height):Int;
 
     public var absolute_x(get_absolute_x, null):Int;
     public var absolute_y(get_absolute_y, null):Int;
 
-    public var parent:ObjectContainer;
-    public var surface(get_surface, null):ISurface;
+    public var surface(default, set_surface):Surface;
+    public var is_surface:Bool;
 
-    public var dirty:Bool;
+    public var autoresize:Bool;
 
     public function new()
     {
+        this.parent = null;
+        this.children = new Array();
+
         this.x = 0;
         this.y = 0;
+        this.z = 0;
         this.width = 0;
         this.height = 0;
 
-        this.parent = null;
+        this.is_surface = false;
+        this.surface = null;
 
-        this.dirty = true;
+        this.autoresize = true;
     }
 
-    private inline function set_x(val:Int):Int
+    public inline function add_child(child:Object):Object
     {
-        this.dirty = true;
-        return this.x = val;
+        child.parent = this;
+        child.autogrow();
+        child.z = this.z + 1;
+
+        if (this.is_surface)
+            child.surface = cast this;
+        else if (this.surface != null)
+            child.surface = this.surface;
+
+        this.children.push(child);
+        return child;
     }
 
-    private inline function set_y(val:Int):Int
+    public inline function remove_child(child:Object):Object
     {
-        this.dirty = true;
-        return this.y = val;
+        child.parent = null;
+        child.surface = null;
+        this.children.remove(child);
+        return child;
     }
 
-    private inline function set_width(val:Int):Int
+    private function autogrow_width():Void
     {
-        this.dirty = true;
-        return this.width = val;
+        if (this.parent == null || !this.parent.autoresize)
+            return;
+
+        if (this.x + this.width > this.parent.width)
+            this.parent.width = this.x + this.width;
     }
 
-    private inline function set_height(val:Int):Int
+    private function autogrow_height():Void
     {
-        this.dirty = true;
-        return this.height = val;
+        if (this.parent == null || !this.parent.autoresize)
+            return;
+
+        if (this.y + this.height > this.parent.height)
+            this.parent.height = this.y + this.height;
+    }
+
+    private function set_width(val:Int):Int
+    {
+        this.width = val;
+        this.autogrow_width();
+
+        return this.width;
+    }
+
+    private function set_height(val:Int):Int
+    {
+        this.height = val;
+        this.autogrow_height();
+
+        return this.height;
     }
 
     private function get_absolute_x():Int
@@ -61,16 +103,29 @@ class Object
         return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
     }
 
-    private function get_surface():ISurface
+    private function set_surface(val:Surface):Surface
     {
-        if (this.parent == null)
-            return cast this;
-        else
-            return this.parent.surface;
+        for (child in this.children)
+            child.surface = val;
+
+        return this.surface = val;
+    }
+
+    public function autogrow():Void
+    {
+        this.autogrow_width();
+        this.autogrow_height();
     }
 
     public function update():Void
     {
-        this.dirty = false;
+        for (child in this.children)
+            child.update();
+    }
+
+    public function toString():String
+    {
+        return "<Object x: " + this.x + "; y: " + this.y +
+               "; z: " + this.z + ">";
     }
 }

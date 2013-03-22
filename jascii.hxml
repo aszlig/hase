@@ -6,3 +6,5 @@
 -D debug
 -main jascii.Main
 -js jascii.js
+--next
+--macro jascii.test.Main.main()

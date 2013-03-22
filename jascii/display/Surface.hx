@@ -1,0 +1,77 @@
+package jascii.display;
+
+class Surface extends Object
+{
+    private var provider:ISurface;
+    private var sprites:Array<Sprite>;
+
+    public function new(provider:ISurface)
+    {
+        super();
+        this.is_surface = true;
+        this.provider = provider;
+        this.width = provider.width;
+        this.height = provider.height;
+        this.autoresize = false;
+        this.sprites = new Array();
+    }
+
+    public inline function register_sprite(sprite:Sprite):Sprite
+    {
+        this.sprites.push(sprite);
+        this.sprites.sort(function(a:Sprite, b:Sprite) {
+            return (a.z < b.z) ? -1 : (a.z > b.z) ? 1 : 0;
+        });
+        return sprite;
+    }
+
+    public inline function unregister_sprite(sprite:Sprite):Sprite
+    {
+        this.sprites.remove(sprite);
+        return sprite;
+    }
+
+    private inline function fill_rect(rect:Rect, ?char:Int = " ".code):Void
+    {
+        for (y in rect.y...(rect.y + rect.height))
+            for (x in rect.x...(rect.x + rect.width))
+                this.draw_char(x, y, char);
+    }
+
+    public function redraw_rect(rect:Rect):Void
+    {
+        this.fill_rect(rect);
+
+        for (sprite in this.sprites)
+            if (sprite.rect == null || sprite.rect.intersects(rect))
+                this.blit(sprite);
+    }
+
+    private inline function draw_char(x:Int, y:Int, ordinal:Int):Void
+    {
+        if (x <= this.width && y <= this.height)
+            this.provider.draw_char(x, y, ordinal);
+    }
+
+    private function blit(sprite:Sprite):Void
+    {
+        if (sprite.ascii == null)
+            return;
+
+        for (yi in 0...sprite.ascii.length) {
+            if (sprite.ascii[yi].length > width)
+                width = sprite.ascii[yi].length;
+
+            for (xi in 0...sprite.ascii[yi].length) {
+                if (sprite.ascii[yi][xi] == 0)
+                    continue;
+
+                this.draw_char(
+                    sprite.parent.absolute_x + sprite.x + xi,
+                    sprite.parent.absolute_y + sprite.y + yi,
+                    sprite.ascii[yi][xi]
+                );
+            }
+        }
+    }
+}
