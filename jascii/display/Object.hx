@@ -115,4 +115,10 @@ class Object
     {
         this.dirty = false;
     }
+
+    public function toString():String
+    {
+        return "<Object x: " + this.x + "; y: " + this.y +
+               "; z: " + this.z + ">";
+    }
 }
