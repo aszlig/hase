@@ -11,7 +11,7 @@ class Object
     public var absolute_y(get_absolute_y, null):Int;
 
     public var parent:ObjectContainer;
-    public var surface(get_surface, null):ISurface;
+    public var surface(get_surface, null):Surface;
 
     public var autoresize:Bool;
     public var dirty:Bool;
@@ -89,7 +89,7 @@ class Object
         return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
     }
 
-    private function get_surface():ISurface
+    private function get_surface():Surface
     {
         if (this.parent == null)
             return cast this;

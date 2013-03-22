@@ -13,7 +13,7 @@ class Surface extends ObjectContainer
         this.autoresize = false;
     }
 
-    @:keep public inline function draw_char(x:Int, y:Int, ordinal:Int):Void
+    public inline function draw_char(x:Int, y:Int, ordinal:Int):Void
     {
         if (x <= this.width && y <= this.height)
             this.provider.draw_char(x, y, ordinal);
