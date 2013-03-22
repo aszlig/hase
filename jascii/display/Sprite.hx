@@ -39,19 +39,14 @@ class Sprite extends Object
         var width:Int = this.calculate_width();
         var height:Int = this.ascii.length;
 
-        var new_rect:Rect = new Rect(
+        var old_rect:Rect = this.rect;
+        this.rect = new Rect(
             this.parent.absolute_x + this.x - this.center_x,
             this.parent.absolute_y + this.y - this.center_y,
             width, height
         );
 
-        var union:Rect = new_rect;
-
-        if (this.rect != null)
-            union = new_rect.union(this.rect);
-
-        this.surface.redraw_rect(union);
-
-        this.rect = new_rect;
+        old_rect = old_rect == null ? this.rect : old_rect.union(this.rect);
+        this.surface.redraw_rect(old_rect);
     }
 }

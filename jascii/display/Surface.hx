@@ -59,16 +59,13 @@ class Surface extends Object
             return;
 
         for (yi in 0...sprite.ascii.length) {
-            if (sprite.ascii[yi].length > width)
-                width = sprite.ascii[yi].length;
-
             for (xi in 0...sprite.ascii[yi].length) {
                 if (sprite.ascii[yi][xi] == 0)
                     continue;
 
                 this.draw_char(
-                    sprite.parent.absolute_x + sprite.x - sprite.center_x + xi,
-                    sprite.parent.absolute_y + sprite.y - sprite.center_y + yi,
+                    sprite.rect.x + xi,
+                    sprite.rect.y + yi,
                     sprite.ascii[yi][xi]
                 );
             }
