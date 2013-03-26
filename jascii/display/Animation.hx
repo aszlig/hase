@@ -10,7 +10,7 @@ typedef AnimOptions = {
 
 class Animation extends Sprite
 {
-    private var frames:Array<Array<Array<Int>>>;
+    private var frames:Array<Array<Array<Symbol>>>;
     private var frame_options:Array<AnimOptions>;
     private var current:Int;
 
@@ -19,14 +19,15 @@ class Animation extends Sprite
 
     public var loopback:Bool;
 
-    public function new(?frames = null, ?options:Array<AnimOptions>)
+    public function new( ?frames:Array<Array<Array<Int>>> = null
+                       , ?options:Array<AnimOptions>)
     {
         super();
 
         if (frames == null)
             frames = new Array();
 
-        this.frames = frames;
+        this.frames = Lambda.array(Lambda.map(frames, this.generate_frame));
         this.frame_options = options;
         this.current = 0;
 
@@ -38,6 +39,23 @@ class Animation extends Sprite
         this.grow_sprite();
     }
 
+    private inline function
+        generate_frame(frame:Array<Array<Int>>):Array<Array<Symbol>>
+    {
+        var out:Array<Array<Symbol>> = new Array();
+
+        for (row in frame) {
+            var out_row:Array<Symbol> = new Array();
+
+            for (col in row)
+                out_row.push(new Symbol(col));
+
+            out.push(out_row);
+        }
+
+        return out;
+    }
+
     private inline function grow_sprite():Void
     {
         var width:Int = 0;
@@ -46,7 +64,7 @@ class Animation extends Sprite
         for (frame in this.frames) {
             var new_width = Lambda.fold(
                 frame,
-                function(row:Array<Int>, acc:Int)
+                function(row:Array<Symbol>, acc:Int)
                     return row.length > acc ? row.length : acc,
                 0
             );
@@ -62,7 +80,8 @@ class Animation extends Sprite
             this.height = height;
     }
 
-    public inline function add_frame(frame:Array<Array<Int>>):Array<Array<Int>>
+    public inline function
+        add_frame(frame:Array<Array<Symbol>>):Array<Array<Symbol>>
     {
         this.frames.push(frame);
         this.grow_sprite();

@@ -1,26 +1,13 @@
 package jascii;
 
-private class Font
-{
-    public inline static var path:String = "cp437.png";
-
-    public inline static var sprite_width:Int = 304;
-    public inline static var sprite_height:Int = 304;
-
-    public inline static var xpadding:Int = 0;
-    public inline static var ypadding:Int = 1;
-    public inline static var xmargin:Int = 7;
-    public inline static var ymargin:Int = 7;
-
-    public inline static var cwidth:Int = 9;
-    public inline static var cheight:Int = 16;
-}
-
 class TermCanvas implements jascii.display.ISurface
 {
     private var canvas:Canvas;
     private var ctx:CanvasRenderingContext2D;
-    private var font:Image;
+
+    private var font:TermFont;
+    private var font_cache:IntHash<Int>;
+    private var font_canvas:Canvas;
 
     public var width:Int;
     public var height:Int;
@@ -28,58 +15,84 @@ class TermCanvas implements jascii.display.ISurface
     public function new(canvas:Canvas)
     {
         this.canvas = canvas;
-        this.width = Std.int(canvas.width / Font.cwidth);
-        this.height = Std.int(canvas.height / Font.cheight);
+
+        this.width = Std.int(canvas.width / (TermFont.WIDTH + 1));
+        this.height = Std.int(canvas.height / TermFont.HEIGHT);
+
         this.ctx = canvas.getContext("2d");
-    }
+        this.ctx.fillStyle = "black";
+        this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    public function init():Void
-    {
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        this.font = new Image();
-        this.font.src = Font.path;
-        this.font.width = Font.sprite_width;
-        this.font.height = Font.sprite_height;
-        this.font.onload = this.onload;
+        this.font = new TermFont();
+        this.font_cache = new IntHash();
+        this.font_canvas = null;
     }
 
     private inline function cursor2x(x:Int):Int
     {
 #if debug
-        if (x * Font.cwidth > this.canvas.width)
+        if (x * (TermFont.WIDTH + 1) > this.canvas.width)
             trace("X cursor value of " + x + " exceeds width of " +
                   this.canvas.width + " pixels!");
 #end
 
-        return x * Font.cwidth;
+        return x * (TermFont.WIDTH + 1);
     }
 
     private inline function cursor2y(y:Int):Int
     {
 #if debug
-        if (y * Font.cheight > this.canvas.height)
+        if (y * TermFont.HEIGHT > this.canvas.height)
             trace("Y cursor value of " + y + " exceeds height of " +
                   this.canvas.height + " pixels!");
 #end
 
-        return y * Font.cheight;
+        return y * TermFont.HEIGHT;
     }
 
-    public function draw_char(x:Int, y:Int, ordinal:Int):Void
+    private inline function add_to_font_cache(ordinal:Int):Int
     {
-        var cleft:Int = (ordinal % 32) * Font.cwidth + Font.xpadding;
-        var ctop:Int = Std.int(ordinal / 32) * Font.cheight + Font.ypadding;
+        var cachedata:ImageData = cast
+            this.ctx.createImageData(TermFont.WIDTH, TermFont.HEIGHT);
 
-        this.ctx.drawImage(
-            this.font,
-            Font.xmargin + cleft, Font.ymargin + ctop,
-            Font.cwidth, Font.cheight,
-            this.cursor2x(x), this.cursor2y(y),
-            Font.cwidth, Font.cheight
-        );
+        var i:Int = 0;
+        for (row in this.font.iter_char(ordinal)) {
+            for (val in row) {
+                cachedata.data[i++] = val ? 0xbe : 0x00;
+                cachedata.data[i++] = val ? 0xbe : 0x00;
+                cachedata.data[i++] = val ? 0xbe : 0x00;
+                cachedata.data[i++] = 0xff;
+            }
+        }
+
+        var cached:Int =
+            (this.font_canvas == null ? 0 : this.font_canvas.width);
+
+        var new_canvas:Canvas = cast js.Lib.document.createElement("canvas");
+        new_canvas.width = cached + TermFont.WIDTH;
+        new_canvas.height = TermFont.HEIGHT;
+        var new_context:CanvasRenderingContext2D = new_canvas.getContext("2d");
+
+        if (cached > 0)
+            new_context.drawImage(this.font_canvas, 0, 0);
+
+        new_context.putImageData(cachedata, cached, 0);
+
+        this.font_cache.set(ordinal, cached);
+        this.font_canvas = new_canvas;
+        return cached;
     }
 
-    public dynamic function onload():Void {}
+    public function draw_char(x:Int, y:Int, sym:jascii.display.Symbol):Void
+    {
+        var cached:Int = this.font_cache.get(sym.ordinal);
+
+        if (cached == null)
+            cached = this.add_to_font_cache(sym.ordinal);
+
+        this.ctx.drawImage(this.font_canvas,
+            cached, 0, TermFont.WIDTH, TermFont.HEIGHT,
+            this.cursor2x(x), this.cursor2y(y),
+            TermFont.WIDTH, TermFont.HEIGHT);
+    }
 }

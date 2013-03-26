@@ -11,19 +11,14 @@ class Main
         js.Lib.window.onload = this.onload;
     }
 
-    private function onload(e:Event)
+    private function onload(e:Event):Void
     {
         var canvas:Canvas = cast js.Lib.document.getElementById("canvas");
         canvas.width = js.Lib.window.innerWidth;
         canvas.height = js.Lib.window.innerHeight;
 
         var tc = new TermCanvas(canvas);
-        tc.onload = function() this.init(tc);
-        tc.init();
-    }
 
-    private function init(tc:TermCanvas):Void
-    {
         this.root_surface = new jascii.display.Surface(tc);
 
         var login_view = new jascii.views.Login();

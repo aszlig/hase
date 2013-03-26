@@ -35,7 +35,7 @@ class Surface extends Object
     {
         for (y in rect.y...(rect.y + rect.height))
             for (x in rect.x...(rect.x + rect.width))
-                this.draw_char(x, y, char);
+                this.draw_char(x, y, new Symbol(char));
     }
 
     public function redraw_rect(rect:Rect):Void
@@ -47,10 +47,10 @@ class Surface extends Object
                 this.blit(sprite);
     }
 
-    private inline function draw_char(x:Int, y:Int, ordinal:Int):Void
+    private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
     {
         if (x <= this.width && y <= this.height)
-            this.provider.draw_char(x, y, ordinal);
+            this.provider.draw_char(x, y, sym);
     }
 
     private function blit(sprite:Sprite):Void
@@ -60,7 +60,7 @@ class Surface extends Object
 
         for (yi in 0...sprite.ascii.length) {
             for (xi in 0...sprite.ascii[yi].length) {
-                if (sprite.ascii[yi][xi] == 0)
+                if (sprite.ascii[yi][xi].is_alpha())
                     continue;
 
                 this.draw_char(
