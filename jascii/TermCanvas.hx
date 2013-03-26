@@ -83,12 +83,12 @@ class TermCanvas implements jascii.display.ISurface
         return cached;
     }
 
-    public function draw_char(x:Int, y:Int, ordinal:Int):Void
+    public function draw_char(x:Int, y:Int, sym:jascii.display.Symbol):Void
     {
-        var cached:Int = this.font_cache.get(ordinal);
+        var cached:Int = this.font_cache.get(sym.ordinal);
 
         if (cached == null)
-            cached = this.add_to_font_cache(ordinal);
+            cached = this.add_to_font_cache(sym.ordinal);
 
         this.ctx.drawImage(this.font_canvas,
             cached, 0, TermFont.WIDTH, TermFont.HEIGHT,
