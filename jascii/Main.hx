@@ -1,21 +1,21 @@
 package jascii;
 
-import js.Dom;
-
 class Main
 {
     private var root_surface:jascii.display.Surface;
 
     public function new()
     {
-        js.Lib.window.onload = this.onload;
+        js.Browser.window.onload = this.onload;
     }
 
-    private function onload(e:Event):Void
+    private function onload(e:js.html.Event):Void
     {
-        var canvas:Canvas = cast js.Lib.document.getElementById("canvas");
-        canvas.width = js.Lib.window.innerWidth;
-        canvas.height = js.Lib.window.innerHeight;
+        var canvas:js.html.CanvasElement = cast
+            js.Browser.document.getElementById("canvas");
+
+        canvas.width = js.Browser.window.innerWidth;
+        canvas.height = js.Browser.window.innerHeight;
 
         var tc = new TermCanvas(canvas);
 

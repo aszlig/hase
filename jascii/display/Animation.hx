@@ -125,7 +125,7 @@ class Animation extends Sprite
         }
     }
 
-    @:macro public static function from_file(path:String):Expr
+    macro public static function from_file(path:String):Expr
     {
         var data:Array<AnimData> = jascii.macro.Animation.parse_file(path);
 

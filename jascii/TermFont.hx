@@ -30,17 +30,7 @@ class TermFont
         };
     }
 
-    public static function remove_me():Void
-    {
-        var f = new TermFont();
-        for (row in f.iter_char("X".code)) {
-            for (x in row)
-                Sys.print(x ? "#" : " ");
-            Sys.print("\n");
-        }
-    }
-
-    @:macro public static function get_font():Expr
+    macro public static function get_font():Expr
     {
         var font:Array<Array<Int>> = new Array();
 

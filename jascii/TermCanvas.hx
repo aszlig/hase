@@ -2,17 +2,17 @@ package jascii;
 
 class TermCanvas implements jascii.display.ISurface
 {
-    private var canvas:Canvas;
-    private var ctx:CanvasRenderingContext2D;
+    private var canvas:js.html.CanvasElement;
+    private var ctx:js.html.CanvasRenderingContext2D;
 
     private var font:TermFont;
-    private var font_cache:IntHash<Int>;
-    private var font_canvas:Canvas;
+    private var font_cache:Map<Int,Int>;
+    private var font_canvas:js.html.CanvasElement;
 
     public var width:Int;
     public var height:Int;
 
-    public function new(canvas:Canvas)
+    public function new(canvas:js.html.CanvasElement)
     {
         this.canvas = canvas;
 
@@ -24,7 +24,7 @@ class TermCanvas implements jascii.display.ISurface
         this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         this.font = new TermFont();
-        this.font_cache = new IntHash();
+        this.font_cache = new Map();
         this.font_canvas = null;
     }
 
@@ -52,7 +52,7 @@ class TermCanvas implements jascii.display.ISurface
 
     private inline function add_to_font_cache(ordinal:Int):Int
     {
-        var cachedata:ImageData = cast
+        var cachedata:js.html.ImageData = cast
             this.ctx.createImageData(TermFont.WIDTH, TermFont.HEIGHT);
 
         var i:Int = 0;
@@ -68,10 +68,14 @@ class TermCanvas implements jascii.display.ISurface
         var cached:Int =
             (this.font_canvas == null ? 0 : this.font_canvas.width);
 
-        var new_canvas:Canvas = cast js.Lib.document.createElement("canvas");
+        var new_canvas:js.html.CanvasElement =
+            js.Browser.document.createCanvasElement();
+
         new_canvas.width = cached + TermFont.WIDTH;
         new_canvas.height = TermFont.HEIGHT;
-        var new_context:CanvasRenderingContext2D = new_canvas.getContext("2d");
+
+        var new_context:js.html.CanvasRenderingContext2D =
+            new_canvas.getContext2d();
 
         if (cached > 0)
             new_context.drawImage(this.font_canvas, 0, 0);

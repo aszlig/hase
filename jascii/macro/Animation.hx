@@ -72,7 +72,7 @@ class Animation
 
         var data:Array<AnimData> = new Array();
 
-        var kvmap:Hash<String> = new Hash();
+        var kvmap:Map<String, String> = new Map();
 
         for (line in lines) {
             var delim:Int = line.indexOf(" ");
@@ -98,12 +98,12 @@ class Animation
                 data.insert(frame_id, {
                     frame: [row],
                     raw_options: kvmap,
-                    options: new Hash()
+                    options: new Map()
                 });
             else
                 data[frame_id].frame.push(row);
 
-            kvmap = new Hash();
+            kvmap = new Map();
         }
 
         for (i in 0...data.length)
