@@ -10,7 +10,7 @@ typedef AnimOptions = {
 
 class Animation extends Sprite
 {
-    private var frames:Array<Array<Array<Symbol>>>;
+    private var frames:Array<Image>;
     private var frame_options:Array<AnimOptions>;
     private var current:Int;
 
@@ -39,10 +39,9 @@ class Animation extends Sprite
         this.grow_sprite();
     }
 
-    private inline function
-        generate_frame(frame:Array<Array<Int>>):Array<Array<Symbol>>
+    private inline function generate_frame(frame:Array<Array<Int>>):Image
     {
-        var out:Array<Array<Symbol>> = new Array();
+        var out:Image = new Array();
 
         for (row in frame) {
             var out_row:Array<Symbol> = new Array();
@@ -80,8 +79,7 @@ class Animation extends Sprite
             this.height = height;
     }
 
-    public inline function
-        add_frame(frame:Array<Array<Symbol>>):Array<Array<Symbol>>
+    public inline function add_frame(frame:Image):Image
     {
         this.frames.push(frame);
         this.grow_sprite();

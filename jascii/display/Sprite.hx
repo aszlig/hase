@@ -2,7 +2,7 @@ package jascii.display;
 
 class Sprite extends Object
 {
-    public var ascii(default, null):Array<Array<Symbol>>;
+    public var ascii(default, null):Image;
     public var rect(default, null):Rect;
 
     public function new()
@@ -32,7 +32,7 @@ class Sprite extends Object
         return super.set_surface(val);
     }
 
-    public function blit(ascii:Array<Array<Symbol>>):Void
+    public function blit(ascii:Image):Void
     {
         this.ascii = ascii;
 
