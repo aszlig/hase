@@ -5,7 +5,12 @@ import jascii.macro.Types;
 
 class AnimationParser
 {
-    public static function apply_options(data:AnimData):AnimData
+    private var data:Array<String>;
+
+    public function new(data:String)
+        this.data = data.split("\n");
+
+    private function apply_options(data:AnimData):AnimData
     {
         if (data.raw_options.exists("reference")) {
             var refchar:Int = data.raw_options.get("reference").charCodeAt(0);
@@ -25,7 +30,7 @@ class AnimationParser
         return data;
     }
 
-    public static function
+    private function
         flood_fill(x:Int, y:Int, frame:Array<Array<Int>>):Array<Array<Int>>
     {
         var queue:Array<{ x:Int, y:Int }> = new Array();
@@ -54,27 +59,24 @@ class AnimationParser
         return frame;
     }
 
-    public static function
-        apply_alpha(frame:Array<Array<Int>>):Array<Array<Int>>
+    private function apply_alpha(frame:Array<Array<Int>>):Array<Array<Int>>
     {
         // start from one of the corners
         for (y in [0, frame.length - 1])
             for (x in [0, frame[y].length - 1])
                 if (frame[y][x] == " ".code)
-                    return AnimationParser.flood_fill(x, y, frame);
+                    return this.flood_fill(x, y, frame);
 
         return frame;
     }
 
-    public static function parse_file(path:String):Array<AnimData>
+    public function parse():Array<AnimData>
     {
-        var lines:Array<String> = sys.io.File.getContent(path).split("\n");
-
         var data:Array<AnimData> = new Array();
 
         var kvmap:Map<String, String> = new Map();
 
-        for (line in lines) {
+        for (line in this.data) {
             var delim:Int = line.indexOf(" ");
             var until_space:String = line.substr(0, delim);
             var frame_id:Null<Int> = Std.parseInt(until_space);
@@ -107,11 +109,16 @@ class AnimationParser
         }
 
         for (i in 0...data.length)
-            data[i] = AnimationParser.apply_options(data[i]);
+            data[i] = this.apply_options(data[i]);
 
         for (i in 0...data.length)
-            data[i].frame = AnimationParser.apply_alpha(data[i].frame);
+            data[i].frame = this.apply_alpha(data[i].frame);
 
         return data;
+    }
+
+    public static function parse_file(path:String):Array<AnimData>
+    {
+        return new AnimationParser(sys.io.File.getContent(path)).parse();
     }
 }
