@@ -1,9 +1,9 @@
-package jascii.macro;
+package jascii.utils;
 
 import haxe.macro.Expr;
 import jascii.macro.Types;
 
-class Animation
+class AnimationParser
 {
     public static function apply_options(data:AnimData):AnimData
     {
@@ -61,7 +61,7 @@ class Animation
         for (y in [0, frame.length - 1])
             for (x in [0, frame[y].length - 1])
                 if (frame[y][x] == " ".code)
-                    return Animation.flood_fill(x, y, frame);
+                    return AnimationParser.flood_fill(x, y, frame);
 
         return frame;
     }
@@ -107,10 +107,10 @@ class Animation
         }
 
         for (i in 0...data.length)
-            data[i] = Animation.apply_options(data[i]);
+            data[i] = AnimationParser.apply_options(data[i]);
 
         for (i in 0...data.length)
-            data[i].frame = Animation.apply_alpha(data[i].frame);
+            data[i].frame = AnimationParser.apply_alpha(data[i].frame);
 
         return data;
     }

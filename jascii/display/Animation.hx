@@ -125,7 +125,8 @@ class Animation extends Sprite
 
     macro public static function from_file(path:String):Expr
     {
-        var data:Array<AnimData> = jascii.macro.Animation.parse_file(path);
+        var data:Array<AnimData> =
+            jascii.utils.AnimationParser.parse_file(path);
 
         var frames_array:Array<Expr> = new Array();
         var opts_array:Array<Expr> = new Array();
