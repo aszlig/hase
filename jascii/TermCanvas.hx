@@ -19,7 +19,7 @@ class TermCanvas implements jascii.display.ISurface
         this.width = Std.int(canvas.width / (TermFont.WIDTH + 1));
         this.height = Std.int(canvas.height / TermFont.HEIGHT);
 
-        this.ctx = canvas.getContext("2d");
+        this.ctx = canvas.getContext2d();
         this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -52,7 +52,7 @@ class TermCanvas implements jascii.display.ISurface
 
     private inline function add_to_font_cache(ordinal:Int):Int
     {
-        var cachedata:js.html.ImageData = cast
+        var cachedata:js.html.ImageData =
             this.ctx.createImageData(TermFont.WIDTH, TermFont.HEIGHT);
 
         var i:Int = 0;
