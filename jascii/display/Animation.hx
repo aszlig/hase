@@ -19,7 +19,7 @@ class Animation extends Sprite
 
     public var loopback:Bool;
 
-    public function new( ?frames:Array<Array<Array<Int>>> = null
+    public function new( ?frames:Array<Image>
                        , ?options:Array<AnimOptions>)
     {
         super();
@@ -27,7 +27,7 @@ class Animation extends Sprite
         if (frames == null)
             frames = new Array();
 
-        this.frames = Lambda.array(Lambda.map(frames, this.generate_frame));
+        this.frames = [for (x in frames) x];
         this.frame_options = options;
         this.current = 0;
 
@@ -39,37 +39,14 @@ class Animation extends Sprite
         this.grow_sprite();
     }
 
-    private inline function generate_frame(frame:Array<Array<Int>>):Image
-    {
-        var out:Image = new Array();
-
-        for (row in frame) {
-            var out_row:Array<Symbol> = new Array();
-
-            for (col in row)
-                out_row.push(new Symbol(col));
-
-            out.push(out_row);
-        }
-
-        return out;
-    }
-
     private inline function grow_sprite():Void
     {
         var width:Int = 0;
         var height:Int = 0;
 
         for (frame in this.frames) {
-            var new_width = Lambda.fold(
-                frame,
-                function(row:Array<Symbol>, acc:Int)
-                    return row.length > acc ? row.length : acc,
-                0
-            );
-
-            width = new_width > width ? new_width : width;
-            height = frame.length > height ? frame.length : height;
+            width = frame.width > width ? frame.width : width;
+            height = frame.height > height ? frame.height : height;
         }
 
         if (width > this.width)
@@ -175,23 +152,9 @@ class Animation extends Sprite
             opts_array.push(opts);
         }
 
-        var frames_expr:Expr = {
-            expr: EArrayDecl(frames_array),
-            pos: haxe.macro.Context.currentPos()
-        };
-
-        var options_expr:Expr = {
-            expr: EArrayDecl(opts_array),
-            pos: haxe.macro.Context.currentPos()
-        };
-
-        return {
-            expr: ENew({
-                name: "Animation",
-                pack: ["jascii", "display"],
-                params: []
-            }, [frames_expr, options_expr]),
-            pos: haxe.macro.Context.currentPos()
-        };
+        return macro new Animation(
+            $a{frames_array},
+            $a{opts_array}
+        );
     }
 }

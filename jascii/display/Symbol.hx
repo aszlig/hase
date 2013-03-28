@@ -1,6 +1,6 @@
 package jascii.display;
 
-abstract Symbol(Int)
+abstract Symbol(Int) from Int
 {
     public var ordinal(get, set):Int;
     public var fgcolor(get, set):Int;

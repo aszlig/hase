@@ -1,3 +1,3 @@
 package jascii.display;
 
-typedef Image = Array<Array<Symbol>>;
+typedef Image = jascii.geom.Matrix<Symbol>;

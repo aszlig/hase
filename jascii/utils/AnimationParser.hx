@@ -30,8 +30,9 @@ class AnimationParser
         return data;
     }
 
-    private function
-        flood_fill(x:Int, y:Int, frame:Array<Array<Int>>):Array<Array<Int>>
+    private function flood_fill( x:Int, y:Int
+                               , frame:Array<Array<jascii.display.Symbol>>
+                               ):Array<Array<jascii.display.Symbol>>
     {
         var queue:Array<{ x:Int, y:Int }> = new Array();
 
@@ -59,7 +60,8 @@ class AnimationParser
         return frame;
     }
 
-    private function apply_alpha(frame:Array<Array<Int>>):Array<Array<Int>>
+    private function apply_alpha( frame:Array<Array<jascii.display.Symbol>>
+                                ):Array<Array<jascii.display.Symbol>>
     {
         // start from one of the corners
         for (y in [0, frame.length - 1])
@@ -91,7 +93,7 @@ class AnimationParser
 
             var content:String = line.substr(delim + 1);
 
-            var row:Array<Int> = new Array();
+            var row:Array<jascii.display.Symbol> = new Array();
 
             for (pos in 0...content.length)
                 row.push(content.charCodeAt(pos));
