@@ -1,0 +1,239 @@
+package jascii.test.cases;
+
+import jascii.geom.Matrix;
+
+class MatrixTest extends haxe.unit.TestCase
+{
+    private inline function assert_matrix<T>( m:Matrix<T>
+                                            , a:Array<Array<T>>):Void
+    {
+        this.assertEquals(a.toString(), m.to_2d_array().toString());
+    }
+
+    public function test_3x3_simple():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        this.assert_matrix(matrix,
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ]
+        );
+    }
+
+    public function test_irregular_rows():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1]
+            , [2, 3, 4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        this.assert_matrix(matrix,
+            [ [   1, null, null, null, null]
+            , [   2,    3,    4,    5,    6]
+            , [   7,    8,    9, null, null]
+            ]
+        );
+    }
+
+    public function test_3x3_add_row():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        matrix.add_row([10, 11, 12]);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2,  3]
+            , [ 4,  5,  6]
+            , [ 7,  8,  9]
+            , [10, 11, 12]
+            ]
+        );
+    }
+
+    public function test_3x3_add_row_grow():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        matrix.add_row([10, 11, 12, 13, 14, 15]);
+
+        this.assert_matrix(matrix,
+            [ [   1,    2,    3, null, null, null]
+            , [   4,    5,    6, null, null, null]
+            , [   7,    8,    9, null, null, null]
+            , [  10,   11,   12,   13,   14,   15]
+            ]
+        );
+    }
+
+    public function test_3x3_add_smaller_row():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        matrix.add_row([10, 11]);
+
+        this.assert_matrix(matrix,
+            [ [   1,    2,    3]
+            , [   4,    5,    6]
+            , [   7,    8,    9]
+            , [  10,   11, null]
+            ]
+        );
+    }
+
+    public function test_2x2_grow_to_4x4_width_first():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2]
+            , [3, 4]
+            ];
+
+        matrix.width = 4;
+        matrix.height = 4;
+
+        this.assert_matrix(matrix,
+            [ [   1,    2, null, null]
+            , [   3,    4, null, null]
+            , [null, null, null, null]
+            , [null, null, null, null]
+            ]
+        );
+    }
+
+    public function test_2x2_grow_to_4x4_height_first():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2]
+            , [3, 4]
+            ];
+
+        matrix.height = 4;
+        matrix.width = 4;
+
+        this.assert_matrix(matrix,
+            [ [   1,    2, null, null]
+            , [   3,    4, null, null]
+            , [null, null, null, null]
+            , [null, null, null, null]
+            ]
+        );
+    }
+
+    public function test_4x4_shrink_to_2x2_width_first():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.width = 2;
+        matrix.height = 2;
+
+        this.assert_matrix(matrix,
+            [ [1, 2]
+            , [5, 6]
+            ]
+        );
+    }
+
+    public function test_4x4_shrink_to_2x2_height_first():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.height = 2;
+        matrix.width = 2;
+
+        this.assert_matrix(matrix,
+            [ [1, 2]
+            , [5, 6]
+            ]
+        );
+    }
+
+    public function test_3x3_map():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [1, 2, 3]
+            , [4, 5, 6]
+            , [7, 8, 9]
+            ];
+
+        var new_matrix:Matrix<Int> =
+            matrix.map(function(x:Int, y:Int, val:Int) return val + 1);
+
+        this.assert_matrix(new_matrix,
+            [ [ 2,  3,  4]
+            , [ 5,  6,  7]
+            , [ 8,  9, 10]
+            ]
+        );
+    }
+
+    public function test_get_cross():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        this.assertEquals( 1, matrix.get(0, 0));
+        this.assertEquals( 6, matrix.get(1, 1));
+        this.assertEquals(11, matrix.get(2, 2));
+        this.assertEquals(16, matrix.get(3, 3));
+
+        this.assertEquals( 4, matrix.get(3, 0));
+        this.assertEquals( 7, matrix.get(2, 1));
+        this.assertEquals(10, matrix.get(1, 2));
+        this.assertEquals(13, matrix.get(0, 3));
+    }
+
+    public function test_manipulate_cross():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        for (i in 0...4) {
+            matrix.set(i, i, 42);
+            matrix.set(i, 3 - i, 42);
+        }
+
+        this.assert_matrix(matrix,
+            [ [42,  2,  3, 42]
+            , [ 5, 42, 42,  8]
+            , [ 9, 42, 42, 12]
+            , [42, 14, 15, 42]
+            ]
+        );
+    }
+}
