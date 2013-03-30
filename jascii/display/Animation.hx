@@ -1,17 +1,16 @@
 package jascii.display;
 
 import haxe.macro.Expr;
-import jascii.macro.Types;
 
-typedef AnimOptions = {
+typedef FrameData = {
+    image:Image,
     ?refpoint_x:Int,
     ?refpoint_y:Int,
 };
 
 class Animation extends Sprite
 {
-    private var frames:Array<Image>;
-    private var frame_options:Array<AnimOptions>;
+    private var frames:Array<FrameData>;
     private var current:Int;
 
     private var td:Int;
@@ -19,16 +18,14 @@ class Animation extends Sprite
 
     public var loopback:Bool;
 
-    public function new( ?frames:Array<Image>
-                       , ?options:Array<AnimOptions>)
+    public function new(?data:Array<FrameData>)
     {
         super();
 
         if (frames == null)
             frames = new Array();
 
-        this.frames = [for (x in frames) x];
-        this.frame_options = options;
+        this.frames = data;
         this.current = 0;
 
         this.td = 0;
@@ -45,8 +42,8 @@ class Animation extends Sprite
         var height:Int = 0;
 
         for (frame in this.frames) {
-            width = frame.width > width ? frame.width : width;
-            height = frame.height > height ? frame.height : height;
+            width = frame.image.width > width ? frame.image.width : width;
+            height = frame.image.height > height ? frame.image.height : height;
         }
 
         if (width > this.width)
@@ -56,21 +53,18 @@ class Animation extends Sprite
             this.height = height;
     }
 
-    public inline function add_frame(frame:Image):Image
+    public inline function add_frame(frame:FrameData):FrameData
     {
         this.frames.push(frame);
         this.grow_sprite();
         return frame;
     }
 
-    private function set_frame_options(opts:AnimOptions):Void
+    private function set_frame_options(frame:FrameData):Void
     {
-        if (opts.refpoint_x != null && opts.refpoint_y != null) {
-            this.center_x = opts.refpoint_x;
-            this.center_y = opts.refpoint_y;
-        } else {
-            this.center_x = 0;
-            this.center_y = 0;
+        if (frame.refpoint_x != null && frame.refpoint_y != null) {
+            this.center_x = frame.refpoint_x;
+            this.center_y = frame.refpoint_y;
         }
     }
 
@@ -83,10 +77,8 @@ class Animation extends Sprite
 
         var frame_id:Int = this.current < 0 ? -this.current : this.current;
 
-        if (this.frame_options != null)
-            this.set_frame_options(this.frame_options[frame_id]);
-
-        this.blit(this.frames[frame_id]);
+        this.set_frame_options(this.frames[frame_id]);
+        this.blit(this.frames[frame_id].image);
 
         if (++this.td >= this.factor) {
             if (++this.current >= this.frames.length) {
@@ -102,59 +94,9 @@ class Animation extends Sprite
 
     macro public static function from_file(path:String):Expr
     {
-        var data:Array<AnimData> =
+        var data:Array<FrameData> =
             jascii.utils.AnimationParser.parse_file(path);
 
-        var frames_array:Array<Expr> = new Array();
-        var opts_array:Array<Expr> = new Array();
-
-        for (item in data) {
-            var row_array:Array<Expr> = new Array();
-
-            for (row in item.frame) {
-                var col_array:Array<Expr> = new Array();
-
-                for (col in row) {
-                    col_array.push({
-                        expr: EConst(CInt(Std.string(col))),
-                        pos: haxe.macro.Context.currentPos()
-                    });
-                }
-
-                row_array.push({
-                    expr: EArrayDecl(col_array),
-                    pos: haxe.macro.Context.currentPos()
-                });
-            }
-
-            frames_array.push({
-                expr: EArrayDecl(row_array),
-                pos: haxe.macro.Context.currentPos()
-            });
-
-            var opt_fields:Array<{field:String, expr:Expr}> = new Array();
-
-            for (key in item.options.keys()) {
-                opt_fields.push({
-                    field: key,
-                    expr: {
-                        expr: item.options.get(key),
-                        pos: haxe.macro.Context.currentPos()
-                    }
-                });
-            }
-
-            var opts:Expr = {
-                expr: EObjectDecl(opt_fields),
-                pos: haxe.macro.Context.currentPos()
-            };
-
-            opts_array.push(opts);
-        }
-
-        return macro new Animation(
-            $a{frames_array},
-            $a{opts_array}
-        );
+        return macro new Animation($v{data});
     }
 }

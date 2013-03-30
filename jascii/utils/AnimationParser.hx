@@ -1,7 +1,8 @@
 package jascii.utils;
 
-import haxe.macro.Expr;
-import jascii.macro.Types;
+import jascii.display.Animation;
+import jascii.display.Image;
+import jascii.display.Symbol;
 
 class AnimationParser
 {
@@ -10,29 +11,24 @@ class AnimationParser
     public function new(data:String)
         this.data = data.split("\n");
 
-    private function apply_options(data:AnimData):AnimData
+    private function apply_refchar(frame:FrameData, refchar:Symbol):FrameData
     {
-        if (data.raw_options.exists("reference")) {
-            var refchar:Int = data.raw_options.get("reference").charCodeAt(0);
-            for (y in 0...data.frame.length) {
-                for (x in 0...data.frame[y].length) {
-                    if (data.frame[y][x] != refchar)
-                        continue;
-
-                    data.raw_options.remove("reference");
-                    data.options.set("refpoint_x", EConst(CInt(Std.string(x))));
-                    data.options.set("refpoint_y", EConst(CInt(Std.string(y))));
-                    data.frame[y][x] = 0;
+        frame.image = frame.image.map(
+            inline function(x:Int, y:Int, sym:Symbol) {
+                if (sym == refchar) {
+                    frame.refpoint_x = x;
+                    frame.refpoint_y = y;
+                    return new Symbol(0);
                 }
-            }
-        }
 
-        return data;
+                return sym;
+            }
+        );
+
+        return frame;
     }
 
-    private function flood_fill( x:Int, y:Int
-                               , frame:Array<Array<jascii.display.Symbol>>
-                               ):Array<Array<jascii.display.Symbol>>
+    private function flood_fill(x:Int, y:Int, img:Image):Image
     {
         var queue:Array<{ x:Int, y:Int }> = new Array();
 
@@ -43,83 +39,83 @@ class AnimationParser
             var x = current.x;
             var y = current.y;
 
-            if (frame[y][x] == " ".code) {
-                frame[y][x] = 0;
+            if (img.get(x, y) == " ".code) {
+                img.set(x, y, 0);
 
-                if (x < frame[y].length - 1)
+                if (x < img.width - 1)
                     queue.push({ x: x + 1, y: y });
                 if (x > 0)
                     queue.push({ x: x - 1, y: y });
-                if (y < frame.length - 1)
+                if (y < img.height - 1)
                     queue.push({ x: x, y: y + 1 });
                 if (y > 0)
                     queue.push({ x: x, y: y - 1 });
             }
         }
 
-        return frame;
+        return img;
     }
 
-    private function apply_alpha( frame:Array<Array<jascii.display.Symbol>>
-                                ):Array<Array<jascii.display.Symbol>>
+    private function apply_alpha(image:Image):Image
     {
         // start from one of the corners
-        for (y in [0, frame.length - 1])
-            for (x in [0, frame[y].length - 1])
-                if (frame[y][x] == " ".code)
-                    return this.flood_fill(x, y, frame);
+        for (x in [0, image.width - 1])
+            for (y in [0, image.height - 1])
+                if (image.get(x, y) == " ".code)
+                    return this.flood_fill(x, y, image);
 
-        return frame;
+        return image;
     }
 
-    public function parse():Array<AnimData>
+    public function parse():Array<FrameData>
     {
-        var data:Array<AnimData> = new Array();
+        var frames:Array<FrameData> = new Array();
+        var refchars:Array<Null<Symbol>> = new Array();
 
-        var kvmap:Map<String, String> = new Map();
+        var refchar:Null<Int> = null;
 
         for (line in this.data) {
             var delim:Int = line.indexOf(" ");
             var until_space:String = line.substr(0, delim);
             var frame_id:Null<Int> = Std.parseInt(until_space);
+
             if (frame_id == null) {
                 if (StringTools.endsWith(until_space, ":")) {
-                    var key:String = line.substr(0, delim - 1);
                     var value:String = line.substr(delim + 1);
-                    kvmap.set(key, value);
+                    switch (line.substr(0, delim - 1)) {
+                        case "reference": refchar = value.charCodeAt(0);
+                    }
                 }
                 continue;
             }
 
             var content:String = line.substr(delim + 1);
 
-            var row:Array<jascii.display.Symbol> = new Array();
+            var row:Array<Symbol> = new Array();
 
             for (pos in 0...content.length)
                 row.push(content.charCodeAt(pos));
 
-            if (data[frame_id] == null)
-                data.insert(frame_id, {
-                    frame: [row],
-                    raw_options: kvmap,
-                    options: new Map()
-                });
-            else
-                data[frame_id].frame.push(row);
-
-            kvmap = new Map();
+            if (frames[frame_id] == null) {
+                refchars.push(refchar);
+                refchar = null;
+                frames.insert(frame_id, {image: [row]});
+            } else {
+                frames[frame_id].image.add_row(row);
+            }
         }
 
-        for (i in 0...data.length)
-            data[i] = this.apply_options(data[i]);
+        for (i in 0...frames.length)
+            if (refchars[i] != null)
+                frames[i] = this.apply_refchar(frames[i], refchars[i]);
 
-        for (i in 0...data.length)
-            data[i].frame = this.apply_alpha(data[i].frame);
+        for (i in 0...frames.length)
+            frames[i].image = this.apply_alpha(frames[i].image);
 
-        return data;
+        return frames;
     }
 
-    public static function parse_file(path:String):Array<AnimData>
+    public static function parse_file(path:String):Array<FrameData>
     {
         return new AnimationParser(sys.io.File.getContent(path)).parse();
     }

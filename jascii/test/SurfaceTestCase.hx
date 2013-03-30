@@ -31,10 +31,10 @@ class SurfaceTestCase extends haxe.unit.TestCase
     public function
         create_animation(frames:Array<Array<String>>):jascii.display.Animation
     {
-        var new_frames:Array<jascii.display.Image> = new Array();
+        var new_frames:Array<jascii.display.Animation.FrameData> = new Array();
 
         for (frame in frames)
-            new_frames.push(this.create_image(frame));
+            new_frames.push({ image: this.create_image(frame) });
 
         return new jascii.display.Animation(new_frames);
     }
