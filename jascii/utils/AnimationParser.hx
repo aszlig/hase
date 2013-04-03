@@ -121,25 +121,29 @@ class AnimationParser
 
     private function parse_frame(data:String):Array<Container>
     {
-        var containers:Array<Container> = new Array();
-
         var global_headers:Array<Header> = new Array();
         var container_data:Array<String> = new Array();
 
         for (line in data.split("\n")) {
             if (StringTools.startsWith(line, "+"))
-                global_headers.push(parse_header(line.substr(1)));
-            else if (StringTools.startsWith(line, "|"))
-                container_data.push(line.substr(1));
+                global_headers.push(this.parse_header(line.substr(1)));
+            else if (line.indexOf("|") != -1)
+                container_data.push(line);
         }
 
-        var container:Container = {
-            headers: global_headers,
-            body: [for (line in container_data)
-                   [for (c in 0...line.length) line.charCodeAt(c)]]
-        };
+        var container_area:Image = [
+            for (line in container_data)
+                [for (c in 0...line.length) line.charCodeAt(c)]
+        ];
 
-        containers.push(container);
+        var containers:Array<Container> = new Array();
+
+        for (img in (new FrameAreaParser(container_area).parse())) {
+            containers.push({
+                headers: global_headers,
+                body: img,
+            });
+        }
 
         return containers;
     }

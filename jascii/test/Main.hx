@@ -9,6 +9,7 @@ class Main
         runner.add(new jascii.test.cases.AnimationTest());
         runner.add(new jascii.test.cases.MatrixTest());
         runner.add(new jascii.test.cases.AnimationParserTest());
+        runner.add(new jascii.test.cases.FrameAreaParserTest());
         runner.run();
     }
 }
