@@ -236,4 +236,144 @@ class MatrixTest extends haxe.unit.TestCase
             ]
         );
     }
+
+    public function test_delete_first_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(0);
+
+        this.assert_matrix(matrix,
+            [ [ 2,  3,  4]
+            , [ 6,  7,  8]
+            , [10, 11, 12]
+            , [14, 15, 16]
+            ]
+        );
+    }
+
+    public function test_delete_last_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(-1);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2,  3]
+            , [ 5,  6,  7]
+            , [ 9, 10, 11]
+            , [13, 14, 15]
+            ]
+        );
+    }
+
+    public function test_delete_to_end_exceed_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(2, 3);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2]
+            , [ 5,  6]
+            , [ 9, 10]
+            , [13, 14]
+            ]
+        );
+    }
+
+    public function test_delete_to_negative_end_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(2, -1);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2]
+            , [ 5,  6]
+            , [ 9, 10]
+            , [13, 14]
+            ]
+        );
+    }
+
+    public function test_delete_two_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(1, 2);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  4]
+            , [ 5,  8]
+            , [ 9, 12]
+            , [13, 16]
+            ]
+        );
+    }
+
+    public function test_delete_nonexistant_cols():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(4, 2);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ]
+        );
+    }
+
+    public function test_delete_no_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        matrix.delete_col(2, 0);
+
+        this.assert_matrix(matrix,
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ]
+        );
+    }
 }

@@ -98,6 +98,21 @@ abstract Matrix<T> (MatrixBase<T>)
         return row;
     }
 
+    public inline function delete_col(pos:Int, len:Int = 1):Void
+    {
+        if (pos < 0)
+            pos = this.width + pos;
+        if (len < 0)
+            len = this.width + len - pos + 1;
+        if (pos + len > this.width)
+            len = this.width - pos;
+
+        this.width -= len;
+
+        for (y in 0...this.height)
+            this.data.splice(y * this.width + pos, len);
+    }
+
     public inline function to_2d_array():Array<Array<T>>
     {
         return [for (y in 0...this.height)
