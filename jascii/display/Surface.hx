@@ -1,5 +1,7 @@
 package jascii.display;
 
+import jascii.geom.Rect;
+
 class Surface extends Object
 {
     private var provider:ISurface;

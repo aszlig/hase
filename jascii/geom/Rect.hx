@@ -1,4 +1,4 @@
-package jascii.display;
+package jascii.geom;
 
 class Rect
 {

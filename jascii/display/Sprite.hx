@@ -1,5 +1,7 @@
 package jascii.display;
 
+import jascii.geom.Rect;
+
 class Sprite extends Object
 {
     public var ascii(default, null):Image;
