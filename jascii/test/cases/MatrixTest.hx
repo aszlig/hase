@@ -487,4 +487,23 @@ class MatrixTest extends haxe.unit.TestCase
             ]
         );
     }
+
+    public function test_extract_rect():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var rect:jascii.geom.Rect = new jascii.geom.Rect(1, 1, 2, 2);
+        var new_matrix:Matrix<Int> = matrix.extract_rect(rect);
+
+        this.assert_matrix(new_matrix,
+            [ [ 6,  7]
+            , [10, 11]
+            ]
+        );
+    }
 }

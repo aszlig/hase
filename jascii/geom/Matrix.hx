@@ -138,6 +138,9 @@ abstract Matrix<T> (MatrixBase<T>)
         return new Matrix(width, height, new_data);
     }
 
+    public inline function extract_rect(rect:Rect):Matrix<T>
+        return Matrix.extract(this, rect.x, rect.y, rect.width, rect.height);
+
     public inline function to_2d_array():Array<Array<T>>
     {
         return [for (y in 0...this.height)
