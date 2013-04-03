@@ -8,6 +8,7 @@ class Main
         runner.add(new jascii.test.cases.SpriteTest());
         runner.add(new jascii.test.cases.AnimationTest());
         runner.add(new jascii.test.cases.MatrixTest());
+        runner.add(new jascii.test.cases.AnimationParserTest());
         runner.run();
     }
 }

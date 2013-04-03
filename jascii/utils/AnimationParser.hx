@@ -4,12 +4,35 @@ import jascii.display.Animation;
 import jascii.display.Image;
 import jascii.display.Symbol;
 
+private enum Variant {
+    Plain;
+    Color16;
+    ColorRed;
+    ColorGreen;
+    ColorBlue;
+}
+
+private enum Header {
+    ChrAttr(key:String, val:Symbol);
+    StrAttr(key:String, val:String);
+    IntAttr(key:String, val:Int);
+    Variant(variant:Variant);
+}
+
+private typedef Container = {
+    var headers:Array<Header>;
+    var body:Image;
+};
+
 class AnimationParser
 {
-    private var data:Array<String>;
+    private static var attr_re:EReg = ~/^([^:]+): *(.+)$/;
+    private static var frame_re:EReg = ~/^[-=].*$/gm;
+
+    private var framedata:Array<String>;
 
     public function new(data:String)
-        this.data = data.split("\n");
+        this.framedata = AnimationParser.frame_re.split(data);
 
     private function apply_refchar(frame:FrameData, refchar:Symbol):FrameData
     {
@@ -67,50 +90,84 @@ class AnimationParser
         return image;
     }
 
+    private function parse_header(data:String):Header
+    {
+        var r:EReg = AnimationParser.attr_re;
+        // attributes
+        if (r.match(data)) {
+            var maybe_int:Null<Int> =
+                Std.parseInt(r.matched(2));
+            if (maybe_int != null)
+                return IntAttr(r.matched(1), maybe_int);
+            else if (r.matched(2).length == 1)
+                return ChrAttr(r.matched(1),
+                               new Symbol(r.matched(2).charCodeAt(0)));
+            else
+                return StrAttr(r.matched(1), r.matched(2));
+        // variants
+        } else {
+            var variant:Variant = switch (StringTools.trim(data)) {
+                case "plain": Plain;
+                case "ansi": Color16;
+                case "red": ColorRed;
+                case "green": ColorGreen;
+                case "blue": ColorBlue;
+                default: throw 'Unable to parse header "$data"!';
+            };
+
+            return Variant(variant);
+        }
+    }
+
+    private function parse_frame(data:String):Array<Container>
+    {
+        var containers:Array<Container> = new Array();
+
+        var global_headers:Array<Header> = new Array();
+        var container_data:Array<String> = new Array();
+
+        for (line in data.split("\n")) {
+            if (StringTools.startsWith(line, "+"))
+                global_headers.push(parse_header(line.substr(1)));
+            else if (StringTools.startsWith(line, "|"))
+                container_data.push(line.substr(1));
+        }
+
+        var container:Container = {
+            headers: global_headers,
+            body: [for (line in container_data)
+                   [for (c in 0...line.length) line.charCodeAt(c)]]
+        };
+
+        containers.push(container);
+
+        return containers;
+    }
+
     public function parse():Array<FrameData>
     {
         var frames:Array<FrameData> = new Array();
-        var refchars:Array<Null<Symbol>> = new Array();
 
-        var refchar:Null<Int> = null;
+        var parsed:Array<Container> = // XXX: multiple containers!
+            [for (f in this.framedata) this.parse_frame(f)[0]];
 
-        for (line in this.data) {
-            var delim:Int = line.indexOf(" ");
-            var until_space:String = line.substr(0, delim);
-            var frame_id:Null<Int> = Std.parseInt(until_space);
+        for (frame in parsed) {
+            var framedata:FrameData = {
+                image: frame.body
+            };
 
-            if (frame_id == null) {
-                if (StringTools.endsWith(until_space, ":")) {
-                    var value:String = line.substr(delim + 1);
-                    switch (line.substr(0, delim - 1)) {
-                        case "reference": refchar = value.charCodeAt(0);
-                    }
+            for(header in frame.headers) {
+                switch (header) {
+                    case ChrAttr("reference", c):
+                        framedata = this.apply_refchar(framedata, c);
+                    default:
                 }
-                continue;
             }
 
-            var content:String = line.substr(delim + 1);
+            framedata.image = this.apply_alpha(framedata.image);
 
-            var row:Array<Symbol> = new Array();
-
-            for (pos in 0...content.length)
-                row.push(content.charCodeAt(pos));
-
-            if (frames[frame_id] == null) {
-                refchars.push(refchar);
-                refchar = null;
-                frames.insert(frame_id, {image: [row]});
-            } else {
-                frames[frame_id].image.add_row(row);
-            }
+            frames.push(framedata);
         }
-
-        for (i in 0...frames.length)
-            if (refchars[i] != null)
-                frames[i] = this.apply_refchar(frames[i], refchars[i]);
-
-        for (i in 0...frames.length)
-            frames[i].image = this.apply_alpha(frames[i].image);
 
         return frames;
     }
