@@ -376,4 +376,115 @@ class MatrixTest extends haxe.unit.TestCase
             ]
         );
     }
+
+    public function test_extract_inner():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract(1, 1, 2, 2);
+
+        this.assert_matrix(new_matrix,
+            [ [ 6,  7]
+            , [10, 11]
+            ]
+        );
+    }
+
+    public function test_extract_full():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract();
+
+        this.assert_matrix(new_matrix,
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ]
+        );
+    }
+
+    public function test_extract_to_out_of_bounds():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract(2, 2, 6, 6);
+
+        this.assert_matrix(new_matrix,
+            [ [11, 12]
+            , [15, 16]
+            ]
+        );
+    }
+
+    public function test_extract_one_row():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract(0, 2, -1, 1);
+
+        this.assert_matrix(new_matrix,
+            [ [ 9, 10, 11, 12]
+            ]
+        );
+    }
+
+    public function test_extract_one_col():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract(2, 0, 1);
+
+        this.assert_matrix(new_matrix,
+            [ [ 3]
+            , [ 7]
+            , [11]
+            , [15]
+            ]
+        );
+    }
+
+    public function test_extract_inner_negative():Void
+    {
+        var matrix:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> = matrix.extract(-3, -3, 2, 2);
+
+        this.assert_matrix(new_matrix,
+            [ [ 6,  7]
+            , [10, 11]
+            ]
+        );
+    }
 }

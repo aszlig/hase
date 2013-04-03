@@ -113,6 +113,31 @@ abstract Matrix<T> (MatrixBase<T>)
             this.data.splice(y * this.width + pos, len);
     }
 
+    public inline function
+        extract(x:Int = 0, y:Int = 0, width:Int = -1, height:Int = -1):Matrix<T>
+    {
+        var new_data:Array<T> = new Array();
+
+        if (x < 0)
+            x = this.width + x;
+        if (y < 0)
+            y = this.width + y;
+        if (width < 0)
+            width = this.width + width - x + 1;
+        if (height < 0)
+            height = this.height + height - y + 1;
+        if (x + width > this.width)
+            width = this.width - x;
+        if (y + height > this.height)
+            height = this.height - y;
+
+        for (yi in y...(y + height))
+            for (xi in x...(x + width))
+                new_data.push(Matrix.get(this, xi, yi));
+
+        return new Matrix(width, height, new_data);
+    }
+
     public inline function to_2d_array():Array<Array<T>>
     {
         return [for (y in 0...this.height)
