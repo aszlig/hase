@@ -83,7 +83,7 @@ abstract Matrix<T> (MatrixBase<T>)
         return new Matrix(this.width, this.height, out);
     }
 
-    public inline function zip<R>(m:Matrix<T>, f:T -> T -> R):Matrix<R>
+    public inline function zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R):Matrix<R>
     {
         return Matrix.map(this, inline function(x:Int, y:Int, sym:T)
                                 return f(sym, m.get(x, y)));

@@ -535,7 +535,7 @@ class MatrixTest extends haxe.unit.TestCase
         );
     }
 
-    public function test_zip_different_type():Void
+    public function test_zip_different_return_type():Void
     {
         var matrix1:Matrix<Int> =
             [ [ 1,  2,  3,  4]
@@ -560,6 +560,36 @@ class MatrixTest extends haxe.unit.TestCase
             , [  "55",   "66",   "77",   "88"]
             , [  "99", "1010", "1111", "1212"]
             , ["1313", "1414", "1515", "1616"]
+            ]
+        );
+    }
+
+    public function test_zip_all_different_types():Void
+    {
+        var matrix1:Matrix<String> =
+            [ ["a", "b", "c", "d"]
+            , ["e", "f", "g", "h"]
+            , ["i", "J", "K", "L"]
+            , ["M", "N", "O", "P"]
+            ];
+
+        var matrix2:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Bool> =
+            matrix1.zip(matrix2, function(m1:String, m2:Int) {
+                return ((m1.toUpperCase() == m1 ? 2 : 1) + m2) % 2 == 0;
+            });
+
+        this.assert_matrix(new_matrix,
+            [ [ true, false,  true, false]
+            , [ true, false,  true, false]
+            , [ true,  true, false,  true]
+            , [false,  true, false,  true]
             ]
         );
     }
