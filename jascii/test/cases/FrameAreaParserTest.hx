@@ -3,6 +3,8 @@ package jascii.test.cases;
 import jascii.display.Image;
 import jascii.display.Symbol;
 
+import jascii.utils.ParserTypes;
+
 class FrameAreaParserTest extends haxe.unit.TestCase
 {
     private function parse(data:Array<String>):Array<Image>

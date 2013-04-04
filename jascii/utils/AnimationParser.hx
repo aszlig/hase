@@ -4,25 +4,7 @@ import jascii.display.Animation;
 import jascii.display.Image;
 import jascii.display.Symbol;
 
-private enum Variant {
-    Plain;
-    Color16;
-    ColorRed;
-    ColorGreen;
-    ColorBlue;
-}
-
-private enum Header {
-    ChrAttr(key:String, val:Symbol);
-    StrAttr(key:String, val:String);
-    IntAttr(key:String, val:Int);
-    Variant(variant:Variant);
-}
-
-private typedef Container = {
-    var headers:Array<Header>;
-    var body:Image;
-};
+import jascii.utils.ParserTypes;
 
 class AnimationParser
 {
