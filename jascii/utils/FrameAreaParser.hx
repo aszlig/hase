@@ -4,12 +4,23 @@ import jascii.display.Image;
 import jascii.display.Symbol;
 import jascii.geom.Rect;
 
+import jascii.utils.ParserTypes;
+
+private typedef Box = {
+    var headers:Array<Rect>;
+    var body:Rect;
+};
+
 private class Border
 {
     public var x(default, null):Int;
     public var y(default, null):Int;
     public var length(default, null):Int;
     public var headings(default, null):Array<Int>;
+
+    public var content_x(get, null):Int;
+    public var content_y(get, null):Int;
+    public var content_length(get, null):Int;
 
     public function new(x:Int, y:Int, heading:Bool = false)
     {
@@ -25,13 +36,22 @@ private class Border
             return false;
 
         if (this.y + this.length == border.y) {
-            this.length++;
+            this.length += border.length;
             this.headings.concat(border.headings);
             return true;
         }
 
         return false;
     }
+
+    private inline function get_content_x():Int
+        return this.x;
+
+    private inline function get_content_y():Int
+        return this.y + this.headings.length;
+
+    private inline function get_content_length():Int
+        return this.length - this.headings.length;
 }
 
 private class BorderGroup
@@ -59,7 +79,7 @@ private class BorderGroup
         this.borders.push(border);
     }
 
-    public function get_boxes(maxwidth:Int):Array<Rect>
+    private function get_single_box(maxwidth:Int):Null<Box>
     {
         var biggest:Null<Border> = Lambda.fold(this.borders,
             function(b:Border, acc:Border) {
@@ -69,12 +89,106 @@ private class BorderGroup
                 else return acc;
             }, this.borders[0]);
 
-        if (biggest != null)
-            return [new Rect(biggest.x + 1, biggest.y,
-                             maxwidth - biggest.x - 1,
-                             biggest.length)];
+        return biggest == null ? null : {
+            headers: new Array(),
+            body: new Rect(biggest.x + 1, biggest.y,
+                           maxwidth - biggest.x - 1,
+                           biggest.length)
+        };
+    }
 
-        return new Array();
+    private function get_real_borders():Array<Border>
+    {
+        var real_borders:Array<Border> = new Array();
+
+        for (current in this.borders) {
+            var bcount:Int = Lambda.count(this.borders, function(b:Border) {
+                return current.y == b.y && current.length == b.length;
+            });
+
+            if (bcount >= 2)
+                real_borders.push(current);
+        }
+
+        return real_borders;
+    }
+
+    private function get_box_rect(box:Box):Rect
+    {
+        var area:Rect = box.body;
+        for (hdr in box.headers)
+            area = area.union(hdr);
+        return area;
+    }
+
+    private function remove_inner(boxes:Array<Box>):Array<Box>
+    {
+        var outer:Array<Box> = new Array();
+
+        var rects:Array<Rect> = [for (b in boxes) this.get_box_rect(b)];
+
+        for (box in boxes) {
+            var area:Rect = this.get_box_rect(box);
+
+            if (area.width <= 0 || area.height <= 0)
+                continue;
+
+            var intersections:Int = Lambda.count(rects, function(r:Rect) {
+                return !area.matches(r) && area.intersects(r) && area.y > r.y;
+            });
+
+            if (intersections == 0)
+                outer.push(box);
+        }
+
+        return outer;
+    }
+
+    public function get_boxes(maxwidth:Int):Array<Box>
+    {
+        var single_box:Box = this.get_single_box(maxwidth);
+        if (single_box != null)
+            return [single_box];
+
+        var boxparts:Array<Border> =
+            [for (b in this.get_real_borders()) if (b.headings.length > 0) b];
+
+        boxparts.sort(function(a:Border, b:Border)
+                      return Reflect.compare(a.x, b.x));
+
+        var boxes:Array<Box> = new Array();
+
+        for (l in 0...boxparts.length) {
+            var left:Border = boxparts[l];
+            var right:Null<Border> = null;
+
+            for (r in 0...boxparts.length) {
+                if (r == l) continue;
+                if (boxparts[l].x > boxparts[r].x) continue;
+                if (boxparts[l].y != boxparts[r].y) continue;
+                if (boxparts[l].length != boxparts[r].length) continue;
+
+                right = boxparts[r];
+                break;
+            }
+
+            if (right == null)
+                continue;
+
+            boxes.push({
+                headers: [
+                    for (h in left.headings)
+                    new Rect(left.x + 1, h, right.x - left.x - 1, 1)
+                ],
+                body: new Rect(
+                    left.content_x + 1, left.content_y,
+                    right.content_x - left.content_x - 1,
+                    right.content_length
+                )
+            });
+        }
+
+        return this.remove_inner(boxes);
     }
 }
 
@@ -85,7 +199,7 @@ class FrameAreaParser
     public function new(area:Image)
         this.area = area;
 
-    private function detect_boxes():Array<Rect>
+    private function parse_boxes():Array<Box>
     {
         var borders:BorderGroup = new BorderGroup();
 
@@ -97,8 +211,36 @@ class FrameAreaParser
         return borders.get_boxes(this.area.width);
     }
 
-    public function parse():Array<Image>
+    public function parse_header(header:Rect):Header
     {
-        return [for (rect in this.detect_boxes()) this.area.extract_rect(rect)];
+        var raw:Array<Array<Symbol>> =
+            this.area.extract_rect(header).to_2d_array();
+
+        var plain:String = StringTools.trim(
+            [for (r in raw) [for (c in r) c.toString()].join("")].join("")
+        );
+
+        return switch (plain) {
+            case "plain": Variant(Plain);
+            case "ansi": Variant(Color16);
+            case "red": Variant(ColorRed);
+            case "green": Variant(ColorGreen);
+            case "blue": Variant(ColorBlue);
+            default: throw 'Unknown container header "$plain"!';
+        };
+    }
+
+    public function parse():Array<Container>
+    {
+        var result:Array<Container> = new Array();
+
+        for (box in this.parse_boxes()) {
+            result.push({
+                headers: [for (h in box.headers) this.parse_header(h)],
+                body: this.area.extract_rect(box.body)
+            });
+        }
+
+        return result;
     }
 }

@@ -61,24 +61,25 @@ class AnimationParserTest extends haxe.unit.TestCase
         this.assert_row("YYY", result[1].image, 2);
     }
 
-    public function test_oneframe()
+    public function test_oneframe_header()
     {
         var result = this.parse_anim(
-            [ "|    _...._     _...._    "
-            , "|  .' .-'~       ~`-. `.  "
-            , "| (  (               )  ) "
-            , "| (  `.             .'  ) "
-            , "| `.   `.,       ,.'   .' "
-            , "|   `,  .`-._ _.-'.  ,'   "
-            , "|     |' _   ~   _ `|     "
-            , "|     |.'*`.   .'*`.|     "
-            , "|     |`-, '' `` ,-'|     "
-            , "|     |    .-^-.    |     "
-            , "|     `-|   `^'   |-'     "
-            , "|       |_.'. .'._|       "
-            , "|         ||vvv||         "
-            , "|         :.^^^.:         "
-            , "|         (     )         "
+            [ ": plain                   :"
+            , "|    _...._     _...._    |"
+            , "|  .' .-'~       ~`-. `.  |"
+            , "| (  (               )  ) |"
+            , "| (  `.             .'  ) |"
+            , "| `.   `.,       ,.'   .' |"
+            , "|   `,  .`-._ _.-'.  ,'   |"
+            , "|     |' _   ~   _ `|     |"
+            , "|     |.'*`.   .'*`.|     |"
+            , "|     |`-, '' `` ,-'|     |"
+            , "|     |    .-^-.    |     |"
+            , "|     `-|   `^'   |-'     |"
+            , "|       |_.'. .'._|       |"
+            , "|         ||vvv||         |"
+            , "|         :.^^^.:         |"
+            , "|         (     )         |"
             ]
         );
 
@@ -90,7 +91,7 @@ class AnimationParserTest extends haxe.unit.TestCase
     public function test_complex_ansi_color()
     {
         var result = this.parse_anim(
-            [ "plain                     | ansi                    |"
+            [ ": plain                   : ansi                    :"
             , "|    _...._     _...._    |    BBBBBB     BBBBBB    |"
             , "|  .' .-'~       ~`-. `.  |  BB BBBB       BBBB BB  |"
             , "| (  (               )  ) | B  B               B  B |"

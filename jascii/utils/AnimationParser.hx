@@ -109,7 +109,7 @@ class AnimationParser
         for (line in data.split("\n")) {
             if (StringTools.startsWith(line, "+"))
                 global_headers.push(this.parse_header(line.substr(1)));
-            else if (line.indexOf("|") != -1)
+            else if (line.indexOf("|") != -1 || line.indexOf(":") != -1)
                 container_data.push(line);
         }
 
@@ -120,10 +120,10 @@ class AnimationParser
 
         var containers:Array<Container> = new Array();
 
-        for (img in (new FrameAreaParser(container_area).parse())) {
+        for (c in (new FrameAreaParser(container_area).parse())) {
             containers.push({
-                headers: global_headers,
-                body: img,
+                headers: global_headers.copy().concat(c.headers),
+                body: c.body,
             });
         }
 
