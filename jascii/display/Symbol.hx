@@ -29,4 +29,7 @@ abstract Symbol(Int) from Int
 
     public inline function is_alpha():Bool
         return this & 0xff == 0;
+
+    @:to public inline function toString():String
+        return String.fromCharCode(this & 0xff);
 }
