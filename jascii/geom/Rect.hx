@@ -36,6 +36,12 @@ class Rect
         );
     }
 
+    public function matches(other:Rect):Bool
+    {
+        return this.x == other.x && this.width  == other.width
+            && this.y == other.y && this.height == other.height;
+    }
+
     public function toString():String
     {
         return "<Rectangle x: " + this.x + "; y: " + this.y +
