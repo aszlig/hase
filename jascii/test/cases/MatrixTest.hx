@@ -506,4 +506,61 @@ class MatrixTest extends haxe.unit.TestCase
             ]
         );
     }
+
+    public function test_zip_multiply():Void
+    {
+        var matrix1:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var matrix2:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<Int> =
+            matrix1.zip(matrix2, function(m1:Int, m2:Int) return m1 * m2);
+
+        this.assert_matrix(new_matrix,
+            [ [  1,   4,   9,  16]
+            , [ 25,  36,  49,  64]
+            , [ 81, 100, 121, 144]
+            , [169, 196, 225, 256]
+            ]
+        );
+    }
+
+    public function test_zip_different_type():Void
+    {
+        var matrix1:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var matrix2:Matrix<Int> =
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ];
+
+        var new_matrix:Matrix<String> =
+            matrix1.zip(matrix2, function(m1:Int, m2:Int)
+                                 return Std.string(m1) + Std.string(m2));
+
+        this.assert_matrix(new_matrix,
+            [ [  "11",   "22",   "33",   "44"]
+            , [  "55",   "66",   "77",   "88"]
+            , [  "99", "1010", "1111", "1212"]
+            , ["1313", "1414", "1515", "1616"]
+            ]
+        );
+    }
 }

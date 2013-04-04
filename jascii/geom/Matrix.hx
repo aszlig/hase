@@ -83,6 +83,12 @@ abstract Matrix<T> (MatrixBase<T>)
         return new Matrix(this.width, this.height, out);
     }
 
+    public inline function zip<R>(m:Matrix<T>, f:T -> T -> R):Matrix<R>
+    {
+        return Matrix.map(this, inline function(x:Int, y:Int, sym:T)
+                                return f(sym, m.get(x, y)));
+    }
+
     public inline function add_row(row:Array<T>):Array<T>
     {
         if (row.length > this.width)
