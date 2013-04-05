@@ -3,6 +3,7 @@ package jascii.utils;
 import jascii.display.Animation;
 import jascii.display.Image;
 import jascii.display.Symbol;
+import jascii.geom.Matrix;
 
 import jascii.utils.ParserTypes;
 
@@ -44,7 +45,7 @@ class AnimationParser
             var x = current.x;
             var y = current.y;
 
-            if (img.get(x, y) == " ".code) {
+            if (img.get(x, y).ordinal == " ".code) {
                 img.set(x, y, 0);
 
                 if (x < img.width - 1)
@@ -66,7 +67,7 @@ class AnimationParser
         // start from one of the corners
         for (x in [0, image.width - 1])
             for (y in [0, image.height - 1])
-                if (image.get(x, y) == " ".code)
+                if (image.get(x, y).ordinal == " ".code)
                     return this.flood_fill(x, y, image);
 
         return image;
@@ -130,19 +131,56 @@ class AnimationParser
         return containers;
     }
 
+    private function merge_containers(containers:Array<Container>):Container
+    {
+        if (containers.length == 1)
+            return containers[0];
+
+        var merged:Matrix<ColorMixer> = [
+            for (y in 0...containers[0].body.height)
+                [for (x in 0...containers[0].body.width) new ColorMixer()]
+        ];
+
+        for (container in containers) {
+            for (header in container.headers) {
+                var merger = function(cm:ColorMixer, sym:Symbol):ColorMixer {
+                    switch (header) {
+                        case Variant(Plain):      cm.plain = sym.ordinal;
+                        case Variant(Color16):    cm.ansi  = sym.ordinal;
+                        case Variant(ColorRed):   cm.red   = sym.ordinal;
+                        case Variant(ColorGreen): cm.green = sym.ordinal;
+                        case Variant(ColorBlue):  cm.blue  = sym.ordinal;
+                        default:
+                    };
+
+                    return cm;
+                };
+
+                merged = merged.zip(container.body, merger);
+            }
+        }
+
+        return {
+            headers: new Array(),
+            body: merged.map(function(x, y, cm:ColorMixer) return cm.merge())
+        }
+    }
+
     public function parse():Array<FrameData>
     {
         var frames:Array<FrameData> = new Array();
 
-        var parsed:Array<Container> = // XXX: multiple containers!
-            [for (f in this.framedata) this.parse_frame(f)[0]];
+        var parsed:Array<Array<Container>> =
+            [for (f in this.framedata) this.parse_frame(f)];
 
         for (frame in parsed) {
+            var merged:Container = merge_containers(frame);
+
             var framedata:FrameData = {
-                image: frame.body
+                image: merged.body
             };
 
-            for(header in frame.headers) {
+            for(header in merged.headers) {
                 switch (header) {
                     case ChrAttr("reference", c):
                         framedata = this.apply_refchar(framedata, c);
