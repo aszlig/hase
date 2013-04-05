@@ -21,13 +21,13 @@ abstract Symbol(Int) from Int
         return this >> 25 & 1 == 1 ? (this & 0xff00) >> 8 : 7;
 
     private inline function set_fgcolor(fg:Int):Int
-        return this |= (1 << 25) | (fg << 8);
+        return this |= fg == 7 ? 0 : (1 << 25) | (fg << 8);
 
     private inline function get_bgcolor():Int
         return this >> 26 & 1 == 1 ? (this & 0xff0000) >> 16 : 0;
 
     private inline function set_bgcolor(bg:Int):Int
-        return this |= (1 << 26) | (bg << 16);
+        return this |= bg == 0 ? 0 : (1 << 26) | (bg << 16);
 
     public inline function is_alpha():Bool
         return this & 0xff == 0;
