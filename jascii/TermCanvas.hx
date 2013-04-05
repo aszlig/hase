@@ -50,17 +50,23 @@ class TermCanvas implements jascii.display.ISurface
         return y * TermFont.HEIGHT;
     }
 
-    private inline function add_to_font_cache(ordinal:Int):Int
+    private inline function add_to_font_cache(sym:jascii.display.Symbol):Int
     {
         var cachedata:js.html.ImageData =
             this.ctx.createImageData(TermFont.WIDTH, TermFont.HEIGHT);
 
+        var fgcolor:Int = jascii.display.Color.get_rgb(sym.fgcolor);
+        var bgcolor:Int = jascii.display.Color.get_rgb(sym.bgcolor);
+
         var i:Int = 0;
-        for (row in this.font.iter_char(ordinal)) {
+        for (row in this.font.iter_char(sym.ordinal)) {
             for (val in row) {
-                cachedata.data[i++] = val ? 0xbe : 0x00;
-                cachedata.data[i++] = val ? 0xbe : 0x00;
-                cachedata.data[i++] = val ? 0xbe : 0x00;
+                cachedata.data[i++] = val ? fgcolor >> 16 & 0xff
+                                          : bgcolor >> 16 & 0xff;
+                cachedata.data[i++] = val ? fgcolor >> 8  & 0xff
+                                          : bgcolor >> 8  & 0xff;
+                cachedata.data[i++] = val ? fgcolor       & 0xff
+                                          : bgcolor       & 0xff;
                 cachedata.data[i++] = 0xff;
             }
         }
@@ -82,17 +88,17 @@ class TermCanvas implements jascii.display.ISurface
 
         new_context.putImageData(cachedata, cached, 0);
 
-        this.font_cache.set(ordinal, cached);
+        this.font_cache.set(sym.get_hash(), cached);
         this.font_canvas = new_canvas;
         return cached;
     }
 
     public function draw_char(x:Int, y:Int, sym:jascii.display.Symbol):Void
     {
-        var cached:Int = this.font_cache.get(sym.ordinal);
+        var cached:Int = this.font_cache.get(sym.get_hash());
 
         if (cached == null)
-            cached = this.add_to_font_cache(sym.ordinal);
+            cached = this.add_to_font_cache(sym);
 
         this.ctx.drawImage(this.font_canvas,
             cached, 0, TermFont.WIDTH, TermFont.HEIGHT,
