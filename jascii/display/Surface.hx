@@ -1,5 +1,7 @@
 package jascii.display;
 
+import jascii.geom.Rect;
+
 class Surface extends Object
 {
     private var provider:ISurface;
@@ -58,17 +60,9 @@ class Surface extends Object
         if (sprite.ascii == null)
             return;
 
-        for (yi in 0...sprite.ascii.length) {
-            for (xi in 0...sprite.ascii[yi].length) {
-                if (sprite.ascii[yi][xi].is_alpha())
-                    continue;
-
-                this.draw_char(
-                    sprite.rect.x + xi,
-                    sprite.rect.y + yi,
-                    sprite.ascii[yi][xi]
-                );
-            }
-        }
+        sprite.ascii.map_(inline function(x:Int, y:Int, sym:Symbol) {
+            if (sym.is_alpha()) return;
+            this.draw_char(sprite.rect.x + x, sprite.rect.y + y, sym);
+        });
     }
 }

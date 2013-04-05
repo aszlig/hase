@@ -11,12 +11,12 @@ class SurfaceTestCase extends haxe.unit.TestCase
         this.root = new jascii.display.Surface(this.test_canvas);
     }
 
-    public function create_image(data:Array<String>):Array<Array<Int>>
+    public function create_image(data:Array<String>):jascii.display.Image
     {
-        var img:Array<Array<Int>> = new Array();
+        var img:Array<Array<jascii.display.Symbol>> = new Array();
 
         for (row in data) {
-            var introw:Array<Int> = new Array();
+            var introw:Array<jascii.display.Symbol> = new Array();
 
             for (x in 0...row.length)
                 introw.push(row.charCodeAt(x) == " ".code
@@ -31,10 +31,10 @@ class SurfaceTestCase extends haxe.unit.TestCase
     public function
         create_animation(frames:Array<Array<String>>):jascii.display.Animation
     {
-        var new_frames:Array<Array<Array<Int>>> = new Array();
+        var new_frames:Array<jascii.display.Animation.FrameData> = new Array();
 
         for (frame in frames)
-            new_frames.push(this.create_image(frame));
+            new_frames.push({ image: this.create_image(frame) });
 
         return new jascii.display.Animation(new_frames);
     }

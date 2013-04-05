@@ -1,8 +1,10 @@
 package jascii.display;
 
+import jascii.geom.Rect;
+
 class Sprite extends Object
 {
-    public var ascii(default, null):Array<Array<Symbol>>;
+    public var ascii(default, null):Image;
     public var rect(default, null):Rect;
 
     public function new()
@@ -10,16 +12,6 @@ class Sprite extends Object
         super();
         this.ascii = null;
         this.rect = null;
-    }
-
-    private function calculate_width():Int
-    {
-        var width:Int = 0;
-
-        for (row in this.ascii)
-            width = row.length > width ? row.length : width;
-
-        return width;
     }
 
     private override function set_surface(val:Surface):Surface
@@ -32,12 +24,12 @@ class Sprite extends Object
         return super.set_surface(val);
     }
 
-    public function blit(ascii:Array<Array<Symbol>>):Void
+    public function blit(ascii:Image):Void
     {
         this.ascii = ascii;
 
-        var width:Int = this.calculate_width();
-        var height:Int = this.ascii.length;
+        var width:Int = this.ascii.width;
+        var height:Int = this.ascii.height;
 
         var old_rect:Rect = this.rect;
         this.rect = new Rect(

@@ -1,4 +1,4 @@
-package jascii.display;
+package jascii.geom;
 
 class Rect
 {
@@ -34,6 +34,12 @@ class Rect
             ((this.y >= other.y && this.y < other.y + other.height) ||
              (other.y >= this.y && other.y < this.y + this.height))
         );
+    }
+
+    public function matches(other:Rect):Bool
+    {
+        return this.x == other.x && this.width  == other.width
+            && this.y == other.y && this.height == other.height;
     }
 
     public function toString():String
