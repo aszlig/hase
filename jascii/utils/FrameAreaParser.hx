@@ -226,7 +226,7 @@ class FrameAreaParser
             case "red": Variant(ColorRed);
             case "green": Variant(ColorGreen);
             case "blue": Variant(ColorBlue);
-            default: throw 'Unknown container header "$plain"!';
+            default: null;
         };
     }
 
@@ -235,8 +235,20 @@ class FrameAreaParser
         var result:Array<Container> = new Array();
 
         for (box in this.parse_boxes()) {
+            var headers:Array<Header> = new Array();
+            var invalid_header:Bool = false;
+
+            for (h in box.headers) {
+                var header:Header = this.parse_header(h);
+                if (header == null) invalid_header = true;
+                else headers.push(header);
+            }
+
+            if (invalid_header)
+                continue;
+
             result.push({
-                headers: [for (h in box.headers) this.parse_header(h)],
+                headers: headers,
                 body: this.area.extract_rect(box.body)
             });
         }
