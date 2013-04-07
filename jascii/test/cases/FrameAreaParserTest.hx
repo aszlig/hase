@@ -97,6 +97,32 @@ class FrameAreaParserTest extends haxe.unit.TestCase
         this.assert_row("BBB ", result[1].body, 2);
     }
 
+    public function test_two_separate_headings_vertical():Void
+    {
+        var result:Array<Container> = this.parse(
+            [ ":green:"
+            , "|AAA  |"
+            , "|AAA  |"
+            , "|AAA  |"
+            , ""
+            , ":blue:"
+            , "|BBB |"
+            , "|BBB |"
+            , "|BBB |"
+            ]
+        );
+
+        this.assertEquals(3, result[0].body.height);
+        this.assert_row("AAA  ", result[0].body, 0);
+        this.assert_row("AAA  ", result[0].body, 1);
+        this.assert_row("AAA  ", result[0].body, 2);
+
+        this.assertEquals(3, result[1].body.height);
+        this.assert_row("BBB ", result[1].body, 0);
+        this.assert_row("BBB ", result[1].body, 1);
+        this.assert_row("BBB ", result[1].body, 2);
+    }
+
     public function test_four_headings():Void
     {
         var result:Array<Container> = this.parse(
