@@ -11,6 +11,7 @@ class Main
         runner.add(new jascii.test.cases.AnimationParserTest());
         runner.add(new jascii.test.cases.FrameAreaParserTest());
         runner.add(new jascii.test.cases.ColorTableTest());
+        runner.add(new jascii.test.cases.RectTest());
         runner.run();
     }
 }
