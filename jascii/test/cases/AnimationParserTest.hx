@@ -111,6 +111,7 @@ class AnimationParserTest extends haxe.unit.TestCase
         );
 
         this.assertEquals(1, result.length);
+        this.assertEquals(25, result[0].image.width);
         this.assertEquals(15, result[0].image.height);
     }
 }
