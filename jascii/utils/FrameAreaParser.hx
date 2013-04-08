@@ -85,6 +85,7 @@ private class BorderGroup
             function(b:Border, acc:Border) {
                 if (acc == null) return null;
                 else if (acc.headings.length > 0) return null;
+                else if (b.x < acc.x) return b;
                 else if (b.length > acc.length) return b;
                 else return acc;
             }, this.borders[0]);
@@ -144,6 +145,32 @@ private class BorderGroup
         return outer;
     }
 
+    private function
+        find_matching_border(left:Border, haystack:Array<Border>):Null<Border>
+    {
+        for (needle in haystack) {
+            if (left.x >= needle.x) continue;
+            if (left.y != needle.y) continue;
+            if (left.length != needle.length) continue;
+            if (left.headings.length != needle.headings.length) continue;
+
+            var same_headings:Bool = true;
+
+            for (i in 0...left.headings.length) {
+                if (left.headings[i] != needle.headings[i]) {
+                    same_headings = false;
+                    break;
+                }
+            }
+
+            if (!same_headings) continue;
+
+            return needle;
+        }
+
+        return null;
+    }
+
     public function get_boxes(maxwidth:Int):Array<Box>
     {
         var single_box:Box = this.get_single_box(maxwidth);
@@ -160,17 +187,7 @@ private class BorderGroup
 
         for (l in 0...boxparts.length) {
             var left:Border = boxparts[l];
-            var right:Null<Border> = null;
-
-            for (r in 0...boxparts.length) {
-                if (r == l) continue;
-                if (boxparts[l].x > boxparts[r].x) continue;
-                if (boxparts[l].y != boxparts[r].y) continue;
-                if (boxparts[l].length != boxparts[r].length) continue;
-
-                right = boxparts[r];
-                break;
-            }
+            var right:Null<Border> = this.find_matching_border(left, boxparts);
 
             if (right == null)
                 continue;
@@ -211,7 +228,7 @@ class FrameAreaParser
         return borders.get_boxes(this.area.width);
     }
 
-    public function parse_header(header:Rect):Header
+    public function parse_header(header:Rect):Null<Header>
     {
         var raw:Array<Array<Symbol>> =
             this.area.extract_rect(header).to_2d_array();
@@ -239,7 +256,7 @@ class FrameAreaParser
             var invalid_header:Bool = false;
 
             for (h in box.headers) {
-                var header:Header = this.parse_header(h);
+                var header:Null<Header> = this.parse_header(h);
                 if (header == null) invalid_header = true;
                 else headers.push(header);
             }

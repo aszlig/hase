@@ -104,11 +104,90 @@ class FrameAreaParserTest extends haxe.unit.TestCase
             , "|AAA  |"
             , "|AAA  |"
             , "|AAA  |"
-            , ""
-            , ":blue:"
-            , "|BBB |"
-            , "|BBB |"
-            , "|BBB |"
+            , "       "
+            , ":blue: "
+            , "|BBB | "
+            , "|BBB | "
+            , "|BBB | "
+            ]
+        );
+
+        this.assertEquals(3, result[0].body.height);
+        this.assert_row("AAA  ", result[0].body, 0);
+        this.assert_row("AAA  ", result[0].body, 1);
+        this.assert_row("AAA  ", result[0].body, 2);
+
+        this.assertEquals(3, result[1].body.height);
+        this.assert_row("BBB ", result[1].body, 0);
+        this.assert_row("BBB ", result[1].body, 1);
+        this.assert_row("BBB ", result[1].body, 2);
+    }
+
+    public function test_two_separate_headings_diagonal():Void
+    {
+        var result:Array<Container> = this.parse(
+            [ ":green:       "
+            , "|AAA  |       "
+            , "|AAA  | :blue:"
+            , "|AAA  | |BBB |"
+            , "        |BBB |"
+            , "        |BBB |"
+            ]
+        );
+
+        this.assertEquals(3, result[0].body.height);
+        this.assert_row("AAA  ", result[0].body, 0);
+        this.assert_row("AAA  ", result[0].body, 1);
+        this.assert_row("AAA  ", result[0].body, 2);
+
+        this.assertEquals(3, result[1].body.height);
+        this.assert_row("BBB ", result[1].body, 0);
+        this.assert_row("BBB ", result[1].body, 1);
+        this.assert_row("BBB ", result[1].body, 2);
+    }
+
+    public function test_two_containers_with_little_noise():Void
+    {
+        var result:Array<Container> = this.parse(
+            [ "yes, i am a noisy line!"
+            , " :green:               "
+            , " |AAA  |               "
+            , " |AAA  |               "
+            , " |AAA  |               "
+            , "i am another noisy line"
+            , "         :blue:        "
+            , " N I     |BBB |        "
+            , "  O S    |BBB |        "
+            , "     E   |BBB |        "
+            ]
+        );
+
+        this.assertEquals(3, result[0].body.height);
+        this.assert_row("AAA  ", result[0].body, 0);
+        this.assert_row("AAA  ", result[0].body, 1);
+        this.assert_row("AAA  ", result[0].body, 2);
+
+        this.assertEquals(3, result[1].body.height);
+        this.assert_row("BBB ", result[1].body, 0);
+        this.assert_row("BBB ", result[1].body, 1);
+        this.assert_row("BBB ", result[1].body, 2);
+    }
+
+    public function test_two_containers_with_lots_of_noise():Void
+    {
+        var result:Array<Container> = this.parse(
+            [ "   ,----------.           ,-."
+            , "   |          | ,-. Y     |O|"
+            , "   | :green:  | | | o <-. `-'"
+            , "   | |AAA  |  | | | |   |    "
+            , "  ' `|AAA  |  | | `-'   |    "
+            , "     |AAA  |  | |:blue: I'm  "
+            , " .------.     | ||BBB | a    "
+            , " |      `-----' ||BBB | snake"
+            , " |              ||BBB | !    "
+            , " |  hello, I am |            "
+            , " |              | some noise "
+            , " `--------------'            "
             ]
         );
 
