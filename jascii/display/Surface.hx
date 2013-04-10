@@ -51,7 +51,7 @@ class Surface extends Object
 
     private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
     {
-        if (x <= this.width && y <= this.height)
+        if (x >= 0 && y >= 0 && x <= this.width && y <= this.height)
             this.provider.draw_char(x, y, sym);
     }
 
