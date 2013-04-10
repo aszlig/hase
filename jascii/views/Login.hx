@@ -8,7 +8,7 @@ class Login extends jascii.display.Sprite
     private var dragon:Animation;
     private var dragon_head:Animation;
     private var dragon_wing:Animation;
-    private var delta:Int;
+    private var delta:Float;
 
     public function new()
     {
@@ -55,15 +55,12 @@ class Login extends jascii.display.Sprite
 
     public override function update(td:Float):Void
     {
+        this.delta += td;
         super.update(td);
 
-        if (this.delta++ > 10000)
-            this.delta = 0;
+        this.car.x = Std.int(this.delta / 100);
 
-        if (this.delta % 5 == 0)
-            this.car.x++;
-
-        this.dragon.x++;
+        this.dragon.x = Std.int(this.delta / 20) - 700;
         this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4 + 10);
 
         if (this.dragon.x > this.width + 10)
