@@ -9,30 +9,39 @@ class Timer
     public function new(root:jascii.display.Surface, fps:Int = 60)
     {
         this.interval = Std.int(1000 / fps);
+        this.last_time = null;
         this.root = root;
+    }
+
+    private function wrap_animation_frame(cb:Float -> Bool):Void
+    {
+        if (untyped window.requestAnimationFrame)
+            js.Browser.window.requestAnimationFrame(cb);
+        else if (untyped window.webkitRequestAnimationFrame)
+            untyped window.webkitRequestAnimationFrame(cb);
+        else if (untyped window.mozRequestAnimationFrame)
+            untyped window.mozRequestAnimationFrame(cb);
+        else
+            haxe.Timer.delay(cb.bind(haxe.Timer.stamp() * 1000), this.interval);
     }
 
     private function anim_callback(time:Float):Bool
     {
         this.tick(time);
-        js.Browser.window.requestAnimationFrame(this.anim_callback);
+        this.wrap_animation_frame(this.anim_callback);
         return false;
     }
 
     public function run():Void
     {
-        if (js.Browser.window.requestAnimationFrame != null) {
-            this.last_time = 0;
-            js.Browser.window.requestAnimationFrame(this.anim_callback);
-        } else {
-            this.last_time = haxe.Timer.stamp() * 1000;
-            var timer:haxe.Timer = new haxe.Timer(this.interval);
-            timer.run = inline function() this.tick(haxe.Timer.stamp() * 1000);
-        }
+        this.wrap_animation_frame(this.anim_callback);
     }
 
     private inline function tick(time:Float):Void
     {
+        if (this.last_time == null)
+            this.last_time = time;
+
         var delta:Float = time - this.last_time;
         this.last_time += delta;
         this.root.update(delta);
