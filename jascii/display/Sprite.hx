@@ -4,7 +4,7 @@ import jascii.geom.Rect;
 
 class Sprite extends Object
 {
-    public var ascii(default, null):Image;
+    public var ascii(default, set):Image;
     public var rect(default, null):Rect;
 
     public function new()
@@ -13,6 +13,9 @@ class Sprite extends Object
         this.ascii = null;
         this.rect = null;
     }
+
+    private inline function set_ascii(val:Image):Image
+        return this.set_dirty(this.ascii = val);
 
     private override function set_surface(val:Surface):Surface
     {
@@ -24,9 +27,10 @@ class Sprite extends Object
         return super.set_surface(val);
     }
 
-    public function blit(ascii:Image):Void
+    public function blit():Void
     {
-        this.ascii = ascii;
+        if (!this.is_dirty || this.ascii == null)
+            return;
 
         var width:Int = this.ascii.width;
         var height:Int = this.ascii.height;
@@ -40,5 +44,7 @@ class Sprite extends Object
 
         old_rect = old_rect == null ? this.rect : old_rect.union(this.rect);
         this.surface.redraw_rect(old_rect);
+
+        this.is_dirty = false;
     }
 }

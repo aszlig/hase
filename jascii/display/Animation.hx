@@ -60,12 +60,20 @@ class Animation extends Sprite
         return frame;
     }
 
-    private function set_frame_options(frame:FrameData):Void
+    private inline function set_frame_options(frame:FrameData):Void
     {
         if (frame.refpoint_x != null && frame.refpoint_y != null) {
             this.center_x = frame.refpoint_x;
             this.center_y = frame.refpoint_y;
         }
+    }
+
+    private function switch_frame():Void
+    {
+        var frame_id:Int = this.current < 0 ? -this.current : this.current;
+
+        this.set_frame_options(this.frames[frame_id]);
+        this.ascii = this.frames[frame_id].image;
     }
 
     public override function update():Void
@@ -75,10 +83,8 @@ class Animation extends Sprite
         if (this.frames.length == 0)
             return;
 
-        var frame_id:Int = this.current < 0 ? -this.current : this.current;
-
-        this.set_frame_options(this.frames[frame_id]);
-        this.blit(this.frames[frame_id].image);
+        if (this.td == 0)
+            this.switch_frame();
 
         if (++this.td >= this.factor) {
             if (++this.current >= this.frames.length) {
@@ -90,6 +96,8 @@ class Animation extends Sprite
 
             this.td = 0;
         }
+
+        this.blit();
     }
 
     macro public static function from_file(path:String):Expr

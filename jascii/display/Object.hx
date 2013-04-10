@@ -5,20 +5,22 @@ class Object
     public var parent:Object;
     public var children:Array<Object>;
 
-    public var x:Int;
-    public var y:Int;
-    public var z:Int;
+    public var x(default, set):Int;
+    public var y(default, set):Int;
+    public var z(default, set):Int;
 
-    public var center_x:Int;
-    public var center_y:Int;
+    public var center_x(default, set):Int;
+    public var center_y(default, set):Int;
 
-    public var width(default, set_width):Int;
-    public var height(default, set_height):Int;
+    public var width(default, set):Int;
+    public var height(default, set):Int;
 
-    public var absolute_x(get_absolute_x, null):Int;
-    public var absolute_y(get_absolute_y, null):Int;
+    public var absolute_x(get, null):Int;
+    public var absolute_y(get, null):Int;
 
-    public var surface(default, set_surface):Surface;
+    public var is_dirty:Bool;
+
+    public var surface(default, set):Surface;
     public var is_surface:Bool;
 
     public var autoresize:Bool;
@@ -37,6 +39,8 @@ class Object
 
         this.width = 0;
         this.height = 0;
+
+        this.is_dirty = true;
 
         this.is_surface = false;
         this.surface = null;
@@ -67,6 +71,23 @@ class Object
         return child;
     }
 
+    private inline function set_dirty<T>(?val:T):T
+    {
+        this.is_dirty = true;
+        for (child in this.children)
+            child.set_dirty();
+        return val;
+    }
+
+    private inline function set_x(val:Int):Int
+        return this.set_dirty(this.x = val);
+
+    private inline function set_y(val:Int):Int
+        return this.set_dirty(this.y = val);
+
+    private inline function set_z(val:Int):Int
+        return this.set_dirty(this.z = val);
+
     private function autogrow_width():Void
     {
         if (this.parent == null || !this.parent.autoresize)
@@ -85,20 +106,26 @@ class Object
             this.parent.height = this.y + this.height;
     }
 
-    private function set_width(val:Int):Int
+    private inline function set_center_x(val:Int):Int
+        return this.set_dirty(this.center_x = val);
+
+    private inline function set_center_y(val:Int):Int
+        return this.set_dirty(this.center_y = val);
+
+    private inline function set_width(val:Int):Int
     {
         this.width = val;
         this.autogrow_width();
 
-        return this.width;
+        return this.set_dirty(this.width);
     }
 
-    private function set_height(val:Int):Int
+    private inline function set_height(val:Int):Int
     {
         this.height = val;
         this.autogrow_height();
 
-        return this.height;
+        return this.set_dirty(this.height);
     }
 
     private function get_absolute_x():Int
