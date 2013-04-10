@@ -71,4 +71,10 @@ class RectTest extends haxe.unit.TestCase
             else
                 this.assertFalse(r.matches(new Rect(x, y, w, h)));
     }
+
+    public function test_matches_null():Void
+    {
+        var r:Rect = new Rect(5, 5, 5, 5);
+        this.assertFalse(r.matches(null));
+    }
 }

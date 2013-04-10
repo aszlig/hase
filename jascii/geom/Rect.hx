@@ -36,9 +36,10 @@ class Rect
         );
     }
 
-    public function matches(other:Rect):Bool
+    public function matches(other:Null<Rect>):Bool
     {
-        return this.x == other.x && this.width  == other.width
+        return other != null
+            && this.x == other.x && this.width  == other.width
             && this.y == other.y && this.height == other.height;
     }
 
