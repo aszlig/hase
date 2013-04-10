@@ -297,8 +297,8 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         bird.add_child(balloon);
         this.root.add_child(bird);
 
-        bird.factor = 2;
-        balloon.factor = 2;
+        bird.fps = 0.5;
+        balloon.fps = 0.5;
 
         balloon.x += 10;
 

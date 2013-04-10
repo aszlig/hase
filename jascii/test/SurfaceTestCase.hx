@@ -28,7 +28,7 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return img;
     }
 
-    public function update(?td:Float = 10):Void
+    public function update(?td:Float = 1000):Void
         return this.root.update(td);
 
     public function

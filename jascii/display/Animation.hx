@@ -13,8 +13,10 @@ class Animation extends Sprite
     private var frames:Array<FrameData>;
     private var current:Int;
 
-    private var td:Int;
-    public var factor:Int;
+    private var td:Null<Float>;
+    private var shift:Float;
+
+    public var fps(default, set):Float;
 
     public var loopback:Bool;
 
@@ -28,12 +30,18 @@ class Animation extends Sprite
         this.frames = data;
         this.current = 0;
 
-        this.td = 0;
-        this.factor = 1;
+        this.td = null;
+        this.fps = 1;
 
         this.loopback = false;
 
         this.grow_sprite();
+    }
+
+    private inline function set_fps(fps:Float):Float
+    {
+        this.shift = 1000 / fps;
+        return this.fps = fps;
     }
 
     private inline function grow_sprite():Void
@@ -83,10 +91,14 @@ class Animation extends Sprite
         if (this.frames.length == 0)
             return;
 
-        if (this.td == 0)
+        if (this.td == null) {
+            this.td = td;
             this.switch_frame();
+        } else {
+            this.td += td;
+        }
 
-        if (++this.td >= this.factor) {
+        while (this.td > this.shift) {
             if (++this.current >= this.frames.length) {
                 if (this.loopback)
                     this.current = -this.frames.length + 1;
@@ -94,7 +106,8 @@ class Animation extends Sprite
                     this.current = 0;
             }
 
-            this.td = 0;
+            this.td -= this.shift;
+            this.switch_frame();
         }
 
         this.blit();
