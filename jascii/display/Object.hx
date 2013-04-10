@@ -152,10 +152,10 @@ class Object
         this.autogrow_height();
     }
 
-    public function update():Void
+    public function update(td:Float):Void
     {
         for (child in this.children)
-            child.update();
+            child.update(td);
     }
 
     public function toString():String

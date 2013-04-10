@@ -28,6 +28,9 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return img;
     }
 
+    public function update(?td:Float = 10):Void
+        return this.root.update(td);
+
     public function
         create_animation(frames:Array<Array<String>>):jascii.display.Animation
     {

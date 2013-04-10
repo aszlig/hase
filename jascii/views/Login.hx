@@ -53,9 +53,9 @@ class Login extends jascii.display.Sprite
         this.dragon_wing.z = -1;
     }
 
-    public override function update():Void
+    public override function update(td:Float):Void
     {
-        super.update();
+        super.update(td);
 
         if (this.delta++ > 10000)
             this.delta = 0;

@@ -20,8 +20,8 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(anim);
-        this.root.update();
-        this.root.update();
+        this.update();
+        this.update();
 
         this.assert_area(
             [ " _     _ "
@@ -54,8 +54,8 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(anim);
-        this.root.update();
-        this.root.update();
+        this.update();
+        this.update();
 
         this.assert_area(
             [ "             "
@@ -84,8 +84,8 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(anim);
-        this.root.update();
-        this.root.update();
+        this.update();
+        this.update();
 
         this.assert_area(
             [ "X        "
@@ -120,10 +120,10 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(anim);
-        this.root.update();
+        this.update();
         anim.x += 4;
         anim.y += 2;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "         "
@@ -135,7 +135,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
 
         anim.x += 1;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "                  "
@@ -185,7 +185,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         bat.x = -2;
         this.root.add_child(anim);
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "       _._       "
@@ -199,7 +199,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         bat.y += 1;
         bat.x += 2;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "                 "
@@ -248,8 +248,8 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         circle.x = -4;
         circle.y = -1;
 
-        this.root.update();
-        this.root.update();
+        this.update();
+        this.update();
 
         this.assert_area(
             [ "   .-.       "
@@ -302,7 +302,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         balloon.x += 10;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "      __   ,-. "
@@ -316,7 +316,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         bird.x += 2;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "      __   ,-. "
@@ -330,7 +330,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         balloon.x += 3;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ " ,  ,_        ,-. "
@@ -382,7 +382,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         bullet.x = 6;
         bullet.y = 1;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "             "
@@ -396,7 +396,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         bullet.x += 4;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "       ~~~          "
@@ -410,7 +410,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
 
         shooter.x += 5;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "                 "

@@ -76,9 +76,9 @@ class Animation extends Sprite
         this.ascii = this.frames[frame_id].image;
     }
 
-    public override function update():Void
+    public override function update(td:Float):Void
     {
-        super.update();
+        super.update(td);
 
         if (this.frames.length == 0)
             return;

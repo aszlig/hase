@@ -26,8 +26,8 @@ class Main
         login_view.height = this.root_surface.height;
         this.root_surface.add_child(login_view);
 
-        var timer = new haxe.Timer(20);
-        timer.run = this.root_surface.update;
+        var timer = new Timer(this.root_surface);
+        timer.run();
     }
 
     public static function main():Void

@@ -14,7 +14,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(circle);
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "   _._   "
@@ -38,9 +38,9 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(circle);
-        this.root.update();
+        this.update();
         circle.x = 5;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "        _._   "
@@ -64,9 +64,9 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         ]);
 
         this.root.add_child(circle);
-        this.root.update();
+        this.update();
         circle.y = 5;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "         "
@@ -116,7 +116,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         this.root.add_child(rect);
 
         circle.y = 1;
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ ",-------."
@@ -154,8 +154,8 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         this.root.add_child(rect);
 
         circle.y = 1;
-        this.root.update();
-        this.root.update();
+        this.update();
+        this.update();
 
         this.assert_area(
             [ ",-------."
@@ -197,7 +197,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         circle.x = -4;
         circle.y = -1;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "   _._       "
@@ -239,7 +239,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         circle.center_x = 4;
         circle.center_y = 1;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ "   _._       "
@@ -288,26 +288,26 @@ class SpriteTest extends jascii.test.SurfaceTestCase
         rect.x += 4;
         tri.y += 5;
 
-        this.root.update();
+        this.update();
 
         rect.x += 4;
         circle.y += 5;
 
-        this.root.update();
+        this.update();
 
         rect.x += 2;
 
-        this.root.update();
+        this.update();
 
         circle.x -= 5;
 
-        this.root.update();
+        this.update();
 
         tri.x += 5;
         circle.y -= 3;
         circle.x += 9;
 
-        this.root.update();
+        this.update();
 
         this.assert_area(
             [ " ,-------.       "
