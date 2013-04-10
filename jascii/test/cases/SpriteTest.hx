@@ -287,6 +287,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
         rect.x += 4;
         tri.y += 5;
+        circle.z = 3;
 
         this.update();
 

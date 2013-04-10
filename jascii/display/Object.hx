@@ -86,7 +86,11 @@ class Object
         return this.set_dirty(this.y = val);
 
     private inline function set_z(val:Int):Int
-        return this.set_dirty(this.z = val);
+    {
+        this.z = this.set_dirty(val);
+        if (this.surface != null) this.surface.z_reorder();
+        return this.z;
+    }
 
     private function autogrow_width():Void
     {
