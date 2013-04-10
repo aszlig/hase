@@ -24,6 +24,7 @@ class Main
         var login_view = new jascii.views.Login();
         login_view.width = this.root_surface.width;
         login_view.height = this.root_surface.height;
+        login_view.init();
         this.root_surface.add_child(login_view);
 
         var timer = new Timer(this.root_surface);

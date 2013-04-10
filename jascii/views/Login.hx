@@ -14,18 +14,14 @@ class Login extends jascii.display.Sprite
     {
         super();
         this.autoresize = false;
+        this.delta = -1000;
+    }
 
-        this.delta = 0;
-
-        this.car = Animation.from_file("gfx/car.cat");
-        this.car.x = 20;
-        this.car.y = 25;
-        this.car.fps = 10;
-        this.add_child(this.car);
-
+    public function init():Void
+    {
         this.dragon = Animation.from_file("gfx/dragon.cat");
         this.dragon.x = -700;
-        this.dragon.y = 10;
+        this.dragon.y = 8;
         this.dragon.fps = 17;
         this.dragon.loopback = true;
         this.add_child(this.dragon);
@@ -51,6 +47,12 @@ class Login extends jascii.display.Sprite
         this.dragon.add_child(this.dragon_wing);
 
         this.dragon_wing.z = -1;
+
+        this.car = Animation.from_file("gfx/car.cat");
+        this.car.x = 20;
+        this.car.y = this.dragon.height + 4;
+        this.car.fps = 10;
+        this.add_child(this.car);
     }
 
     public override function update(td:Float):Void
@@ -58,10 +60,10 @@ class Login extends jascii.display.Sprite
         this.delta += td;
         super.update(td);
 
-        this.car.x = Std.int(this.delta / 100);
+        this.car.x = Std.int(this.delta / 4000 * this.width);
 
-        this.dragon.x = Std.int(this.delta / 20) - 700;
-        this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4 + 10);
+        this.dragon.x = Std.int(this.delta / 4500 * this.width) - 100;
+        this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4) + 8;
 
         if (this.dragon.x > this.width + 10)
             this.remove_child(this.dragon);
