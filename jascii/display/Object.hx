@@ -71,22 +71,29 @@ class Object
         return child;
     }
 
-    private inline function set_dirty<T>(?val:T):T
+    private inline function set_dirty<T>(?from:T, ?to:T):T
     {
-        this.is_dirty = true;
-        for (child in this.children)
-            child.set_dirty();
-        return val;
+        if ((from == null && to == null) || from != to) {
+            this.is_dirty = true;
+            for (child in this.children)
+                child.set_dirty();
+        }
+
+        return to;
     }
 
     private inline function set_x(val:Int):Int
-        return this.set_dirty(this.x = val);
+        return this.x = this.set_dirty(this.x, val);
 
     private inline function set_y(val:Int):Int
-        return this.set_dirty(this.y = val);
+        return this.y = this.set_dirty(this.y, val);
 
     private inline function set_z(val:Int):Int
-        return this.set_dirty(this.z = val);
+    {
+        this.z = this.set_dirty(this.z, val);
+        if (this.surface != null) this.surface.z_reorder();
+        return this.z;
+    }
 
     private function autogrow_width():Void
     {
@@ -107,17 +114,17 @@ class Object
     }
 
     private inline function set_center_x(val:Int):Int
-        return this.set_dirty(this.center_x = val);
+        return this.center_x = this.set_dirty(this.center_x, val);
 
     private inline function set_center_y(val:Int):Int
-        return this.set_dirty(this.center_y = val);
+        return this.center_y = this.set_dirty(this.center_y, val);
 
     private inline function set_width(val:Int):Int
     {
         this.width = val;
         this.autogrow_width();
 
-        return this.set_dirty(this.width);
+        return this.set_dirty(null, this.width);
     }
 
     private inline function set_height(val:Int):Int
@@ -125,7 +132,7 @@ class Object
         this.height = val;
         this.autogrow_height();
 
-        return this.set_dirty(this.height);
+        return this.set_dirty(null, this.height);
     }
 
     private function get_absolute_x():Int
@@ -152,10 +159,10 @@ class Object
         this.autogrow_height();
     }
 
-    public function update():Void
+    public function update(td:Float):Void
     {
         for (child in this.children)
-            child.update();
+            child.update(td);
     }
 
     public function toString():String

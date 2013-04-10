@@ -18,12 +18,17 @@ class Surface extends Object
         this.sprites = new Array();
     }
 
-    public inline function register_sprite(sprite:Sprite):Sprite
+    public inline function z_reorder():Void
     {
-        this.sprites.push(sprite);
         this.sprites.sort(function(a:Sprite, b:Sprite) {
             return (a.z < b.z) ? -1 : (a.z > b.z) ? 1 : 0;
         });
+    }
+
+    public inline function register_sprite(sprite:Sprite):Sprite
+    {
+        this.sprites.push(sprite);
+        this.z_reorder();
         return sprite;
     }
 
