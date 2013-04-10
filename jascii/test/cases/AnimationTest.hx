@@ -2,7 +2,7 @@ package jascii.test.cases;
 
 class AnimationTest extends jascii.test.SurfaceTestCase
 {
-    public function test_simple_animate()
+    public function test_simple_animate():Void
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -33,7 +33,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_animate_grow()
+    public function test_animate_grow():Void
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -70,7 +70,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_animate_shrink()
+    public function test_animate_shrink():Void
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -97,7 +97,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_animate_resize_move()
+    public function test_animate_resize_move():Void
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -152,7 +152,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_animate_overlay()
+    public function test_animate_overlay():Void
     {
         var anim:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -213,7 +213,7 @@ class AnimationTest extends jascii.test.SurfaceTestCase
         );
     }
 
-    public function test_overlay_intersect()
+    public function test_overlay_intersect():Void
     {
         var circle:jascii.display.Animation = this.create_animation([
             [ "   _._   "
@@ -259,6 +259,167 @@ class AnimationTest extends jascii.test.SurfaceTestCase
             , "   `-'      |"
             , "    `-------'"
             ], 0, 0, 13, 6
+        );
+    }
+
+    public function test_move_slow_anim():Void
+    {
+        var bird:jascii.display.Animation = this.create_animation([
+            [ "      __ "
+            , " `.__(o_>"
+            , "   (___) "
+            , "    ||   "
+            , "    LL   "
+            ],
+            [ "  ,  ,_    "
+            , "  |__(O`'' "
+            , "   (___)^^ "
+            , "    ||     "
+            , "    ^^     "
+            ]
+        ]);
+
+        var balloon:jascii.display.Animation = this.create_animation([
+            [ " ,-. "
+            , ":   :"
+            , " `.' "
+            , "  :  "
+            , "  :  "
+            ],
+            [ "  ,-. "
+            , " :   :"
+            , " ,'-' "
+            , ":     "
+            , "      "
+            ],
+        ]);
+
+        bird.add_child(balloon);
+        this.root.add_child(bird);
+
+        bird.factor = 2;
+        balloon.factor = 2;
+
+        balloon.x += 10;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "      __   ,-. "
+            , " `.__(o_> :   :"
+            , "   (___)   `.' "
+            , "    ||      :  "
+            , "    LL      :  "
+            , "               "
+            ], 0, 0, 15, 6
+        );
+
+        bird.x += 2;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "      __   ,-. "
+            , " `.__(o_> :   :"
+            , "   (___)   `.' "
+            , "    ||      :  "
+            , "    LL      :  "
+            , "               "
+            ], 2, 0, 15, 6
+        );
+
+        balloon.x += 3;
+
+        this.root.update();
+
+        this.assert_area(
+            [ " ,  ,_        ,-. "
+            , " |__(O`''    :   :"
+            , "  (___)^^    ,'-' "
+            , "   ||       :     "
+            , "   ^^             "
+            , "                  "
+            ], 3, 0, 18, 6
+        );
+    }
+
+    public function test_move_around_multiple():Void
+    {
+        var bullet:jascii.display.Animation = this.create_animation([
+            [ "     "
+            , " ==> "
+            , "     "
+            ],
+            [ "        "
+            , " ~~~==> "
+            , "        "
+            ]
+        ]);
+
+        var shooter:jascii.display.Animation = this.create_animation([
+            [ "         "
+            , "  o      "
+            , " |`-x~~  "
+            , " ||      "
+            , "/'|      "
+            , "         "
+            ],
+            [ "     ~~~ "
+            , "  o   ~  "
+            , " |`-x~~  "
+            , " ||      "
+            , "/'|      "
+            , "         "
+            ]
+        ]);
+
+        shooter.add_child(bullet);
+        this.root.add_child(shooter);
+
+        shooter.x = 4;
+        shooter.y = 0;
+
+        bullet.x = 6;
+        bullet.y = 1;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "             "
+            , "    o        "
+            , "   |`-x~~==> "
+            , "   ||        "
+            , "  /'|        "
+            , "             "
+            ], 2, 0, 13, 6
+        );
+
+        bullet.x += 4;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "       ~~~          "
+            , "    o   ~           "
+            , "   |`-x~~    ~~~==> "
+            , "   ||               "
+            , "  /'|               "
+            , "                    "
+            ], 2, 0, 20, 6
+        );
+
+        shooter.x += 5;
+
+        this.root.update();
+
+        this.assert_area(
+            [ "                 "
+            , "    o            "
+            , "   |`-x~~    ==> "
+            , "   ||            "
+            , "  /'|            "
+            , "                 "
+            ], 7, 0, 17, 6
         );
     }
 }
