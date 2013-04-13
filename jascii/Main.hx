@@ -28,7 +28,7 @@ class Main
         this.root_surface.add_child(login_view);
 
         var timer = new Timer(this.root_surface);
-        timer.run();
+        timer.start();
     }
 
     public static function main():Void
