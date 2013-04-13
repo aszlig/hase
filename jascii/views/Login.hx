@@ -49,7 +49,7 @@ class Login extends jascii.display.Sprite
         this.dragon_wing.z = -1;
 
         this.car = Animation.from_file("gfx/car.cat");
-        this.car.x = 20;
+        this.car.x = -20;
         this.car.y = this.dragon.height + 4;
         this.car.fps = 10;
         this.add_child(this.car);
