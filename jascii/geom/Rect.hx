@@ -1,51 +1,62 @@
 package jascii.geom;
 
-class Rect
+abstract Rect (Array<Int>)
 {
-    public var x:Int;
-    public var y:Int;
-    public var width:Int;
-    public var height:Int;
+    public var x(get, never):Int;
+    public var y(get, never):Int;
+    public var width(get, never):Int;
+    public var height(get, never):Int;
 
-    public function new(x:Int, y:Int, width:Int, height:Int)
-    {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+    public var right(get, never):Int;
+    public var bottom(get, never):Int;
 
-    public function union(other:Rect):Rect
+    public inline function new(x:Int, y:Int, width:Int, height:Int)
+        this = [x, y, width, height];
+
+    private inline function get_x():Int
+        return this[0];
+
+    private inline function get_y():Int
+        return this[1];
+
+    private inline function get_width():Int
+        return this[2];
+
+    private inline function get_height():Int
+        return this[3];
+
+    private inline function get_right():Int
+        return Rect.get_x(this) + Rect.get_width(this);
+
+    private inline function get_bottom():Int
+        return Rect.get_y(this) + Rect.get_height(this);
+
+    public inline function union(other:Rect):Rect
     {
-        var x = other.x > this.x ? this.x : other.x;
-        var y = other.y > this.y ? this.y : other.y;
-        var width = other.x + other.width > this.x + this.width
-                  ? other.x + other.width : this.x + this.width;
-        var height = other.y + other.height > this.y + this.height
-                   ? other.y + other.height : this.y + this.height;
+        var x:Int = other.x > Rect.get_x(this) ? Rect.get_x(this) : other.x;
+        var y:Int = other.y > Rect.get_y(this) ? Rect.get_y(this) : other.y;
+        var width:Int = other.right > Rect.get_right(this)
+                      ? other.right : Rect.get_right(this);
+        var height:Int = other.bottom > Rect.get_bottom(this)
+                       ? other.bottom : Rect.get_bottom(this);
+
         return new Rect(x, y, width - x, height - y);
     }
 
-    public function intersects(other:Rect):Bool
+    public inline function intersects(other:Rect):Bool
     {
-        return (
-            ((this.x >= other.x && this.x < other.x + other.width)  ||
-             (other.x >= this.x && other.x < this.x + this.width))  &&
-            ((this.y >= other.y && this.y < other.y + other.height) ||
-             (other.y >= this.y && other.y < this.y + this.height))
-        );
+        return Rect.get_x(this) < other.right
+            && Rect.get_right(this) > other.x
+            && Rect.get_y(this) < other.bottom
+            && Rect.get_bottom(this) > other.y;
     }
 
-    public function matches(other:Null<Rect>):Bool
+    public inline function matches(other:Null<Rect>):Bool
     {
         return other != null
-            && this.x == other.x && this.width  == other.width
-            && this.y == other.y && this.height == other.height;
-    }
-
-    public function toString():String
-    {
-        return "<Rectangle x: " + this.x + "; y: " + this.y +
-               "; width: " + this.width + "; height: " + this.height + ">";
+            && Rect.get_x(this) == other.x
+            && Rect.get_y(this) == other.y
+            && Rect.get_width(this) == other.width
+            && Rect.get_height(this) == other.height;
     }
 }
