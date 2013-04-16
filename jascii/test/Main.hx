@@ -12,6 +12,7 @@ class Main
         runner.add(new jascii.test.cases.FrameAreaParserTest());
         runner.add(new jascii.test.cases.ColorTableTest());
         runner.add(new jascii.test.cases.RectTest());
+        runner.add(new jascii.test.cases.PVectorTest());
         runner.run();
     }
 }
