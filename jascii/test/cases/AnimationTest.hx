@@ -422,4 +422,52 @@ class AnimationTest extends jascii.test.SurfaceTestCase
             ], 7, 0, 17, 6
         );
     }
+
+    public function test_unnecessary_update():Void
+    {
+        var shooter:jascii.display.Animation = this.create_animation([
+            [ "         "
+            , "  o      "
+            , " |`-x~~  "
+            , " ||      "
+            , "/'|      "
+            , "         "
+            ],
+            [ "     ~~~ "
+            , "  o   ~  "
+            , " |`-x~~  "
+            , " ||      "
+            , "/'|      "
+            , "         "
+            ]
+        ]);
+
+        shooter.fps = 0.5;
+
+        this.root.add_child(shooter);
+        this.update();
+
+        this.assert_area(
+            [ "         "
+            , "  o      "
+            , " |`-x~~  "
+            , " ||      "
+            , "/'|      "
+            , "         "
+            ], 0, 0, 9, 6
+        );
+
+        this.clear_surface();
+        this.update();
+
+        this.assert_area(
+            [ "         "
+            , "         "
+            , "         "
+            , "         "
+            , "         "
+            , "         "
+            ], 0, 0, 9, 6
+        );
+    }
 }

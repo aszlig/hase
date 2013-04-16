@@ -28,6 +28,9 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return img;
     }
 
+    public function clear_surface():Void
+        this.test_canvas.clear();
+
     public function update(?td:Float = 1000):Void
         return this.root.update(td);
 

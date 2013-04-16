@@ -23,6 +23,12 @@ class TestCanvas implements jascii.display.ISurface
         this.area[y * this.width + x] = sym;
     }
 
+    public function clear():Void
+    {
+        for (c in 0...this.area.length)
+            this.area[c] = new jascii.display.Symbol(" ".code);
+    }
+
     public function extract(x:Int, y:Int, width:Int, height:Int):Array<String>
     {
         var out:Array<String> = new Array();
