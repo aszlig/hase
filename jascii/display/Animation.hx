@@ -86,8 +86,6 @@ class Animation extends Sprite
 
     public override function update(td:Float):Void
     {
-        super.update(td);
-
         if (this.frames.length == 0)
             return;
 
@@ -110,7 +108,7 @@ class Animation extends Sprite
             this.switch_frame();
         }
 
-        this.blit();
+        super.update(td);
     }
 
     macro public static function from_file(path:String):Expr
