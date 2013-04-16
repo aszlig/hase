@@ -62,7 +62,7 @@ class Surface extends Object
 
     private function blit(sprite:Sprite):Void
     {
-        if (sprite.ascii == null)
+        if (sprite.ascii == null || sprite.rect == null)
             return;
 
         sprite.ascii.map_(inline function(x:Int, y:Int, sym:Symbol) {

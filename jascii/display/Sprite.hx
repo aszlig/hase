@@ -47,4 +47,10 @@ class Sprite extends Object
 
         this.is_dirty = false;
     }
+
+    public override function update(td:Float):Void
+    {
+        super.update(td);
+        this.blit();
+    }
 }

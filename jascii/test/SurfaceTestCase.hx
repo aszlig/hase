@@ -42,6 +42,13 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return new jascii.display.Animation(new_frames);
     }
 
+    public function create_sprite(image:Array<String>):jascii.display.Sprite
+    {
+        var sprite:jascii.display.Sprite = new jascii.display.Sprite();
+        sprite.ascii = this.create_image(image);
+        return sprite;
+    }
+
     private function format_expect(expect:Array<String>, got:Array<String>)
     {
         var ewidth:Int = expect[0].length;

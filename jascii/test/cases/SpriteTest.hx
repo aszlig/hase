@@ -4,14 +4,14 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 {
     public function test_simple():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
         this.root.add_child(circle);
         this.update();
@@ -28,14 +28,14 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_move_x():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
         this.root.add_child(circle);
         this.update();
@@ -54,14 +54,14 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_move_y():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
         this.root.add_child(circle);
         this.update();
@@ -85,16 +85,16 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_overlay():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
-        var rect:jascii.display.Animation = this.create_animation([
+        var rect:jascii.display.Sprite = this.create_sprite(
             [ ",-------."
             , "|       |"
             , "|       |"
@@ -102,14 +102,14 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             , "|       |"
             , "`-------'"
             ]
-        ]);
+        );
 
-        var dot:jascii.display.Animation = this.create_animation([
+        var dot:jascii.display.Sprite = this.create_sprite(
             [ "     "
             , "     "
             , "    ^"
-            ],
-        ]);
+            ]
+        );
 
         rect.add_child(circle);
         circle.add_child(dot);
@@ -131,16 +131,16 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_overlay_double_update():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
-        var rect:jascii.display.Animation = this.create_animation([
+        var rect:jascii.display.Sprite = this.create_sprite(
             [ ",-------."
             , "|       |"
             , "|       |"
@@ -148,7 +148,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             , "|       |"
             , "`-------'"
             ]
-        ]);
+        );
 
         rect.add_child(circle);
         this.root.add_child(rect);
@@ -170,23 +170,23 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_overlay_intersect():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
-        var rect:jascii.display.Animation = this.create_animation([
+        var rect:jascii.display.Sprite = this.create_sprite(
             [ ",-------."
             , "|       |"
             , "|       |"
             , "|       |"
             , "`-------'"
             ]
-        ]);
+        );
 
         rect.add_child(circle);
         this.root.add_child(rect);
@@ -212,23 +212,23 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_centering():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "   _._   "
             , " .'   `. "
             , " :     ; "
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
-        var rect:jascii.display.Animation = this.create_animation([
+        var rect:jascii.display.Sprite = this.create_sprite(
             [ ",-------."
             , "|       |"
             , "|       |"
             , "|       |"
             , "`-------'"
             ]
-        ]);
+        );
 
         rect.add_child(circle);
         this.root.add_child(rect);
@@ -254,7 +254,7 @@ class SpriteTest extends jascii.test.SurfaceTestCase
 
     public function test_move_around_multiple():Void
     {
-        var circle:jascii.display.Animation = this.create_animation([
+        var circle:jascii.display.Sprite = this.create_sprite(
             [ "         "
             , "   _._   "
             , " .'   `. "
@@ -262,24 +262,24 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             , "  `-.-'  "
             , "         "
             ]
-        ]);
+        );
 
-        var rect:jascii.display.Animation = this.create_animation([
+        var rect:jascii.display.Sprite = this.create_sprite(
             [ ",-------."
             , "|       |"
             , "|       |"
             , "|       |"
             , "`-------'"
             ]
-        ]);
+        );
 
-        var tri:jascii.display.Animation = this.create_animation([
+        var tri:jascii.display.Sprite = this.create_sprite(
             [ "     .     "
             , "   ,' `.   "
             , " ,'     `. "
             , "`---------'"
             ]
-        ]);
+        );
 
         rect.add_child(circle);
         rect.add_child(tri);
