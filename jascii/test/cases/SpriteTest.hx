@@ -359,4 +359,58 @@ class SpriteTest extends jascii.test.SurfaceTestCase
             ], 0, 0, 9, 5
         );
     }
+
+    public function test_destroy():Void
+    {
+        var circle:jascii.display.Sprite = this.create_sprite(
+            [ "         "
+            , "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ]
+        );
+
+        var rect:jascii.display.Sprite = this.create_sprite(
+            [ ",-------."
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "`-------'"
+            ]
+        );
+
+        var another:jascii.display.Sprite = this.create_sprite(
+            [ "-.`-.-'.-"
+            , "  `.|,'  "
+            , "---)|(---"
+            , "  ,'|`.  "
+            , "-'  |  `-"
+            , "    |    "
+            ]
+        );
+
+        rect.add_child(circle);
+        this.root.add_child(rect);
+
+        this.root.add_child(another);
+
+        this.update();
+
+        this.root.remove_child(rect);
+
+        this.update();
+
+        this.assert_area(
+            [ "-.`-.-'.-"
+            , "  `.|,'  "
+            , "---)|(---"
+            , "  ,'|`.  "
+            , "-'  |  `-"
+            , "    |    "
+            ], 0, 0, 9, 6
+        );
+    }
 }

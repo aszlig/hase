@@ -35,6 +35,8 @@ class Surface extends Object
     public inline function unregister_sprite(sprite:Sprite):Sprite
     {
         this.sprites.remove(sprite);
+        if (sprite.rect != null)
+            this.redraw_rect(sprite.rect);
         return sprite;
     }
 
