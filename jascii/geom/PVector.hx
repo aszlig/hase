@@ -21,10 +21,10 @@ abstract PVector (Array<Float>)
         return this[1] = val;
 
     public inline function dot_product(other:PVector):Float
-        return PVector.get_x(this) * other.x + PVector.get_y(this) * other.y;
+        return PVector.x * other.x + PVector.y * other.y;
 
     public inline function cross_product(other:PVector):Float
-        return PVector.get_x(this) * other.y - PVector.get_y(this) * other.x;
+        return PVector.x * other.y - PVector.y * other.x;
 
     public inline function normalize():Void
     {

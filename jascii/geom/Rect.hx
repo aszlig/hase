@@ -26,37 +26,37 @@ abstract Rect (Array<Int>)
         return this[3];
 
     private inline function get_right():Int
-        return Rect.get_x(this) + Rect.get_width(this);
+        return Rect.x + Rect.width;
 
     private inline function get_bottom():Int
-        return Rect.get_y(this) + Rect.get_height(this);
+        return Rect.y + Rect.height;
 
     public inline function union(other:Rect):Rect
     {
-        var x:Int = other.x > Rect.get_x(this) ? Rect.get_x(this) : other.x;
-        var y:Int = other.y > Rect.get_y(this) ? Rect.get_y(this) : other.y;
-        var width:Int = other.right > Rect.get_right(this)
-                      ? other.right : Rect.get_right(this);
-        var height:Int = other.bottom > Rect.get_bottom(this)
-                       ? other.bottom : Rect.get_bottom(this);
+        var x:Int = other.x > Rect.x ? Rect.x : other.x;
+        var y:Int = other.y > Rect.y ? Rect.y : other.y;
+        var width:Int = other.right > Rect.right
+                      ? other.right : Rect.right;
+        var height:Int = other.bottom > Rect.bottom
+                       ? other.bottom : Rect.bottom;
 
         return new Rect(x, y, width - x, height - y);
     }
 
     public inline function intersects(other:Rect):Bool
     {
-        return Rect.get_x(this) < other.right
-            && Rect.get_right(this) > other.x
-            && Rect.get_y(this) < other.bottom
-            && Rect.get_bottom(this) > other.y;
+        return Rect.x < other.right
+            && Rect.right > other.x
+            && Rect.y < other.bottom
+            && Rect.bottom > other.y;
     }
 
     public inline function matches(other:Null<Rect>):Bool
     {
         return other != null
-            && Rect.get_x(this) == other.x
-            && Rect.get_y(this) == other.y
-            && Rect.get_width(this) == other.width
-            && Rect.get_height(this) == other.height;
+            && Rect.x == other.x
+            && Rect.y == other.y
+            && Rect.width == other.width
+            && Rect.height == other.height;
     }
 }

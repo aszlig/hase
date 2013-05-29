@@ -25,7 +25,7 @@ abstract Matrix<T> (MatrixBase<T>)
         while (this.width < new_width) {
             for (y in 1...(this.height + 1))
                 this.data.insert(y * this.width + (y - 1),
-                                 Matrix.get_default_value(this));
+                                 Matrix.get_default_value());
             this.width++;
         }
 
@@ -46,7 +46,7 @@ abstract Matrix<T> (MatrixBase<T>)
     {
         while (this.height < new_height) {
             for (x in 0...this.width)
-                this.data.push(Matrix.get_default_value(this));
+                this.data.push(Matrix.get_default_value());
             this.height++;
         }
 
@@ -69,7 +69,7 @@ abstract Matrix<T> (MatrixBase<T>)
     {
         for (y in 0...this.height)
             for (x in 0...this.width)
-                f(x, y, Matrix.get(this, x, y));
+                f(x, y, Matrix.get(x, y));
     }
 
     public inline function map<R>(f:Int -> Int -> T -> R):Matrix<R>
@@ -78,25 +78,25 @@ abstract Matrix<T> (MatrixBase<T>)
 
         for (y in 0...this.height)
             for (x in 0...this.width)
-                out.push(f(x, y, Matrix.get(this, x, y)));
+                out.push(f(x, y, Matrix.get(x, y)));
 
         return new Matrix(this.width, this.height, out);
     }
 
     public inline function zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R):Matrix<R>
     {
-        return Matrix.map(this, inline function(x:Int, y:Int, sym:T)
-                                return f(sym, m.get(x, y)));
+        return Matrix.map(inline function(x:Int, y:Int, sym:T)
+                          return f(sym, m.get(x, y)));
     }
 
     public inline function add_row(row:Array<T>):Array<T>
     {
         if (row.length > this.width)
-            Matrix.set_width(this, row.length);
+            Matrix.set_width(row.length);
 
         for (x in 0...this.width)
             this.data.push(x >= row.length
-                           ? Matrix.get_default_value(this)
+                           ? Matrix.get_default_value()
                            : row[x]);
 
         this.height++;
@@ -139,18 +139,18 @@ abstract Matrix<T> (MatrixBase<T>)
 
         for (yi in y...(y + height))
             for (xi in x...(x + width))
-                new_data.push(Matrix.get(this, xi, yi));
+                new_data.push(Matrix.get(xi, yi));
 
         return new Matrix(width, height, new_data);
     }
 
     public inline function extract_rect(rect:Rect):Matrix<T>
-        return Matrix.extract(this, rect.x, rect.y, rect.width, rect.height);
+        return Matrix.extract(rect.x, rect.y, rect.width, rect.height);
 
     public inline function to_2d_array():Array<Array<T>>
     {
         return [for (y in 0...this.height)
-                [for (x in 0...this.width) Matrix.get(this, x, y)]];
+                [for (x in 0...this.width) Matrix.get(x, y)]];
     }
 
     private static inline function fold_maxsize<O>(array:Array<O>, acc:Int):Int
