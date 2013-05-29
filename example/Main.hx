@@ -1,4 +1,4 @@
-package hase;
+package;
 
 class Main
 {
@@ -17,7 +17,7 @@ class Main
         canvas.width = js.Browser.window.innerWidth;
         canvas.height = js.Browser.window.innerHeight;
 
-        var tc = new TermCanvas(canvas);
+        var tc = new hase.TermCanvas(canvas);
 
         this.root_surface = new hase.display.Surface(tc);
 
@@ -27,7 +27,7 @@ class Main
         login_view.init();
         this.root_surface.add_child(login_view);
 
-        var timer = new Timer(this.root_surface);
+        var timer = new hase.Timer(this.root_surface);
         timer.start();
     }
 

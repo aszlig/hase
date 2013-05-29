@@ -1,7 +1,0 @@
-#!/usr/bin/env haxe
--main hase.Main
--js hase.js
--dce full
--D debug
---next
---macro hase.test.Main.main()

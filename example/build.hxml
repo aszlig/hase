@@ -1,0 +1,6 @@
+#!/usr/bin/env haxe
+-cp ..
+-main Main
+-js hase.js
+-dce full
+-D debug
