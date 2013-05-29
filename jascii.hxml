@@ -1,7 +1,0 @@
-#!/usr/bin/env haxe
--main jascii.Main
--js jascii.js
--dce full
--D debug
---next
---macro jascii.test.Main.main()

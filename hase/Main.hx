@@ -1,0 +1,38 @@
+package hase;
+
+class Main
+{
+    private var root_surface:hase.display.Surface;
+
+    public function new()
+    {
+        js.Browser.window.onload = this.onload;
+    }
+
+    private function onload(e:js.html.Event):Void
+    {
+        var canvas:js.html.CanvasElement = cast
+            js.Browser.document.getElementById("canvas");
+
+        canvas.width = js.Browser.window.innerWidth;
+        canvas.height = js.Browser.window.innerHeight;
+
+        var tc = new TermCanvas(canvas);
+
+        this.root_surface = new hase.display.Surface(tc);
+
+        var login_view = new hase.views.Login();
+        login_view.width = this.root_surface.width;
+        login_view.height = this.root_surface.height;
+        login_view.init();
+        this.root_surface.add_child(login_view);
+
+        var timer = new Timer(this.root_surface);
+        timer.start();
+    }
+
+    public static function main():Void
+    {
+        new Main();
+    }
+}
