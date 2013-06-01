@@ -22,7 +22,7 @@ package;
 
 import hase.display.Animation;
 
-class Scene extends hase.display.Sprite
+class Main implements hase.Application
 {
     private var car:Animation;
     private var dragon:Animation;
@@ -30,21 +30,17 @@ class Scene extends hase.display.Sprite
     private var dragon_wing:Animation;
     private var delta:Float;
 
-    public function new()
-    {
-        super();
-        this.autoresize = false;
-        this.delta = -1000;
-    }
-
     public function init():Void
     {
+        this.root.autoresize = false;
+        this.delta = -1000;
+
         this.dragon = Animation.from_file("gfx/dragon.cat");
         this.dragon.x = -700;
         this.dragon.y = 8;
         this.dragon.fps = 17;
         this.dragon.loopback = true;
-        this.add_child(this.dragon);
+        this.root.add_child(this.dragon);
 
         this.dragon_head = Animation.from_file("gfx/dragon_head.cat");
         this.dragon_head.x = 39;
@@ -72,57 +68,19 @@ class Scene extends hase.display.Sprite
         this.car.x = -20;
         this.car.y = this.dragon.height + 4;
         this.car.fps = 10;
-        this.add_child(this.car);
+        this.root.add_child(this.car);
     }
 
-    public override function update(td:Float):Void
+    public function update(td:Float):Void
     {
         this.delta += td;
-        super.update(td);
 
-        this.car.x = Std.int(this.delta / 4000 * this.width);
+        this.car.x = Std.int(this.delta / 4000 * this.root.width);
 
-        this.dragon.x = Std.int(this.delta / 4500 * this.width) - 100;
+        this.dragon.x = Std.int(this.delta / 4500 * this.root.width) - 100;
         this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4) + 8;
 
-        if (this.dragon.x > this.width + 10)
-            this.remove_child(this.dragon);
-    }
-}
-
-class Main
-{
-    private var root_surface:hase.display.Surface;
-
-    public function new()
-    {
-        js.Browser.window.onload = this.onload;
-    }
-
-    private function onload(e:js.html.Event):Void
-    {
-        var canvas:js.html.CanvasElement = cast
-            js.Browser.document.getElementById("canvas");
-
-        canvas.width = js.Browser.window.innerWidth;
-        canvas.height = js.Browser.window.innerHeight;
-
-        var tc = new hase.TermCanvas(canvas);
-
-        this.root_surface = new hase.display.Surface(tc);
-
-        var scene = new Scene();
-        scene.width = this.root_surface.width;
-        scene.height = this.root_surface.height;
-        scene.init();
-        this.root_surface.add_child(scene);
-
-        var timer = new hase.Timer(this.root_surface);
-        timer.start();
-    }
-
-    public static function main():Void
-    {
-        new Main();
+        if (this.dragon.x > this.root.width + 10)
+            this.root.remove_child(this.dragon);
     }
 }

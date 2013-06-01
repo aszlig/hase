@@ -100,8 +100,11 @@ class Timer
     public inline function stop():Void
         this.running = false;
 
-    private inline function tick(delta:Float)
+    public dynamic function on_tick(delta:Float):Void {}
+
+    private inline function tick(delta:Float):Void
     {
         this.root.update(delta);
+        this.on_tick(delta);
     }
 }
