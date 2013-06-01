@@ -22,7 +22,7 @@ package;
 
 import hase.display.Animation;
 
-class Main implements hase.Application
+class Example implements hase.Application
 {
     private var car:Animation;
     private var dragon:Animation;
