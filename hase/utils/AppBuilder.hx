@@ -80,14 +80,14 @@ class AppBuilder
                     var canvas:js.html.CanvasElement =
                         js.Browser.document.createCanvasElement();
 
-                    canvas.style.position = "absolute";
+                    canvas.style.position = "fixed";
+                    canvas.style.top = "0";
+                    canvas.style.left = "0";
                     canvas.width = js.Browser.window.innerWidth;
                     canvas.height = js.Browser.window.innerHeight;
 
                     var app = from_canvas(canvas);
 
-                    js.Browser.document.body.style.margin = "0";
-                    js.Browser.document.body.style.padding = "0";
                     js.Browser.document.body.appendChild(canvas);
 
                     app.run();
