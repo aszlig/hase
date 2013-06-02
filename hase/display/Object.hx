@@ -93,7 +93,7 @@ class Object
         return child;
     }
 
-    private inline function set_dirty<T>(?from:T, ?to:T):T
+    private inline function set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
     {
         if ((from == null && to == null) || from != to) {
             this.is_dirty = true;

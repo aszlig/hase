@@ -28,7 +28,7 @@ class Timer
 {
     private var interval:Int;
     private var root:hase.display.Surface;
-    private var last_time:Float;
+    private var last_time:Null<Float>;
     private var running:Bool;
 
     private var req_anim_frame:FrameHandler;
