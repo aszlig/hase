@@ -433,4 +433,104 @@ class SpriteTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 6
         );
     }
+
+    public function test_z_order():Void
+    {
+        var circle:hase.display.Sprite = this.create_sprite(
+            [ "   _._   "
+            , " .'   `. "
+            , " :     : "
+            , "  `-.-'  "
+            , "         "
+            ]
+        );
+
+        var rect:hase.display.Sprite = this.create_sprite(
+            [ ".-------."
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "`-------'"
+            ]
+        );
+
+        var bar:hase.display.Sprite = this.create_sprite(
+            [ ".-----------------------."
+            , "|                       |"
+            , "|                       |"
+            , "`-----------------------'"
+            ]
+        );
+
+        circle.x += 8;
+        circle.y += 1;
+        circle.z = 20;
+
+        rect.x += 8;
+        rect.z = 10;
+
+        bar.y += 1;
+        bar.z = 15;
+
+        this.root.add_child(circle);
+        this.root.add_child(rect);
+        this.root.add_child(bar);
+
+        this.update();
+
+        this.assert_area(
+            [ "        .-------.        "
+            , ".----------_._----------."
+            , "|       |.'   `.|       |"
+            , "|       |:     :|       |"
+            , "`---------`-.-'---------'"
+            , "        `-------'        "
+            ], 0, 0, 25, 6
+        );
+
+        bar.y -= 1;
+
+        this.update();
+
+        this.assert_area(
+            [ ".-----------------------."
+            , "|       |  _._  |       |"
+            , "|       |.'   `.|       |"
+            , "`--------:-----:--------'"
+            , "        | `-.-' |        "
+            , "        `-------'        "
+            ], 0, 0, 25, 6
+        );
+
+        rect.y += 1;
+
+        this.update();
+
+        this.assert_area(
+            [ ".-----------------------."
+            , "|       .--_._--.       |"
+            , "|       |.'   `.|       |"
+            , "`--------:-----:--------'"
+            , "        | `-.-' |        "
+            , "        |       |        "
+            , "        `-------'        "
+            ], 0, 0, 25, 7
+        );
+
+        rect.z = 30;
+
+        this.update();
+
+        this.assert_area(
+            [ ".-----------------------."
+            , "|       .-------.       |"
+            , "|       |.'   `.|       |"
+            , "`-------|:-----:|-------'"
+            , "        | `-.-' |        "
+            , "        |       |        "
+            , "        `-------'        "
+            ], 0, 0, 25, 7
+        );
+    }
 }
