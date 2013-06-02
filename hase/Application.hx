@@ -20,8 +20,13 @@
  */
 package hase;
 
-@:autoBuild(hase.utils.AppBuilder.build())
-interface Application
+@:autoBuild(hase.utils.AppBuilder.build(
+#if js
+"js"
+#elseif cpp
+"cpp"
+#end
+)) interface Application
 {
     public function init():Void;
     public function update(td:Float):Void;
