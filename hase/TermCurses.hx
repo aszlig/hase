@@ -20,7 +20,7 @@
  */
 package hase;
 
-class TermCurses implements hase.display.ISurface
+class TermCurses implements hase.display.ISurfaceProvider
 {
     public var width:Int;
     public var height:Int;

@@ -20,7 +20,7 @@
  */
 package hase;
 
-class TermCanvas implements hase.display.ISurface
+class TermCanvas implements hase.display.ISurfaceProvider
 {
     private var canvas:js.html.CanvasElement;
     private var ctx:js.html.CanvasRenderingContext2D;

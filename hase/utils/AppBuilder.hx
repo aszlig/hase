@@ -103,7 +103,7 @@ class AppBuilder
         var complex_fields:ComplexType = macro : {
             private var root:hase.display.Surface;
 
-            public function new(tc:hase.display.ISurface)
+            public function new(tc:hase.display.ISurfaceProvider)
             {
                 this.root = new hase.display.Surface(tc);
                 this.init();

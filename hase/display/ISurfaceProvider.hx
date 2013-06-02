@@ -20,7 +20,7 @@
  */
 package hase.display;
 
-interface ISurface
+interface ISurfaceProvider
 {
     public function draw_char(x:Int, y:Int, sym:Symbol):Void;
     // XXX: These should be handled by events (such as resize).

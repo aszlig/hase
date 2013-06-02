@@ -24,10 +24,10 @@ import hase.geom.Rect;
 
 class Surface extends Object
 {
-    private var provider:ISurface;
+    private var provider:ISurfaceProvider;
     private var sprites:Array<Sprite>;
 
-    public function new(provider:ISurface)
+    public function new(provider:ISurfaceProvider)
     {
         super();
         this.is_surface = true;
