@@ -20,9 +20,10 @@
  */
 package hase;
 
+#if js
 import js.html.RequestAnimationFrameCallback;
-
 typedef FrameHandler = RequestAnimationFrameCallback -> Void;
+#end
 
 class Timer
 {
@@ -31,21 +32,26 @@ class Timer
     private var last_time:Null<Float>;
     private var running:Bool;
 
+#if js
     private var req_anim_frame:FrameHandler;
+#end
 
     public function new(root:hase.display.Surface, fps:Int = 60)
     {
         this.interval = Std.int(1000 / fps);
         this.root = root;
 
+#if js
         var raf:Null<FrameHandler> = null;
 
         if (js.Browser.window != null)
             raf = this.get_frame_handler();
 
         this.req_anim_frame = raf != null ? raf : this.legacy_timer;
+#end
     }
 
+#if js
     private inline function get_frame_handler():Null<FrameHandler>
     {
         // What a mess! Cross-browser fuckery at its best!
@@ -69,13 +75,22 @@ class Timer
 
     private inline function legacy_timer(cb:RequestAnimationFrameCallback):Void
         haxe.Timer.delay(cb.bind(haxe.Timer.stamp() * 1000), this.interval);
+#else
+    private inline function req_anim_frame(cb:Float -> Bool):Void
+    {
+#if cpp
+        Sys.sleep(this.interval / 1000);
+        cb(haxe.Timer.stamp() * 1000);
+#else
+        haxe.Timer.delay(cb.bind(haxe.Timer.stamp() * 1000), this.interval);
+#end
+    }
+#end
 
     private function loop(time:Float):Bool
     {
         if (!this.running)
             return true;
-
-        this.req_anim_frame(this.loop);
 
         if (this.last_time == null) {
             this.tick(0);
@@ -86,6 +101,8 @@ class Timer
         }
 
         this.last_time = time;
+
+        this.req_anim_frame(this.loop);
 
         return !this.running;
     }
