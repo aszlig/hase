@@ -47,6 +47,8 @@ typedef TermSize = {
 
     private var last_x:Int;
     private var last_y:Int;
+    private var last_fg:Null<Int>;
+    private var last_bg:Null<Int>;
 
     public function new()
     {
@@ -61,6 +63,7 @@ typedef TermSize = {
         this.init_term();
 
         this.last_x = this.last_y = 0;
+        this.last_fg = this.last_bg = null;
     }
 
     private inline function init_term():Void
@@ -116,6 +119,24 @@ typedef TermSize = {
         this.buffer.add("\x1b[" + sequence);
     }
 
+    private inline function set_color(?fg:Int, ?bg:Int):Void
+    {
+        var mods:Array<String> = [];
+
+        if (fg != null && fg != this.last_fg) {
+            mods.push("38;5;" + fg);
+            this.last_fg = fg;
+        }
+
+        if (bg != null && bg != this.last_bg) {
+            mods.push("48;5;" + bg);
+            this.last_bg = bg;
+        }
+
+        if (mods.length > 0)
+            this.write_csi(mods.join(";") + "m");
+    }
+
     public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
     {
         this.begin_op();
@@ -123,9 +144,8 @@ typedef TermSize = {
         if (this.last_y != y || this.last_x != x)
             this.write_csi('${y};${x}f');
 
-        this.write_csi('38;5;${sym.fgcolor};48;5;${sym.bgcolor}m');
+        this.set_color(sym.fgcolor, sym.bgcolor);
         this.buffer.addChar(sym.ordinal);
-        this.write_csi("m");
 
         this.last_x = x >= this.width ? x : x + 1;
         this.last_y = y;
