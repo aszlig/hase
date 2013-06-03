@@ -25,8 +25,17 @@ typedef TermSize = {
     var height:Int;
 };
 
-@:headerCode("#include <sys/ioctl.h>")
-@:headerCode("#include <unistd.h>")
+@:headerCode("
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <signal.h>
+")
+
+@:cppFileCode("void cleanup(int signum) {
+    write(STDOUT_FILENO, \"\\33[?25h\\33[2J\\338\", 12);
+    signal(signum, SIG_DFL);
+    kill(getpid(), signum);
+}")
 
 @:require(cpp) class TermCurses implements hase.display.ISurfaceProvider
 {
@@ -47,10 +56,24 @@ typedef TermSize = {
 
         this.output = Sys.stdout();
         this.write_csi("2J");
+
+        this.install_cleanup();
         this.write_csi("?25l");
 
         this.write_csi("0;0f");
         this.last_x = this.last_y = 0;
+    }
+
+    private inline function install_cleanup():Void
+    {
+        this.output.writeString("\x1b7");
+
+        untyped __cpp__("
+            if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+                signal(SIGINT, cleanup);
+            if (signal(SIGTERM, SIG_IGN) != SIG_IGN)
+                signal(SIGTERM, cleanup);
+        ");
     }
 
     private inline function get_termsize():TermSize
