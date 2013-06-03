@@ -28,16 +28,18 @@ using haxe.macro.ExprTools;
 
 class AppBuilder
 {
+    private var target:String;
     private var type:Type;
     private var fields:Array<Field>;
 
-    public function new(type:Type, fields:Array<Field>)
+    public function new(target:String, type:Type, fields:Array<Field>)
     {
+        this.target = target;
         this.type = type;
         this.fields = fields;
     }
 
-    private inline function create_basefields():Array<Field>
+    private function create_statics():Array<Field>
     {
         var baseclass:ComplexType = Context.toComplexType(this.type);
 
@@ -51,10 +53,57 @@ class AppBuilder
             pos: Context.currentPos(),
         };
 
+        var complex_statics:ComplexType = switch (this.target) {
+            case "js": macro : {
+                public inline static function
+                    from_canvas(canvas:js.html.CanvasElement):$baseclass
+                {
+                    var tc:hase.TermCanvas = new hase.TermCanvas(canvas);
+                    return $e{newbase};
+                }
+
+                public static function main():Void
+                {
+                    js.Browser.window.onload = function(_) {
+                        var canvas:js.html.CanvasElement =
+                            js.Browser.document.createCanvasElement();
+
+                        canvas.style.position = "fixed";
+                        canvas.style.top = "0";
+                        canvas.style.left = "0";
+                        canvas.width = js.Browser.window.innerWidth;
+                        canvas.height = js.Browser.window.innerHeight;
+
+                        var app = from_canvas(canvas);
+
+                        js.Browser.document.body.appendChild(canvas);
+
+                        app.run();
+                    };
+                }
+            };
+            case "cpp": macro : {
+                public static function main():Void
+                {
+                    var tc:hase.TermCurses = new hase.TermCurses();
+                    $e{newbase}.run();
+                }
+            };
+            default: throw "Unknown target " + this.target + ".";
+        };
+
+        return switch (complex_statics) {
+            case TAnonymous(statics): statics;
+            default: throw "Cannot create Application static methods.";
+        }
+    }
+
+    private inline function create_basefields():Array<Field>
+    {
         var complex_fields:ComplexType = macro : {
             private var root:hase.display.Surface;
 
-            public function new(tc:hase.TermCanvas)
+            public function new(tc:hase.display.ISurfaceProvider)
             {
                 this.root = new hase.display.Surface(tc);
                 this.init();
@@ -67,36 +116,10 @@ class AppBuilder
                 timer.start();
             }
 
-            public inline static function
-                from_canvas(canvas:js.html.CanvasElement):$baseclass
-            {
-                var tc:hase.TermCanvas = new hase.TermCanvas(canvas);
-                return $e{newbase};
-            }
-
-            public static function main():Void
-            {
-                js.Browser.window.onload = function(_) {
-                    var canvas:js.html.CanvasElement =
-                        js.Browser.document.createCanvasElement();
-
-                    canvas.style.position = "fixed";
-                    canvas.style.top = "0";
-                    canvas.style.left = "0";
-                    canvas.width = js.Browser.window.innerWidth;
-                    canvas.height = js.Browser.window.innerHeight;
-
-                    var app = from_canvas(canvas);
-
-                    js.Browser.document.body.appendChild(canvas);
-
-                    app.run();
-                };
-            }
         };
 
         return switch (complex_fields) {
-            case TAnonymous(fields): fields;
+            case TAnonymous(fields): fields.concat(this.create_statics());
             default: throw "Cannot create Application base methods.";
         }
     }
@@ -120,12 +143,12 @@ class AppBuilder
         return this.fields;
     }
 
-    public static function build():Array<Field>
+    public static function build(target:String):Array<Field>
     {
         var type:Null<Type> = Context.getLocalType();
         var fields:Array<Field> = Context.getBuildFields();
 
-        var builder:AppBuilder = new AppBuilder(type, fields);
+        var builder:AppBuilder = new AppBuilder(target, type, fields);
         return builder.build_application();
     }
 }

@@ -20,7 +20,7 @@
  */
 package hase.test;
 
-class TestCanvas implements hase.display.ISurface
+class TestCanvas implements hase.display.ISurfaceProvider
 {
     public var width:Int;
     public var height:Int;
