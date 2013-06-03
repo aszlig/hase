@@ -35,6 +35,9 @@ typedef TermSize = {
 
     private var output:haxe.io.Output;
 
+    private var last_x:Int;
+    private var last_y:Int;
+
     public function new()
     {
         var ts:TermSize = this.get_termsize();
@@ -44,6 +47,10 @@ typedef TermSize = {
 
         this.output = Sys.stdout();
         this.write_csi("2J");
+        this.write_csi("?25l");
+
+        this.write_csi("0;0f");
+        this.last_x = this.last_y = 0;
     }
 
     private inline function get_termsize():TermSize
@@ -69,7 +76,14 @@ typedef TermSize = {
 
     public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
     {
-        this.write_csi('$y;${x}f');
+        if (this.last_y != y || this.last_x != x)
+            this.write_csi('${y};${x}f');
+
+        this.write_csi('38;5;${sym.fgcolor};48;5;${sym.bgcolor}m');
         this.output.writeInt8(sym.ordinal);
+        this.write_csi("m");
+
+        this.last_x = x >= this.width ? x : x + 1;
+        this.last_y = y;
     }
 }
