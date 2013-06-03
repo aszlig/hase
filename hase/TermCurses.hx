@@ -20,7 +20,15 @@
  */
 package hase;
 
-class TermCurses implements hase.display.ISurfaceProvider
+typedef TermSize = {
+    var width:Int;
+    var height:Int;
+};
+
+@:headerCode("#include <sys/ioctl.h>")
+@:headerCode("#include <unistd.h>")
+
+@:require(cpp) class TermCurses implements hase.display.ISurfaceProvider
 {
     public var width:Int;
     public var height:Int;
@@ -29,11 +37,28 @@ class TermCurses implements hase.display.ISurfaceProvider
 
     public function new()
     {
-        // TODO: ioctl(STDOUT_FILENO, TIOCGWINSZ, &win);
-        this.width = 198; // TODO: win.ws_col
-        this.height = 71; // TODO: win.ws_row
+        var ts:TermSize = this.get_termsize();
+
+        this.width = ts.width;
+        this.height = ts.height;
+
         this.output = Sys.stdout();
         this.write_csi("2J");
+    }
+
+    private inline function get_termsize():TermSize
+    {
+        untyped {
+            __cpp__("static struct winsize ws");
+            var rval = __cpp__("ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws)");
+            if (rval != 0)
+                throw "Unable to get terminal size!";
+
+            return {
+                width: __cpp__("ws.ws_col"),
+                height: __cpp__("ws.ws_row"),
+            };
+        };
     }
 
     private function write_csi(sequence:String):Void
