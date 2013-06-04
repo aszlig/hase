@@ -80,6 +80,12 @@ abstract Rect (Array<Int>)
             && Rect.height == other.height;
     }
 
+    public inline function contains(x:Int, y:Int):Bool
+    {
+        return Rect.x <= x && Rect.right >= x
+            && Rect.y <= y && Rect.bottom >= y;
+    }
+
     @:op(A & B)
     public static inline function intersection(r1:Rect, r2:Rect):Null<Rect>
     {

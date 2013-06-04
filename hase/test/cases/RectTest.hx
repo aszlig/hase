@@ -156,4 +156,26 @@ class RectTest extends haxe.unit.TestCase
         var r2:Rect = new Rect(5, 5, 2, 2);
         this.assertEquals(null, r1 & r2);
     }
+
+    public function test_contains():Void
+    {
+        var r:Rect = new Rect(5, 5, 5, 5);
+
+        this.assertTrue(r.contains(5, 5));
+        this.assertFalse(r.contains(4, 4));
+        this.assertTrue(r.contains(10, 10));
+        this.assertFalse(r.contains(11, 11));
+
+        this.assertFalse(r.contains(0, 0));
+        this.assertFalse(r.contains(5, 4));
+        this.assertFalse(r.contains(4, 5));
+
+        this.assertFalse(r.contains(15, 15));
+        this.assertFalse(r.contains(10, 11));
+        this.assertFalse(r.contains(11, 10));
+
+        this.assertTrue(r.contains(5, 10));
+        this.assertTrue(r.contains(10, 5));
+        this.assertTrue(r.contains(7, 7));
+    }
 }
