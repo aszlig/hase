@@ -18,14 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase;
+package hase.term;
 
-class TermCanvas implements hase.display.ISurfaceProvider
+import hase.term.internal.Font;
+
+@:require(js) class Canvas implements Interface
 {
     private var canvas:js.html.CanvasElement;
     private var ctx:js.html.CanvasRenderingContext2D;
 
-    private var font:TermFont;
+    private var font:Font;
     private var font_cache:Map<Int,Int>;
     private var font_canvas:js.html.CanvasElement;
 
@@ -36,14 +38,14 @@ class TermCanvas implements hase.display.ISurfaceProvider
     {
         this.canvas = canvas;
 
-        this.width = Std.int(canvas.width / (TermFont.WIDTH + 1));
-        this.height = Std.int(canvas.height / TermFont.HEIGHT);
+        this.width = Std.int(canvas.width / (Font.WIDTH + 1));
+        this.height = Std.int(canvas.height / Font.HEIGHT);
 
         this.ctx = canvas.getContext2d();
         this.ctx.fillStyle = "black";
         this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        this.font = new TermFont();
+        this.font = new Font();
         this.font_cache = new Map();
         this.font_canvas = null;
     }
@@ -51,29 +53,29 @@ class TermCanvas implements hase.display.ISurfaceProvider
     private inline function cursor2x(x:Int):Int
     {
 #if debug
-        if (x * (TermFont.WIDTH + 1) > this.canvas.width)
+        if (x * (Font.WIDTH + 1) > this.canvas.width)
             trace("X cursor value of " + x + " exceeds width of " +
                   this.canvas.width + " pixels!");
 #end
 
-        return x * (TermFont.WIDTH + 1);
+        return x * (Font.WIDTH + 1);
     }
 
     private inline function cursor2y(y:Int):Int
     {
 #if debug
-        if (y * TermFont.HEIGHT > this.canvas.height)
+        if (y * Font.HEIGHT > this.canvas.height)
             trace("Y cursor value of " + y + " exceeds height of " +
                   this.canvas.height + " pixels!");
 #end
 
-        return y * TermFont.HEIGHT;
+        return y * Font.HEIGHT;
     }
 
     private inline function add_to_font_cache(sym:hase.display.Symbol):Int
     {
         var cachedata:js.html.ImageData =
-            this.ctx.createImageData(TermFont.WIDTH, TermFont.HEIGHT);
+            this.ctx.createImageData(Font.WIDTH, Font.HEIGHT);
 
         var fgcolor:Int = hase.display.Color.get_rgb(sym.fgcolor);
         var bgcolor:Int = hase.display.Color.get_rgb(sym.bgcolor);
@@ -97,8 +99,8 @@ class TermCanvas implements hase.display.ISurfaceProvider
         var new_canvas:js.html.CanvasElement =
             js.Browser.document.createCanvasElement();
 
-        new_canvas.width = cached + TermFont.WIDTH;
-        new_canvas.height = TermFont.HEIGHT;
+        new_canvas.width = cached + Font.WIDTH;
+        new_canvas.height = Font.HEIGHT;
 
         var new_context:js.html.CanvasRenderingContext2D =
             new_canvas.getContext2d();
@@ -121,8 +123,8 @@ class TermCanvas implements hase.display.ISurfaceProvider
             cached = this.add_to_font_cache(sym);
 
         this.ctx.drawImage(this.font_canvas,
-            cached, 0, TermFont.WIDTH, TermFont.HEIGHT,
+            cached, 0, Font.WIDTH, Font.HEIGHT,
             this.cursor2x(x), this.cursor2y(y),
-            TermFont.WIDTH, TermFont.HEIGHT);
+            Font.WIDTH, Font.HEIGHT);
     }
 }

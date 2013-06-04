@@ -18,9 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.display;
+package hase.term;
 
-interface ISurfaceProvider
+import hase.display.Symbol;
+
+interface Interface
 {
     public function draw_char(x:Int, y:Int, sym:Symbol):Void;
     // XXX: These should be handled by events (such as resize).

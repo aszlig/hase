@@ -24,16 +24,16 @@ import hase.geom.Rect;
 
 class Surface extends Object
 {
-    private var provider:ISurfaceProvider;
+    private var terminal:hase.term.Interface;
     private var sprites:Array<Sprite>;
 
-    public function new(provider:ISurfaceProvider)
+    public function new(terminal:hase.term.Interface)
     {
         super();
         this.is_surface = true;
-        this.provider = provider;
-        this.width = provider.width;
-        this.height = provider.height;
+        this.terminal = terminal;
+        this.width = terminal.width;
+        this.height = terminal.height;
         this.autoresize = false;
         this.sprites = new Array();
     }
@@ -79,7 +79,7 @@ class Surface extends Object
     private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
     {
         if (x >= 0 && y >= 0 && x <= this.width && y <= this.height)
-            this.provider.draw_char(x, y, sym);
+            this.terminal.draw_char(x, y, sym);
     }
 
     private function blit(sprite:Sprite):Void

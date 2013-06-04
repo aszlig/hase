@@ -49,7 +49,7 @@ class AppBuilder
         }
 
         var newbase:Expr = {
-            expr: ENew(path, [macro tc]),
+            expr: ENew(path, [macro term]),
             pos: Context.currentPos(),
         };
 
@@ -58,7 +58,7 @@ class AppBuilder
                 public inline static function
                     from_canvas(canvas:js.html.CanvasElement):$baseclass
                 {
-                    var tc:hase.TermCanvas = new hase.TermCanvas(canvas);
+                    var term:hase.term.Canvas = new hase.term.Canvas(canvas);
                     return $e{newbase};
                 }
 
@@ -85,7 +85,7 @@ class AppBuilder
             case "cpp": macro : {
                 public static function main():Void
                 {
-                    var tc:hase.TermCurses = new hase.TermCurses();
+                    var term:hase.term.Curses = new hase.term.Curses();
                     $e{newbase}.run();
                 }
             };
@@ -103,9 +103,9 @@ class AppBuilder
         var complex_fields:ComplexType = macro : {
             private var root:hase.display.Surface;
 
-            public function new(tc:hase.display.ISurfaceProvider)
+            public function new(term:hase.term.Interface)
             {
-                this.root = new hase.display.Surface(tc);
+                this.root = new hase.display.Surface(term);
                 this.init();
             }
 

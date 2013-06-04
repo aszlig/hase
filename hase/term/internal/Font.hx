@@ -18,20 +18,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase;
+package hase.term.internal;
 
 import haxe.macro.Expr;
 
-class TermFont
+@:allow(hase.term.Canvas)
+class Font
 {
-    var data:Array<Array<Int>>;
+    private var data:Array<Array<Int>>;
 
-    public function new()
+    private function new()
     {
-        this.data = TermFont.get_font();
+        this.data = Font.get_font();
     }
 
-    public inline function iter_char(ordinal:Int):Iterator<Iterator<Bool>>
+    private inline function iter_char(ordinal:Int):Iterator<Iterator<Bool>>
     {
         var char:Array<Int> = this.data[ordinal - (" ".code)];
 
@@ -40,46 +41,46 @@ class TermFont
             hasNext: inline function() return y < char.length * 2,
             next: inline function() {
                 var row:Int = char[y >> 1];
-                var and:Int = y++ % 2 == 0 ? 1 << TermFont.WIDTH : 1;
+                var and:Int = y++ % 2 == 0 ? 1 << Font.WIDTH : 1;
                 var x:Int = 0;
                 return {
-                    hasNext: inline function() return x < TermFont.WIDTH,
+                    hasNext: inline function() return x < Font.WIDTH,
                     next: inline function() return (row >> x++) & and != 0
                 };
             }
         };
     }
 
-    macro public static function get_font():Expr
+    macro private static function get_font():Expr
     {
         var font:Array<Array<Int>> = new Array();
 
         var cells:Int =
-            Std.int(TermFont.DATA.length / TermFont.HEIGHT);
+            Std.int(Font.DATA.length / Font.HEIGHT);
 
-        var blocks:Int = Std.int(cells / TermFont.BLOCKSIZE);
+        var blocks:Int = Std.int(cells / Font.BLOCKSIZE);
 
-        for (i in 0...TermFont.DATA.length) {
+        for (i in 0...Font.DATA.length) {
             var block:Int =
-                Std.int(i / (TermFont.HEIGHT * TermFont.BLOCKSIZE));
+                Std.int(i / (Font.HEIGHT * Font.BLOCKSIZE));
 
-            var cellblock_start:Int = TermFont.BLOCKSIZE * block;
+            var cellblock_start:Int = Font.BLOCKSIZE * block;
 
             var current_blocksize:Int = block >= blocks
-                ? (cells % blocks) % TermFont.BLOCKSIZE
-                : TermFont.BLOCKSIZE;
+                ? (cells % blocks) % Font.BLOCKSIZE
+                : Font.BLOCKSIZE;
 
             var cell:Int = i % current_blocksize + cellblock_start;
 
             var is_odd:Bool =
                 (Std.int(i / current_blocksize) -
-                    (TermFont.HEIGHT * cellblock_start))
+                    (Font.HEIGHT * cellblock_start))
                 % 2 != 0;
 
             var row:Int = 0;
 
-            for (j in 0...TermFont.WIDTH)
-                row |= TermFont.DATA[i].charCodeAt(j) != " ".code
+            for (j in 0...Font.WIDTH)
+                row |= Font.DATA[i].charCodeAt(j) != " ".code
                     ? 1 << j : 0;
 
             if (font[cell] == null) {
@@ -90,7 +91,7 @@ class TermFont
             if (is_odd)
                 font[cell][font[cell].length - 1] |= row;
             else
-                font[cell].push(row << TermFont.DATA[i].length);
+                font[cell].push(row << Font.DATA[i].length);
         }
 
         var out:Array<Expr> = new Array();
@@ -117,12 +118,12 @@ class TermFont
         };
     }
 
-    public static inline var BLOCKSIZE:Int = 6;
-    public static inline var WIDTH:Int     = 8;
-    public static inline var HEIGHT:Int    = 16;
+    private static inline var BLOCKSIZE:Int = 6;
+    private static inline var WIDTH:Int     = 8;
+    private static inline var HEIGHT:Int    = 16;
 
 #if macro
-    public static var DATA:Array<String> = [
+    private static var DATA:Array<String> = [
     //  |<---------------- this is considered to be a block ---------------->|
     //  +--------.  .--------.  .--------.  .--------.  .--------.  .--------+
     //  | cell 0 |  | cell 1 |  | cell 2 |  | cell 3 |  | cell 4 |  | cell 5 |

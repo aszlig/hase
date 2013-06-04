@@ -18,9 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.test;
+package hase.term;
 
-class TestCanvas implements hase.display.ISurfaceProvider
+class Test implements Interface
 {
     public var width:Int;
     public var height:Int;

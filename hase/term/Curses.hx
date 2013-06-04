@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase;
+package hase.term;
 
 typedef TermSize = {
     var width:Int;
@@ -37,7 +37,7 @@ typedef TermSize = {
     kill(getpid(), signum);
 }")
 
-@:require(cpp) class TermCurses implements hase.display.ISurfaceProvider
+@:require(cpp) class Curses implements Interface
 {
     public var width:Int;
     public var height:Int;

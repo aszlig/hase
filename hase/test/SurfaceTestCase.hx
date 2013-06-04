@@ -23,12 +23,12 @@ package hase.test;
 class SurfaceTestCase extends haxe.unit.TestCase
 {
     var root:hase.display.Surface;
-    var test_canvas:hase.test.TestCanvas;
+    var terminal:hase.term.Test;
 
     public override function setup():Void
     {
-        this.test_canvas = new hase.test.TestCanvas();
-        this.root = new hase.display.Surface(this.test_canvas);
+        this.terminal = new hase.term.Test();
+        this.root = new hase.display.Surface(this.terminal);
     }
 
     public function create_image(data:Array<String>):hase.display.Image
@@ -49,7 +49,7 @@ class SurfaceTestCase extends haxe.unit.TestCase
     }
 
     public function clear_surface():Void
-        this.test_canvas.clear();
+        this.terminal.clear();
 
     public function update(?td:Float = 1000):Void
         return this.root.update(td);
@@ -107,7 +107,7 @@ class SurfaceTestCase extends haxe.unit.TestCase
         this.currentTest.done = true;
 
         var fraction:Array<String> =
-            this.test_canvas.extract(x, y, width, height);
+            this.terminal.extract(x, y, width, height);
 
         var match:Bool = true;
 
