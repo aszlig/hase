@@ -79,4 +79,19 @@ abstract Rect (Array<Int>)
             && Rect.width == other.width
             && Rect.height == other.height;
     }
+
+    @:op(A & B)
+    public static inline function intersection(r1:Rect, r2:Rect):Null<Rect>
+    {
+        var x:Int = r1.x > r2.x ? r1.x : r2.x;
+        var y:Int = r1.y > r2.y ? r1.y : r2.y;
+
+        var right:Int = r1.right < r2.right
+                      ? r1.right : r2.right;
+        var bottom:Int = r1.bottom < r2.bottom
+                       ? r1.bottom : r2.bottom;
+
+        return (right - x < 1 || bottom - y < 1) ? null :
+           new Rect(x, y, right - x, bottom - y);
+    }
 }

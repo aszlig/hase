@@ -97,4 +97,63 @@ class RectTest extends haxe.unit.TestCase
         var r:Rect = new Rect(5, 5, 5, 5);
         this.assertFalse(r.matches(null));
     }
+
+    public function test_intersection_area_diagonal():Void
+    {
+        var r1:Rect = new Rect(8, 8, 4, 4);
+        var r2:Rect = new Rect(10, 10, 8, 8);
+
+        var result:Null<Rect> = r1 & r2;
+
+        this.assertEquals(10, result.x);
+        this.assertEquals(10, result.y);
+        this.assertEquals(2, result.width);
+        this.assertEquals(2, result.height);
+    }
+
+    public function test_intersection_area_vertical():Void
+    {
+        var r1:Rect = new Rect(4, 4, 4, 4);
+        var r2:Rect = new Rect(4, 7, 4, 4);
+
+        var result:Null<Rect> = r1 & r2;
+
+        this.assertEquals(4, result.x);
+        this.assertEquals(7, result.y);
+        this.assertEquals(4, result.width);
+        this.assertEquals(1, result.height);
+    }
+
+    public function test_intersection_area_horizontal():Void
+    {
+        var r1:Rect = new Rect(4, 4, 4, 4);
+        var r2:Rect = new Rect(7, 4, 4, 4);
+
+        var result:Null<Rect> = r1 & r2;
+
+        this.assertEquals(7, result.x);
+        this.assertEquals(4, result.y);
+        this.assertEquals(1, result.width);
+        this.assertEquals(4, result.height);
+    }
+
+    public function test_intersection_area_overlap():Void
+    {
+        var r1:Rect = new Rect(4, 4, 4, 4);
+        var r2:Rect = new Rect(4, 4, 4, 4);
+
+        var result:Null<Rect> = r1 & r2;
+
+        this.assertEquals(4, result.x);
+        this.assertEquals(4, result.y);
+        this.assertEquals(4, result.width);
+        this.assertEquals(4, result.height);
+    }
+
+    public function test_intersection_area_none():Void
+    {
+        var r1:Rect = new Rect(0, 0, 2, 2);
+        var r2:Rect = new Rect(5, 5, 2, 2);
+        this.assertEquals(null, r1 & r2);
+    }
 }
