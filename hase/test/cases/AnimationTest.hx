@@ -490,4 +490,156 @@ class AnimationTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 6
         );
     }
+
+    public function test_different_overlapping_frame_sizes():Void
+    {
+        var triangle_input:Array<Array<String>> = [
+            [ "   ,^.   "
+            , "  ,' `.  "
+            , " ,'   `. "
+            , ",'     `."
+            , "`-------'"
+            ],
+            [ "        "
+            , "   ,^.  "
+            , "  ,' `. "
+            , " ,'   `."
+            , " `-----'"
+            ],
+            [ "       "
+            , "   ,'. "
+            , "  ,' `."
+            , "  '---'"
+            ],
+            [ "      "
+            , "      "
+            , "   .'."
+            , "   `-'"
+            ]
+        ];
+
+        var tris:Array<hase.display.Animation> = [
+            this.create_animation(triangle_input),
+            this.create_animation(triangle_input),
+            this.create_animation(triangle_input),
+            this.create_animation(triangle_input),
+        ];
+
+        var bar:hase.display.Sprite = this.create_sprite(
+            [ ".---."
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "|   |"
+            , "`---'"
+            ]
+        );
+
+        for (tri in tris) {
+            tri.x = 0;
+            tri.z = 3;
+        }
+
+        bar.x = 4;
+        bar.z = 1;
+        bar.center_x = 2;
+
+        this.root.add_child(bar);
+
+        tris[0].y = 0;
+        this.root.add_child(tris[0]);
+        this.update();
+
+        this.assert_area(
+            [ "  .,^..  "
+            , "  ,' `.  "
+            , " ,'   `. "
+            , ",'|   |`."
+            , "`-------'"
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  `---'  "
+            ], 0, 0, 9, 14
+        );
+
+        tris[1].y = 3;
+        this.root.add_child(tris[1]);
+        this.update();
+
+        this.assert_area(
+            [ "  .---.  "
+            , "  |,^.|  "
+            , "  ,' `.  "
+            , " ,',^.`. "
+            , " `,'-`.' "
+            , " ,'   `. "
+            , ",'|   |`."
+            , "`-------'"
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  `---'  "
+            ], 0, 0, 9, 14
+        );
+
+        tris[2].y = 5;
+        this.root.add_child(tris[2]);
+        this.update();
+
+        this.assert_area(
+            [ "  .---.  "
+            , "  |,'.|  "
+            , "  |' `|  "
+            , "  |---|  "
+            , "  |,^.|  "
+            , "  ,,^..  "
+            , " ,,' `.. "
+            , " ,'---`. "
+            , ",'|   |`."
+            , "`-------'"
+            , "  |   |  "
+            , "  |   |  "
+            , "  |   |  "
+            , "  `---'  "
+            ], 0, 0, 9, 14
+        );
+
+        tris[3].y = 9;
+        this.root.add_child(tris[3]);
+        this.update();
+
+        this.assert_area(
+            [ "  .---.  "
+            , "  |   |  "
+            , "  |.'.|  "
+            , "  |`-'|  "
+            , "  |,'.|  "
+            , "  |' `|  "
+            , "  |,^.|  "
+            , "  ,' `.  "
+            , " ,'   `. "
+            , " `-,^.-' "
+            , "  ,' `.  "
+            , " ,'   `. "
+            , ",'|   |`."
+            , "`-------'"
+            ], 0, 0, 9, 14
+        );
+    }
 }
