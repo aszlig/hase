@@ -60,36 +60,48 @@ class Surface extends Object
         return sprite;
     }
 
-    private inline function fill_rect(rect:Rect, ?char:Int = " ".code):Void
-    {
-        for (y in rect.y...(rect.y + rect.height))
-            for (x in rect.x...(rect.x + rect.width))
-                this.draw_char(x, y, new Symbol(char));
-    }
+    private function combine_symbols(s1:Symbol, s2:Symbol):Symbol
+        return s2.is_alpha() ? s1 : s2;
 
     public function redraw_rect(rect:Rect):Void
     {
-        this.fill_rect(rect);
+        var base:Image = Image.create(rect.width, rect.height, " ".code);
 
-        for (sprite in this.sprites)
-            if (sprite.rect == null || sprite.rect.intersects(rect))
-                this.blit(sprite);
+        for (sprite in this.sprites) {
+            if (sprite.rect == null || sprite.ascii == null)
+                continue;
+
+            var common:Null<Rect> = sprite.rect & rect;
+            if (common == null)
+                continue;
+
+            // relative within redraw rectangle
+            var rel:Rect = new Rect(common.x - rect.x,
+                                    common.y - rect.y,
+                                    common.width,
+                                    common.height);
+
+            // relative within current sprite
+            var relsprite_x:Int = common.x - sprite.rect.x;
+            var relsprite_y:Int = common.y - sprite.rect.y;
+
+            base = base.map(inline function(x:Int, y:Int, sym:Symbol)
+                return !rel.contains(x, y) ? sym :
+                this.combine_symbols(sym, sprite.ascii.get(
+                    relsprite_x + (x - rel.x),
+                    relsprite_y + (y - rel.y)
+                ))
+            );
+        }
+
+        base.map_(inline function(x:Int, y:Int, sym:Symbol) {
+            this.draw_char(rect.x + x, rect.y + y, sym);
+        });
     }
 
     private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
     {
         if (x >= 0 && y >= 0 && x <= this.width && y <= this.height)
             this.terminal.draw_char(x, y, sym);
-    }
-
-    private function blit(sprite:Sprite):Void
-    {
-        if (sprite.ascii == null || sprite.rect == null)
-            return;
-
-        sprite.ascii.map_(inline function(x:Int, y:Int, sym:Symbol) {
-            if (sym.is_alpha()) return;
-            this.draw_char(sprite.rect.x + x, sprite.rect.y + y, sym);
-        });
     }
 }
