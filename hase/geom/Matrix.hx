@@ -173,6 +173,10 @@ abstract Matrix<T> (MatrixBase<T>)
                 [for (x in 0...this.width) Matrix.get(x, y)]];
     }
 
+    public static inline function
+        create<T>(width:Int, height:Int, val:T):Matrix<T>
+        return new Matrix(width, height, [for (_ in 0...(width * height)) val]);
+
     private static inline function fold_maxsize<O>(array:Array<O>, acc:Int):Int
         return array.length > acc ? array.length : acc;
 

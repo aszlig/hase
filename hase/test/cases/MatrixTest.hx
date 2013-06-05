@@ -613,4 +613,16 @@ class MatrixTest extends haxe.unit.TestCase
             ]
         );
     }
+
+    public function test_create_simple():Void
+    {
+        var matrix:Matrix<Int> = Matrix.create(4, 4, 666);
+        this.assert_matrix(matrix,
+            [ [666, 666, 666, 666]
+            , [666, 666, 666, 666]
+            , [666, 666, 666, 666]
+            , [666, 666, 666, 666]
+            ]
+        );
+    }
 }
