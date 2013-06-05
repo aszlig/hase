@@ -63,9 +63,6 @@ class Surface extends Object
         return sprite;
     }
 
-    private function combine_symbols(s1:Symbol, s2:Symbol):Symbol
-        return s2.is_alpha() ? s1 : s2;
-
     @:allow(hase.display.Sprite.blit)
     private function redraw_rect(rect:Rect):Void
     {
@@ -75,32 +72,34 @@ class Surface extends Object
             if (sprite.rect == null || sprite.ascii == null)
                 continue;
 
+            // intersection between redraw rectangle and current sprite
             var common:Null<Rect> = sprite.rect & rect;
             if (common == null)
                 continue;
 
             // relative within redraw rectangle
-            var rel:Rect = new Rect(common.x - rect.x,
-                                    common.y - rect.y,
-                                    common.width,
-                                    common.height);
+            var rel_redraw_x:Int = common.x - rect.x;
+            var rel_redraw_y:Int = common.y - rect.y;
 
             // relative within current sprite
-            var relsprite_x:Int = common.x - sprite.rect.x;
-            var relsprite_y:Int = common.y - sprite.rect.y;
+            var rel_sprite_x:Int = common.x - sprite.rect.x;
+            var rel_sprite_y:Int = common.y - sprite.rect.y;
 
-            base = base.map(inline function(x:Int, y:Int, sym:Symbol)
-                return !rel.contains(x, y) ? sym :
-                this.combine_symbols(sym, sprite.ascii.get(
-                    relsprite_x + (x - rel.x),
-                    relsprite_y + (y - rel.y)
-                ))
-            );
+            for (y in rel_redraw_y...(rel_redraw_y + common.height)) {
+                for (x in rel_redraw_x...(rel_redraw_x + common.width)) {
+                    var sym:Symbol = sprite.ascii.get(
+                        rel_sprite_x + (x - rel_redraw_x),
+                        rel_sprite_y + (y - rel_redraw_y)
+                    );
+
+                    if (!sym.is_alpha())
+                        base.set(x, y, sym);
+                }
+            }
         }
 
-        base.map_(inline function(x:Int, y:Int, sym:Symbol) {
-            this.draw_char(rect.x + x, rect.y + y, sym);
-        });
+        base.map_(inline function(x:Int, y:Int, sym:Symbol):Void
+                  this.draw_char(rect.x + x, rect.y + y, sym));
     }
 
     private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
