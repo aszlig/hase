@@ -82,8 +82,8 @@ abstract Rect (Array<Int>)
 
     public inline function contains(x:Int, y:Int):Bool
     {
-        return Rect.x <= x && Rect.right >= x
-            && Rect.y <= y && Rect.bottom >= y;
+        return Rect.x <= x && Rect.right > x
+            && Rect.y <= y && Rect.bottom > y;
     }
 
     @:op(A & B)
