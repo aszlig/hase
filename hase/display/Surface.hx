@@ -38,21 +38,24 @@ class Surface extends Object
         this.sprites = new Array();
     }
 
-    public inline function z_reorder():Void
+    @:allow(hase.display.Object.set_z)
+    private inline function z_reorder():Void
     {
         this.sprites.sort(function(a:Sprite, b:Sprite) {
             return (a.z < b.z) ? -1 : (a.z > b.z) ? 1 : 0;
         });
     }
 
-    public inline function register_sprite(sprite:Sprite):Sprite
+    @:allow(hase.display.Sprite.set_surface)
+    private inline function register_sprite(sprite:Sprite):Sprite
     {
         this.sprites.push(sprite);
         this.z_reorder();
         return sprite;
     }
 
-    public inline function unregister_sprite(sprite:Sprite):Sprite
+    @:allow(hase.display.Sprite.set_surface)
+    private inline function unregister_sprite(sprite:Sprite):Sprite
     {
         this.sprites.remove(sprite);
         if (sprite.rect != null)
@@ -63,7 +66,8 @@ class Surface extends Object
     private function combine_symbols(s1:Symbol, s2:Symbol):Symbol
         return s2.is_alpha() ? s1 : s2;
 
-    public function redraw_rect(rect:Rect):Void
+    @:allow(hase.display.Sprite.blit)
+    private function redraw_rect(rect:Rect):Void
     {
         var base:Image = Image.create(rect.width, rect.height, " ".code);
 
