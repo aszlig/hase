@@ -48,8 +48,9 @@ abstract PVector (Array<Float>)
 
     public inline function normalize():PVector
     {
-        var len:Float = Math.sqrt(this[0] * this[0] + this[1] * this[1]);
-        return new PVector(this[0] / len, this[1] / len);
+        var len:Float = Math.sqrt(PVector.x * PVector.x +
+                                  PVector.y * PVector.y);
+        return new PVector(PVector.x / len, PVector.y / len);
     }
 
     @:op(A + B)
