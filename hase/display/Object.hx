@@ -40,7 +40,7 @@ class Object
 
     public var is_dirty:Bool;
 
-    public var surface(default, set):Surface;
+    public var surface(default, set):Null<Surface>;
     public var is_surface:Bool;
 
     public var autoresize:Bool;
@@ -167,7 +167,7 @@ class Object
         return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
     }
 
-    private function set_surface(val:Surface):Surface
+    private function set_surface(val:Null<Surface>):Null<Surface>
     {
         for (child in this.children)
             child.surface = val;
