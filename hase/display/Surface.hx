@@ -39,7 +39,7 @@ class Surface extends Object
     }
 
     @:allow(hase.display.Object.set_z)
-    private inline function z_reorder():Void
+    private function z_reorder():Void
     {
         this.sprites.sort(function(a:Sprite, b:Sprite) {
             return (a.z < b.z) ? -1 : (a.z > b.z) ? 1 : 0;
