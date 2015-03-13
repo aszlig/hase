@@ -31,7 +31,7 @@ typedef FrameData = {
 class Animation extends Sprite
 {
     private var frames:Array<FrameData>;
-    private var current:Int;
+    public var current:Int; // XXX: make this private and refactor
 
     private var td:Null<Float>;
     private var shift:Float;
