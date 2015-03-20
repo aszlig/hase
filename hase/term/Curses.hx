@@ -142,7 +142,7 @@ typedef TermSize = {
         this.begin_op();
 
         if (this.last_y != y || this.last_x != x)
-            this.write_csi('${y};${x}f');
+            this.write_csi('${y + 1};${x + 1}f');
 
         this.set_color(sym.fgcolor, sym.bgcolor);
         this.buffer.addChar(sym.ordinal);
