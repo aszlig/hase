@@ -26,6 +26,7 @@ class Main
     {
         var runner = new haxe.unit.TestRunner();
         runner.add(new hase.test.cases.SpriteTest());
+        runner.add(new hase.test.cases.SurfaceTest());
         runner.add(new hase.test.cases.AnimationTest());
         runner.add(new hase.test.cases.MatrixTest());
         runner.add(new hase.test.cases.AnimationParserTest());
