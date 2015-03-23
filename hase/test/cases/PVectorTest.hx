@@ -47,6 +47,14 @@ class PVectorTest extends haxe.unit.TestCase
         this.assert_vector(-15, -12, v * -3.0);
     }
 
+    public function test_divide_float():Void
+    {
+        var v:PVector = new PVector(24, 12);
+
+        this.assert_vector(6, 3, new PVector(24, 12) / 4);
+        this.assert_vector(3, 10, new PVector(9, 30) / 3);
+    }
+
     public function test_negate():Void
     {
         var v:PVector = new PVector(5, 4);
