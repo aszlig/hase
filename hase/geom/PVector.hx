@@ -61,9 +61,6 @@ abstract PVector (Array<Float>)
     public static inline function sub(a:PVector, b:PVector):PVector
         return new PVector(a.x - b.x, a.y - b.y);
 
-    @:op(A * B)
-    public static inline function mul(a:PVector, b:PVector):PVector
-        return new PVector(a.x * b.x, a.y * b.y);
 
     @:commutative @:op(A * B)
     public static inline function mulf(a:PVector, b:Float):PVector

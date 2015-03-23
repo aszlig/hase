@@ -37,7 +37,6 @@ class PVectorTest extends haxe.unit.TestCase
 
         this.assert_vector( 8, 6, v1 + v2);
         this.assert_vector( 2, 2, v1 - v2);
-        this.assert_vector(15, 8, v1 * v2);
     }
 
     public function test_multiply_float():Void
