@@ -72,4 +72,24 @@ abstract PVector (Array<Float>)
     @:op(-A)
     public static inline function inv(v:PVector):PVector
         return new PVector(-v.x, -v.y);
+
+    @:op(A == B)
+    public static inline function eq(a:PVector, b:PVector):Bool
+        return a.x == b.x && a.y == b.y;
+
+    @:op(A < B)
+    public static inline function lt(a:PVector, b:PVector):Bool
+        return a.x < b.x && a.y < b.y;
+
+    @:op(A <= B)
+    public static inline function le(a:PVector, b:PVector):Bool
+        return a.x <= b.x && a.y <= b.y;
+
+    @:op(A > B)
+    public static inline function gt(a:PVector, b:PVector):Bool
+        return a.x > b.x && a.y > b.y;
+
+    @:op(A >= B)
+    public static inline function ge(a:PVector, b:PVector):Bool
+        return a.x >= b.x && a.y >= b.y;
 }

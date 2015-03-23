@@ -30,6 +30,48 @@ class PVectorTest extends haxe.unit.TestCase
         this.assertEquals(y, result.y);
     }
 
+    public function test_equality():Void
+    {
+        this.assertTrue(new PVector(10, 20) == new PVector(10, 20));
+        this.assertFalse(new PVector(10, 20) == new PVector(20, 10));
+    }
+
+    public function test_lower_than():Void
+    {
+        this.assertTrue( new PVector( 9,  9) < new PVector(10, 10));
+        this.assertFalse(new PVector(10,  9) < new PVector(10, 10));
+        this.assertFalse(new PVector( 9, 10) < new PVector(10, 10));
+        this.assertFalse(new PVector(10, 10) < new PVector(10, 10));
+        this.assertFalse(new PVector(11, 11) < new PVector(10, 10));
+    }
+
+    public function test_lower_equal():Void
+    {
+        this.assertTrue( new PVector( 9,  9) <= new PVector(10, 10));
+        this.assertTrue( new PVector(10,  9) <= new PVector(10, 10));
+        this.assertTrue( new PVector( 9, 10) <= new PVector(10, 10));
+        this.assertTrue( new PVector(10, 10) <= new PVector(10, 10));
+        this.assertFalse(new PVector(11, 11) <= new PVector(10, 10));
+    }
+
+    public function test_greater_than():Void
+    {
+        this.assertTrue( new PVector(10, 10) > new PVector( 9,  9));
+        this.assertFalse(new PVector(10, 10) > new PVector(10,  9));
+        this.assertFalse(new PVector(10, 10) > new PVector( 9, 10));
+        this.assertFalse(new PVector(10, 10) > new PVector(10, 10));
+        this.assertFalse(new PVector(10, 10) > new PVector(11, 11));
+    }
+
+    public function test_greater_equal():Void
+    {
+        this.assertTrue( new PVector(10, 10) >= new PVector( 9,  9));
+        this.assertTrue( new PVector(10, 10) >= new PVector(10,  9));
+        this.assertTrue( new PVector(10, 10) >= new PVector( 9, 10));
+        this.assertTrue( new PVector(10, 10) >= new PVector(10, 10));
+        this.assertFalse(new PVector(10, 10) >= new PVector(11, 11));
+    }
+
     public function test_simple_math():Void
     {
         var v1:PVector = new PVector(5, 4);
