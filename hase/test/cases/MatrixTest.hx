@@ -48,7 +48,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_irregular_rows():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [1]
             , [2, 3, 4, 5, 6]
             , [7, 8, 9]
@@ -83,7 +83,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_row_grow():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
@@ -102,7 +102,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_smaller_row():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
@@ -121,7 +121,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_2x2_grow_to_4x4_width_first():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [1, 2]
             , [3, 4]
             ];
@@ -140,7 +140,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_2x2_grow_to_4x4_height_first():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [1, 2]
             , [3, 4]
             ];
@@ -159,7 +159,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_4x4_shrink_to_2x2_width_first():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
@@ -178,7 +178,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_4x4_shrink_to_2x2_height_first():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Null<Int>> =
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
