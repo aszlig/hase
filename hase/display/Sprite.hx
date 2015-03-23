@@ -57,8 +57,8 @@ class Sprite extends Object
 
         var old_rect:Rect = this.rect;
         this.rect = new Rect(
-            this.parent.absolute_x + this.x - this.center_x,
-            this.parent.absolute_y + this.y - this.center_y,
+            this.absolute_x - this.center_x,
+            this.absolute_y - this.center_y,
             width, height
         );
 
