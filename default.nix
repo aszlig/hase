@@ -19,7 +19,9 @@ in stdenv.mkDerivation {
 
   doCheck = true;
   checkPhase = ''
-    haxe test.hxml
+    haxe --macro 'hase.test.Main.main()'
+    haxe -main hase.test.Main -cpp test -D HXCPP_M64
+    ./test/Main
   '';
 
   installPhase = ''
