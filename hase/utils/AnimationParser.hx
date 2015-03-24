@@ -48,7 +48,7 @@ class AnimationParser
                 }
 
                 return sym;
-            }
+            }, 0
         );
 
         return frame;
@@ -134,10 +134,10 @@ class AnimationParser
                 container_data.push(line);
         }
 
-        var container_area:Image = [
+        var container_area:Image = Matrix.from_2d_array([
             for (line in container_data)
                 [for (c in 0...line.length) line.charCodeAt(c)]
-        ];
+        ], 0);
 
         var containers:Array<Container> = new Array();
 
@@ -156,10 +156,10 @@ class AnimationParser
         if (containers.length == 1)
             return containers[0];
 
-        var merged:Matrix<ColorMixer> = [
+        var merged:Matrix<ColorMixer> = Matrix.from_2d_array([
             for (y in 0...containers[0].body.height)
                 [for (x in 0...containers[0].body.width) new ColorMixer()]
-        ];
+        ], new ColorMixer());
 
         for (container in containers) {
             for (header in container.headers) {
@@ -176,13 +176,13 @@ class AnimationParser
                     return cm;
                 };
 
-                merged = merged.zip(container.body, merger);
+                merged = merged.zip(container.body, merger, new ColorMixer());
             }
         }
 
         return {
             headers: new Array(),
-            body: merged.map(function(x, y, cm:ColorMixer) return cm.merge())
+            body: merged.map(function(x, y, cm:ColorMixer) return cm.merge(), 0)
         }
     }
 

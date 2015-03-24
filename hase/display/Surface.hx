@@ -66,7 +66,8 @@ class Surface extends Object
     @:allow(hase.display.Sprite.blit)
     private function redraw_rect(rect:Rect):Void
     {
-        var base:Image = Image.create(rect.width, rect.height, " ".code);
+        var base:Image = Image.create(rect.width, rect.height,
+                                      " ".code, " ".code);
 
         for (sprite in this.sprites) {
             if (sprite.rect == null || sprite.ascii == null)
