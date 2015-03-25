@@ -260,4 +260,52 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
         this.assertEquals(25, result[0].image.width);
         this.assertEquals(15, result[0].image.height);
     }
+
+    public function test_references()
+    {
+        var result = this.parse_anim(
+            [ "+reference: !"
+            , ": plain   :"
+            , "|         |"
+            , "| o     o |"
+            , "|    !    |"
+            , "| `-----' |"
+            , "|         |"
+            , "-"
+            , "+reference: x"
+            , ": plain   :"
+            , "| !x    ! |"
+            , "| .-----. |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+
+        anim.x = 8;
+        anim.y = 8;
+        this.root.add_child(anim);
+
+        this.update();
+
+        this.assert_area(
+            [ "         "
+            , " o     o "
+            , "         "
+            , " `-----' "
+            , "         "
+            ], 4, 6, 9, 5
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "         "
+            , "         "
+            , " !     ! "
+            , " .-----. "
+            , "         "
+            ], 6, 6, 9, 5
+        );
+    }
 }
