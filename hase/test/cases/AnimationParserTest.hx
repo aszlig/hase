@@ -24,7 +24,7 @@ import hase.display.Animation;
 import hase.display.Image;
 import hase.display.Symbol;
 
-class AnimationParserTest extends haxe.unit.TestCase
+class AnimationParserTest extends hase.test.SurfaceTestCase
 {
     private function parse_anim(data:Array<String>):Array<FrameData>
     {
@@ -79,6 +79,132 @@ class AnimationParserTest extends haxe.unit.TestCase
         this.assert_row("YYY", result[1].image, 0);
         this.assert_row("YYY", result[1].image, 1);
         this.assert_row("YYY", result[1].image, 2);
+    }
+
+    public function test_different_frame_sizes():Void
+    {
+        var result:Array<FrameData> = this.parse_anim(
+            [ "|l"
+            , "|it"
+            , "|le!"
+            , "-"
+            , "|          B"
+            , "|     I"
+            , "|     I"
+            , "|G!"
+            ]
+        );
+
+        this.assertEquals(2, result.length);
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+
+        this.root.add_child(anim);
+        this.update();
+
+        this.assert_area(
+            [ "l   "
+            , "it  "
+            , "le! "
+            , "    "
+            ], 0, 0, 4, 4
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "          B "
+            , "     I      "
+            , "     I      "
+            , "G!          "
+            , "            "
+            ], 0, 0, 12, 5
+        );
+    }
+
+    public function test_different_frame_sizes_with_color():Void
+    {
+        var result:Array<FrameData> = this.parse_anim(
+            [ ": plain                   : : red           :"
+            , "| -.__,'``=.--__          | |               |"
+            , "|  __ `--   `   `.   ))   | |               |"
+            , "| ---:   -----.  ;__-' `. | |        555555 |"
+            , "|     `-.  `--)      vv|| | |          5555 |"
+            , "|          `--;; ,,''     | |               |"
+            , "|               <.        |"
+            , "|    __.----._    ^;,     | : green   |"
+            , "|    ,'    ' .'-.__ `||;  | |         |"
+            , "|              ' |,`|,'   | |  33     |"
+            , "|               ,' /'     | | 3333    |"
+            , "                            |     333 |"
+            , ""
+            , ": ansi                    :: red                     :"
+            , "|                         || 22222222222222          |"
+            , "|                         ||  22 222   2   22   22   |"
+            , "|                         ||        999999  22222 22 |"
+            , "|                    WWWW ||       1  9999      vv|| |"
+            , "|                         ||          11122 2222     |"
+            , "|                         ||               22        |"
+            , "|                 WWW     ||    222222222            |"
+            , "|                   WWW;  ||    22    2 222222       |"
+            , "|                wwwwww   ||              2          |"
+            , "|               ww ww     ||                         |"
+            , "-"
+            , ": plain          :          : ansi     :"
+            , "| not that small |          :     WWWW |"
+            , "| smaller        |"
+            ]
+        );
+
+        this.assertEquals(2, result.length);
+
+        var mixer:hase.utils.ColorMixer = new hase.utils.ColorMixer();
+        mixer.plain = "-".code;
+        mixer.red = "5".code;
+
+        var red_dash:Symbol = mixer.merge();
+
+        var got_it:Bool = false;
+
+        result[0].image.map_(inline function(x:Int, y:Int, sym:Symbol) {
+            if (y == 2 && x >= 9 && x <= 12) {
+                this.assertEquals(red_dash, sym);
+                got_it = true;
+            }
+        });
+
+        this.assertTrue(got_it);
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+
+        this.root.add_child(anim);
+        this.update();
+
+        this.assert_area(
+            [ " -.__,'``=.--__          "
+            , "  __ `--   `   `.   ))   "
+            , " ---:   -----.  ;__-' `. "
+            , "     `-.  `--)      vv|| "
+            , "          `--;; ,,''     "
+            , "               <.        "
+            , "    __.----._    ^;,     "
+            , "    ,'    ' .'-.__ `||;  "
+            , "              ' |,`|,'   "
+            , "               ,' /'     "
+            , "                         "
+            ], 0, 0, 25, 11
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ " not that small "
+            , " smaller        "
+            , "                "
+            ], 0, 0, 16, 3
+        );
     }
 
     public function test_oneframe_header()
