@@ -22,63 +22,72 @@ package hase.geom;
 
 class Matrix<T>
 {
-    public var width(default, set):Int;
-    public var height(default, set):Int;
+    private var _width:Int;
+    private var _height:Int;
     private var data:Array<T>;
     private var default_value:T;
 
-    public inline function new(width:Int, height:Int, data:Array<T>, defval:T)
+    public var width(get, set):Int;
+    public var height(get, set):Int;
+
+    private inline function new(width:Int, height:Int, data:Array<T>, defval:T)
     {
-        this.width = width;
-        this.height = height;
+        this._width = width;
+        this._height = height;
         this.data = data;
         this.default_value = defval;
     }
 
+    private inline function get_width():Int
+        return this._width;
+
     public inline function set_width(new_width:Int):Int
     {
-        while (this.width < new_width) {
-            for (y in 1...(this.height + 1))
-                this.data.insert(y * this.width + (y - 1), this.default_value);
-            this.width++;
+        while (this._width < new_width) {
+            for (y in 1...(this._height + 1))
+                this.data.insert(y * this._width + (y - 1), this.default_value);
+            this._width++;
         }
 
-        if (this.width > new_width) {
-            for (y in 1...(this.height + 1))
-                this.data.splice(y * new_width, this.width - new_width);
+        if (this._width > new_width) {
+            for (y in 1...(this._height + 1))
+                this.data.splice(y * new_width, this._width - new_width);
 
-            this.width = new_width;
+            this._width = new_width;
         }
 
-        return this.width;
+        return this._width;
     }
+
+    private inline function get_height():Int
+        return this._height;
 
     public inline function set_height(new_height:Int):Int
     {
-        while (this.height < new_height) {
-            for (x in 0...this.width) this.data.push(this.default_value);
-            this.height++;
+        while (this._height < new_height) {
+            for (x in 0...this._width) this.data.push(this.default_value);
+            this._height++;
         }
 
-        while (this.height > new_height) {
-            for (x in 0...this.width)
+        while (this._height > new_height) {
+            for (x in 0...this._width)
                 this.data.pop();
-            this.height--;
+            this._height--;
         }
 
-        return this.height;
+        return this._height;
     }
 
     public inline function get(x:Int, y:Int):T
-        return this.data[y * this.width + x];
+        return this.data[y * this._width + x];
 
     public inline function set(x:Int, y:Int, val:T):T
-        return this.data[y * this.width + x] = val;
+        return this.data[y * this._width + x] = val;
 
     public inline function map_(f:Int -> Int -> T -> Void):Void
     {
-        for (y in 0...this.height)
-            for (x in 0...this.width)
+        for (y in 0...this._height)
+            for (x in 0...this._width)
                 f(x, y, this.get(x, y));
     }
 
@@ -86,11 +95,11 @@ class Matrix<T>
     {
         var out:Array<R> = new Array();
 
-        for (y in 0...this.height)
-            for (x in 0...this.width)
+        for (y in 0...this._height)
+            for (x in 0...this._width)
                 out.push(f(x, y, this.get(x, y)));
 
-        return new Matrix(this.width, this.height, out, def);
+        return new Matrix(this._width, this._height, out, def);
     }
 
     public inline function
@@ -104,13 +113,13 @@ class Matrix<T>
 
     public inline function add_row(row:Array<T>):Array<T>
     {
-        if (row.length > this.width)
+        if (row.length > this._width)
             this.set_width(row.length);
 
-        for (x in 0...this.width)
+        for (x in 0...this._width)
             this.data.push(x >= row.length ? this.default_value : row[x]);
 
-        this.height++;
+        this._height++;
 
         return row;
     }
@@ -118,16 +127,16 @@ class Matrix<T>
     public inline function delete_col(pos:Int, len:Int = 1):Void
     {
         if (pos < 0)
-            pos = this.width + pos;
+            pos = this._width + pos;
         if (len < 0)
-            len = this.width + len - pos + 1;
-        if (pos + len > this.width)
-            len = this.width - pos;
+            len = this._width + len - pos + 1;
+        if (pos + len > this._width)
+            len = this._width - pos;
 
-        this.width -= len;
+        this._width -= len;
 
-        for (y in 0...this.height)
-            this.data.splice(y * this.width + pos, len);
+        for (y in 0...this._height)
+            this.data.splice(y * this._width + pos, len);
     }
 
     public inline function
@@ -136,17 +145,17 @@ class Matrix<T>
         var new_data:Array<T> = new Array();
 
         if (x < 0)
-            x = this.width + x;
+            x = this._width + x;
         if (y < 0)
-            y = this.width + y;
+            y = this._width + y;
         if (width < 0)
-            width = this.width + width - x + 1;
+            width = this._width + width - x + 1;
         if (height < 0)
-            height = this.height + height - y + 1;
-        if (x + width > this.width)
-            width = this.width - x;
-        if (y + height > this.height)
-            height = this.height - y;
+            height = this._height + height - y + 1;
+        if (x + width > this._width)
+            width = this._width - x;
+        if (y + height > this._height)
+            height = this._height - y;
 
         for (yi in y...(y + height))
             for (xi in x...(x + width))
@@ -160,8 +169,8 @@ class Matrix<T>
 
     public inline function to_2d_array():Array<Array<T>>
     {
-        return [for (y in 0...this.height)
-                [for (x in 0...this.width) this.get(x, y)]];
+        return [for (y in 0...this._height)
+                [for (x in 0...this._width) this.get(x, y)]];
     }
 
     public static inline function
