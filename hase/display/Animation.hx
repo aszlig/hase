@@ -153,7 +153,7 @@ class Animation extends Sprite
         super.update(td);
     }
 
-    macro public static function from_file(path:String):Expr
+    macro public static function load_framedata(path:String):Expr
     {
         var data:Array<FrameData> =
             hase.utils.AnimationParser.parse_file(path);
@@ -165,11 +165,14 @@ class Animation extends Sprite
             key: fd.key,
         }];
 
-        return macro new Animation([for (fd in $v{raw_data}) {
+        return macro [for (fd in $v{raw_data}) {
             image: hase.geom.Matrix.from_2d_array(fd.raw_image, 0),
             refpoint_x: fd.refpoint_x,
             refpoint_y: fd.refpoint_y,
             key: fd.key,
-        }]);
+        }];
     }
+
+    macro public static function from_file(path:String):Expr
+        return macro new Animation(Animation.load_framedata($v{path}));
 }
