@@ -475,6 +475,20 @@ class MatrixTest extends haxe.unit.TestCase
         );
     }
 
+    public function test_extract_nirvana():Void
+    {
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
+            [ [ 1,  2,  3,  4]
+            , [ 5,  6,  7,  8]
+            , [ 9, 10, 11, 12]
+            , [13, 14, 15, 16]
+            ], 0
+        );
+
+        var new_matrix:Matrix<Int> = matrix.extract(20, 20, 60, 60);
+        this.assert_matrix(new_matrix, []);
+    }
+
     public function test_extract_one_row():Void
     {
         var matrix:Matrix<Int> = Matrix.from_2d_array(

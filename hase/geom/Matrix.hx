@@ -78,17 +78,32 @@ class Matrix<T>
         return this._height;
     }
 
-    public inline function get(x:Int, y:Int):T
+    public inline function unsafe_get(x:Int, y:Int):T
         return this.data[y * this._width + x];
 
-    public inline function set(x:Int, y:Int, val:T):T
+    public inline function unsafe_set(x:Int, y:Int, val:T):T
         return this.data[y * this._width + x] = val;
+
+    public inline function get(x:Int, y:Int):T
+    {
+        return (x < 0 || y < 0 || x >= this._width || y >= this.height)
+             ? this.default_value : this.unsafe_get(x, y);
+    }
+
+    public inline function set(x:Int, y:Int, val:T):T
+    {
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x >= this._width)  this.width  = x + 1;
+        if (y >= this._height) this.height = y + 1;
+        return this.unsafe_set(x, y, val);
+    }
 
     public inline function map_(f:Int -> Int -> T -> Void):Void
     {
         for (y in 0...this._height)
             for (x in 0...this._width)
-                f(x, y, this.get(x, y));
+                f(x, y, this.unsafe_get(x, y));
     }
 
     public inline function map<R>(f:Int -> Int -> T -> R, def:R):Matrix<R>
@@ -97,7 +112,7 @@ class Matrix<T>
 
         for (y in 0...this._height)
             for (x in 0...this._width)
-                out.push(f(x, y, this.get(x, y)));
+                out.push(f(x, y, this.unsafe_get(x, y)));
 
         return new Matrix(this._width, this._height, out, def);
     }
@@ -105,8 +120,19 @@ class Matrix<T>
     public inline function
         zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R, def:R):Matrix<R>
     {
+        if (this._width > m._width)
+            m.width = this._width
+        else if (this._width < m._width)
+            this.width = m._width;
+
+        if (this._height > m._height)
+            m.height = this._height;
+        else if (this._height < m._height)
+            this.height = m._height;
+
         return this.map(
-            inline function(x:Int, y:Int, sym:T) return f(sym, m.get(x, y)),
+            inline function(x:Int, y:Int, sym:T)
+                return f(sym, m.unsafe_get(x, y)),
             def
         );
     }
@@ -159,7 +185,7 @@ class Matrix<T>
 
         for (yi in y...(y + height))
             for (xi in x...(x + width))
-                new_data.push(this.get(xi, yi));
+                new_data.push(this.unsafe_get(xi, yi));
 
         return new Matrix(width, height, new_data, this.default_value);
     }
@@ -169,8 +195,10 @@ class Matrix<T>
 
     public inline function to_2d_array():Array<Array<T>>
     {
-        return [for (y in 0...this._height)
-                [for (x in 0...this._width) this.get(x, y)]];
+        return [
+            for (y in 0...this._height)
+                [for (x in 0...this._width) this.unsafe_get(x, y)]
+        ];
     }
 
     public static inline function
