@@ -20,22 +20,14 @@
  */
 package hase.term;
 
+#if cpp
+import hase.term.internal.RawTerm;
+#end
+
 typedef TermSize = {
     var width:Int;
     var height:Int;
 };
-
-@:headerCode("
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <signal.h>
-")
-
-@:cppFileCode("void cleanup(int signum) {
-    write(STDOUT_FILENO, \"\\33[?25h\\33[2J\\338\", 12);
-    signal(signum, SIG_DFL);
-    kill(getpid(), signum);
-}")
 
 @:require(cpp || neko) class Curses implements Interface
 {
@@ -59,7 +51,6 @@ typedef TermSize = {
         this.width = ts.width;
         this.height = ts.height;
 
-        this.install_cleanup();
         this.init_term();
 
         this.last_x = this.last_y = 0;
@@ -68,6 +59,13 @@ typedef TermSize = {
 
     private inline function init_term():Void
     {
+        #if cpp
+        RawTerm.setraw();
+        RawTerm.add_cleanup(inline function(signal:Int) {
+            this.exit(1);
+        });
+        #end
+
         this.begin_op();
 
         this.buffer.add("\x1b7");
@@ -76,18 +74,6 @@ typedef TermSize = {
         this.write_csi("0;0f");
 
         this.flush_op();
-    }
-
-    private inline function install_cleanup():Void
-    {
-        #if cpp
-        untyped __cpp__("
-            if (signal(SIGINT, SIG_IGN) != SIG_IGN)
-                signal(SIGINT, cleanup);
-            if (signal(SIGTERM, SIG_IGN) != SIG_IGN)
-                signal(SIGTERM, cleanup);
-        ");
-        #end
     }
 
     public inline function exit(code:Int):Void
@@ -100,7 +86,11 @@ typedef TermSize = {
 
         this.flush_op();
 
-        Sys.exit(code);
+        #if cpp
+        RawTerm.unsetraw();
+        RawTerm.remove_cleanups();
+        RawTerm.exit_now(code);
+        #end
     }
 
     private inline function get_termsize():TermSize
