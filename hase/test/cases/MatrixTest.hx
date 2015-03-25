@@ -49,17 +49,17 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_irregular_rows():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1]
             , [2, 3, 4, 5, 6]
             , [7, 8, 9]
-            ], null
+            ], 100
         );
 
         this.assert_matrix(matrix,
-            [ [   1, null, null, null, null]
+            [ [   1,  100,  100,  100,  100]
             , [   2,    3,    4,    5,    6]
-            , [   7,    8,    9, null, null]
+            , [   7,    8,    9,  100,  100]
             ]
         );
     }
@@ -86,19 +86,19 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_row_grow():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ], null
+            ], 200
         );
 
         matrix.add_row([10, 11, 12, 13, 14, 15]);
 
         this.assert_matrix(matrix,
-            [ [   1,    2,    3, null, null, null]
-            , [   4,    5,    6, null, null, null]
-            , [   7,    8,    9, null, null, null]
+            [ [   1,    2,    3,  200,  200,  200]
+            , [   4,    5,    6,  200,  200,  200]
+            , [   7,    8,    9,  200,  200,  200]
             , [  10,   11,   12,   13,   14,   15]
             ]
         );
@@ -106,11 +106,11 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_smaller_row():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ], null
+            ], 12
         );
 
         matrix.add_row([10, 11]);
@@ -119,59 +119,59 @@ class MatrixTest extends haxe.unit.TestCase
             [ [   1,    2,    3]
             , [   4,    5,    6]
             , [   7,    8,    9]
-            , [  10,   11, null]
+            , [  10,   11,   12]
             ]
         );
     }
 
     public function test_2x2_grow_to_4x4_width_first():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2]
             , [3, 4]
-            ], null
+            ], 1234
         );
 
         matrix.width = 4;
         matrix.height = 4;
 
         this.assert_matrix(matrix,
-            [ [   1,    2, null, null]
-            , [   3,    4, null, null]
-            , [null, null, null, null]
-            , [null, null, null, null]
+            [ [   1,    2, 1234, 1234]
+            , [   3,    4, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
             ]
         );
     }
 
     public function test_2x2_grow_to_4x4_height_first():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2]
             , [3, 4]
-            ], null
+            ], 1234
         );
 
         matrix.height = 4;
         matrix.width = 4;
 
         this.assert_matrix(matrix,
-            [ [   1,    2, null, null]
-            , [   3,    4, null, null]
-            , [null, null, null, null]
-            , [null, null, null, null]
+            [ [   1,    2, 1234, 1234]
+            , [   3,    4, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
             ]
         );
     }
 
     public function test_4x4_shrink_to_2x2_width_first():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ], null
+            ], 20
         );
 
         matrix.width = 2;
@@ -186,12 +186,12 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_4x4_shrink_to_2x2_height_first():Void
     {
-        var matrix:Matrix<Null<Int>> = Matrix.from_2d_array(
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ], null
+            ], 20
         );
 
         matrix.height = 2;
