@@ -52,12 +52,12 @@ typedef TermSize = {
 
     public function new()
     {
+        this.output = Sys.stdout();
+
         var ts:TermSize = this.get_termsize();
 
         this.width = ts.width;
         this.height = ts.height;
-
-        this.output = Sys.stdout();
 
         this.install_cleanup();
         this.init_term();
@@ -108,8 +108,29 @@ typedef TermSize = {
         var lines:Null<String> = Sys.getEnv("LINES");
         var columns:Null<String> = Sys.getEnv("COLUMNS");
 
-        if (lines == null || columns == null)
-            throw "Unable to get terminal size!";
+        if (lines == null || columns == null) {
+            this.begin_op();
+            this.write_csi("1000;1000H");
+            this.write_csi("6n");
+            this.flush_op();
+            if (Sys.getChar(false) == 0x1b) {
+                // Not using getChar && getChar because order of evaluation
+                // might be backend-specific!
+                if (Sys.getChar(false) == "[".code) {
+                    lines = "";
+                    columns = "";
+                    var char:Int = 0;
+                    while ((char = Sys.getChar(false)) != ";".code)
+                        lines += String.fromCharCode(char);
+
+                    while ((char = Sys.getChar(false)) != "R".code)
+                        columns += String.fromCharCode(char);
+                }
+            }
+
+            if (lines == null || columns == null)
+                throw "Unable to get terminal size!";
+        }
 
         return {
             width: Std.parseInt(columns),
