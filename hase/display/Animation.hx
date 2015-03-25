@@ -26,6 +26,7 @@ typedef FrameData = {
     image:Image,
     ?refpoint_x:Int,
     ?refpoint_y:Int,
+    ?key:String,
 };
 
 class Animation extends Sprite
@@ -37,6 +38,7 @@ class Animation extends Sprite
     private var shift:Float;
 
     public var fps(default, set):Float;
+    public var key:Null<String>;
 
     public var loopback:Bool;
 
@@ -96,10 +98,28 @@ class Animation extends Sprite
         }
     }
 
+    private function find_next_keyframe():Int
+    {
+        if (this.key != null) {
+            var frame_id:Int = this.current + 1;
+            if (frame_id >= this.frames.length) frame_id = 0;
+            while (this.frames[frame_id].key != this.key) {
+                if (++frame_id >= this.frames.length)
+                    frame_id = 0;
+                if (frame_id == this.current)
+                    return this.current + 1;
+            }
+            return frame_id;
+        }
+        return this.current + 1;
+    }
+
+    private inline function increment_current():Int
+        return this.current = this.find_next_keyframe();
+
     private function switch_frame():Void
     {
         var frame_id:Int = this.current < 0 ? -this.current : this.current;
-
         this.set_frame_options(this.frames[frame_id]);
         this.ascii = this.frames[frame_id].image;
     }
@@ -117,7 +137,7 @@ class Animation extends Sprite
         }
 
         while (this.td > this.shift) {
-            if (++this.current >= this.frames.length) {
+            if (this.increment_current() >= this.frames.length) {
                 if (this.loopback)
                     this.current = -this.frames.length + 1;
                 else
@@ -140,12 +160,14 @@ class Animation extends Sprite
             raw_image: fd.image.to_2d_array(),
             refpoint_x: fd.refpoint_x,
             refpoint_y: fd.refpoint_y,
+            key: fd.key,
         }];
 
         return macro new Animation([for (fd in $v{raw_data}) {
             image: hase.geom.Matrix.from_2d_array(fd.raw_image, 0),
             refpoint_x: fd.refpoint_x,
             refpoint_y: fd.refpoint_y,
+            key: fd.key,
         }]);
     }
 }

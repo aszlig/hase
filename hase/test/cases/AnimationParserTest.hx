@@ -308,4 +308,147 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             ], 6, 6, 9, 5
         );
     }
+
+    public function test_keyframes()
+    {
+        var result = this.parse_anim(
+            [ "+key: happy"
+            , ": plain   :"
+            , "| o     o |"
+            , "|    ^    |"
+            , "| `-----' |"
+            , "-"
+            , "+key: happy"
+            , ": plain   :"
+            , "| O     O |"
+            , "|    ^    |"
+            , "| `-----' |"
+            , "-"
+            , "+key: meh"
+            , ": plain   :"
+            , "| o     o |"
+            , "|    ^    |"
+            , "| `-----. |"
+            , "-"
+            , "+key: meh"
+            , ": plain   :"
+            , "| o     o |"
+            , "|    ^    |"
+            , "| .-----' |"
+            , "-"
+            , "+key: sad"
+            , ": plain   :"
+            , "| o     o |"
+            , "|    ^    |"
+            , "| .-----. |"
+            , "-"
+            , "+key: sad"
+            , ": plain   :"
+            , "| O     O |"
+            , "|    ^    |"
+            , "| .-----. |"
+            , "-"
+            , "+key: sad"
+            , ": plain   :"
+            , "| X     X |"
+            , "|    ^    |"
+            , "| .-----. |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+        anim.key = "happy";
+
+        this.root.add_child(anim);
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----' "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " O     O "
+            , "    ^    "
+            , " `-----' "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----' "
+            ], 0, 0, 9, 3
+        );
+
+        anim.key = "meh";
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----. "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " .-----' "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----. "
+            ], 0, 0, 9, 3
+        );
+
+        anim.key = "sad";
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " .-----. "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " O     O "
+            , "    ^    "
+            , " .-----. "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.assert_area(
+            [ " X     X "
+            , "    ^    "
+            , " .-----. "
+            ], 0, 0, 9, 3
+        );
+
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+
+        this.assert_area(
+            [ " O     O "
+            , "    ^    "
+            , " .-----. "
+            ], 0, 0, 9, 3
+        );
+    }
 }
