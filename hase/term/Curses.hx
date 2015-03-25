@@ -37,7 +37,7 @@ typedef TermSize = {
     kill(getpid(), signum);
 }")
 
-@:require(cpp) class Curses implements Interface
+@:require(cpp || neko) class Curses implements Interface
 {
     public var width:Int;
     public var height:Int;
@@ -80,17 +80,19 @@ typedef TermSize = {
 
     private inline function install_cleanup():Void
     {
-
+        #if cpp
         untyped __cpp__("
             if (signal(SIGINT, SIG_IGN) != SIG_IGN)
                 signal(SIGINT, cleanup);
             if (signal(SIGTERM, SIG_IGN) != SIG_IGN)
                 signal(SIGTERM, cleanup);
         ");
+        #end
     }
 
     private inline function get_termsize():TermSize
     {
+        #if cpp
         untyped {
             __cpp__("static struct winsize ws");
             var rval = __cpp__("ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws)");
@@ -102,6 +104,18 @@ typedef TermSize = {
                 height: __cpp__("ws.ws_row"),
             };
         };
+        #else
+        var lines:Null<String> = Sys.getEnv("LINES");
+        var columns:Null<String> = Sys.getEnv("COLUMNS");
+
+        if (lines == null || columns == null)
+            throw "Unable to get terminal size!";
+
+        return {
+            width: Std.parseInt(columns),
+            height: Std.parseInt(lines),
+        };
+        #end
     }
 
     private function begin_op():Void

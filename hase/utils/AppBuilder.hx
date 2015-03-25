@@ -82,7 +82,7 @@ class AppBuilder
                     };
                 }
             };
-            case "cpp": macro : {
+            case "cpp" | "neko": macro : {
                 public static function main():Void
                 {
                     var term:hase.term.Curses = new hase.term.Curses();

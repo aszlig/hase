@@ -25,7 +25,8 @@ in stdenv.mkDerivation {
   '';
 
   installPhase = ''
-    install -vD example/build/Example "$out/bin/hase-example"
+    install -vD example/build/Example "$out/bin/example"
+    install -vD example/example.n "$out/libexec/hase/example.n"
     install -m 0644 -vD example/example.js "$out/share/hase/example.js"
     install -m 0644 -vD example/example.html "$out/share/hase/example.html"
   '';

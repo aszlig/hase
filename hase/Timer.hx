@@ -22,6 +22,6 @@ package hase;
 
 #if js
 typedef Timer = hase.timer.JS;
-#elseif cpp
+#elseif (cpp || neko)
 typedef Timer = hase.timer.CPP;
 #end

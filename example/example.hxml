@@ -1,6 +1,11 @@
 #!/usr/bin/env haxe
 -cp ..
 -main Example
+-neko example.n
+-dce full
+--next
+-cp ..
+-main Example
 -js example.js
 -dce full
 --next

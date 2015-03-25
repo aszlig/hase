@@ -25,6 +25,8 @@ package hase;
 "js"
 #elseif cpp
 "cpp"
+#elseif neko
+"neko"
 #end
 )) interface Application
 {
