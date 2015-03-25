@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ class Main
         runner.add(new hase.test.cases.ColorTableTest());
         runner.add(new hase.test.cases.RectTest());
         runner.add(new hase.test.cases.PVectorTest());
+        runner.add(new hase.test.cases.MotionTest());
         runner.run();
     }
 }
