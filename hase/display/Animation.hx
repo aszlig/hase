@@ -139,7 +139,9 @@ class Animation extends Sprite
         while (this.td > this.shift) {
             if (this.increment_current() >= this.frames.length) {
                 if (this.loopback)
-                    this.current = -this.frames.length + 1;
+                    this.current = this.frames.length > 1
+                                 ? -this.frames.length + 2
+                                 : 0;
                 else
                     this.current = 0;
             }
