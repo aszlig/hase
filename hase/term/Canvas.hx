@@ -20,6 +20,7 @@
  */
 package hase.term;
 
+import hase.input.Key;
 import hase.term.internal.Font;
 
 @:require(js) class Canvas implements Interface
@@ -52,6 +53,9 @@ import hase.term.internal.Font;
 
     public inline function exit(code:Int):Void
         js.Browser.document.body.removeChild(this.canvas);
+
+    public inline function get_key():Key
+        return None;
 
     private inline function cursor2x(x:Int):Int
     {

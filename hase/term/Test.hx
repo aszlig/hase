@@ -39,6 +39,7 @@ class Test implements Interface
     }
 
     public inline function exit(code:Int):Void {}
+    public inline function get_key():hase.input.Key return None;
 
     public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
     {

@@ -24,6 +24,8 @@ package hase.term;
 import hase.term.internal.RawTerm;
 #end
 
+import hase.input.Key;
+
 typedef TermSize = {
     var width:Int;
     var height:Int;
@@ -90,6 +92,36 @@ typedef TermSize = {
         RawTerm.unsetraw();
         RawTerm.remove_cleanups();
         RawTerm.exit_now(code);
+        #end
+    }
+
+    public inline function get_key():Key
+    {
+        #if cpp
+        cpp.vm.Gc.enterGCFreeZone();
+
+        untyped __cpp__("
+            struct timeval tv;
+            fd_set fds;
+
+            tv.tv_sec = 0;
+            tv.tv_usec = 0;
+            FD_ZERO(&fds);
+            FD_SET(STDIN_FILENO, &fds);
+
+            select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+        ");
+
+        var char:Key = None;
+        if (untyped __cpp__("FD_ISSET(STDIN_FILENO, &fds)") > 0) {
+            char = Char(untyped __cpp__("getchar()"));
+        }
+
+        cpp.vm.Gc.exitGCFreeZone();
+
+        return char;
+        #else
+        return None;
         #end
     }
 

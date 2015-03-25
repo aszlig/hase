@@ -29,4 +29,5 @@ interface Interface
     public var width:Int;
     public var height:Int;
     public function exit(code:Int):Void;
+    public function get_key():hase.input.Key;
 }

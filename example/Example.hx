@@ -85,4 +85,6 @@ class Example implements hase.Application
             this.exit();
         }
     }
+
+    public function on_keypress(k:hase.input.Key):Void {}
 }

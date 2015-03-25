@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,19 +18,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase;
+package hase.input;
 
-@:autoBuild(hase.utils.AppBuilder.build(
-#if js
-"js"
-#elseif cpp
-"cpp"
-#elseif neko
-"neko"
-#end
-)) interface Application
-{
-    public function init():Void;
-    public function update(td:Float):Void;
-    public function on_keypress(td:hase.input.Key):Void;
+enum Key {
+    None;
+    ArrowUp;
+    ArrowDown;
+    ArrowLeft;
+    ArrowRight;
+    Char(c:Int);
 }
