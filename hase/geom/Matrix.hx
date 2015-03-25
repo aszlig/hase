@@ -41,7 +41,7 @@ class Matrix<T>
     private inline function get_width():Int
         return this._width;
 
-    public inline function set_width(new_width:Int):Int
+    private inline function set_width(new_width:Int):Int
     {
         while (this._width < new_width) {
             for (y in 1...(this._height + 1))
@@ -62,7 +62,7 @@ class Matrix<T>
     private inline function get_height():Int
         return this._height;
 
-    public inline function set_height(new_height:Int):Int
+    private inline function set_height(new_height:Int):Int
     {
         while (this._height < new_height) {
             for (x in 0...this._width) this.data.push(this.default_value);
