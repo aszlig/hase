@@ -136,6 +136,16 @@ class Animation extends Sprite
         var data:Array<FrameData> =
             hase.utils.AnimationParser.parse_file(path);
 
-        return macro new Animation($v{data});
+        var raw_data:Dynamic = [for (fd in data) {
+            raw_image: fd.image.to_2d_array(),
+            refpoint_x: fd.refpoint_x,
+            refpoint_y: fd.refpoint_y,
+        }];
+
+        return macro new Animation([for (fd in $v{raw_data}) {
+            image: hase.geom.Matrix.from_2d_array(fd.raw_image, 0),
+            refpoint_x: fd.refpoint_x,
+            refpoint_y: fd.refpoint_y,
+        }]);
     }
 }
