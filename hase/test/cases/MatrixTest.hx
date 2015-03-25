@@ -32,11 +32,12 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_simple():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 0
+        );
 
         this.assert_matrix(matrix,
             [ [1, 2, 3]
@@ -48,27 +49,29 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_irregular_rows():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1]
             , [2, 3, 4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 100
+        );
 
         this.assert_matrix(matrix,
-            [ [   1, null, null, null, null]
+            [ [   1,  100,  100,  100,  100]
             , [   2,    3,    4,    5,    6]
-            , [   7,    8,    9, null, null]
+            , [   7,    8,    9,  100,  100]
             ]
         );
     }
 
     public function test_3x3_add_row():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 0
+        );
 
         matrix.add_row([10, 11, 12]);
 
@@ -83,18 +86,19 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_row_grow():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 200
+        );
 
         matrix.add_row([10, 11, 12, 13, 14, 15]);
 
         this.assert_matrix(matrix,
-            [ [   1,    2,    3, null, null, null]
-            , [   4,    5,    6, null, null, null]
-            , [   7,    8,    9, null, null, null]
+            [ [   1,    2,    3,  200,  200,  200]
+            , [   4,    5,    6,  200,  200,  200]
+            , [   7,    8,    9,  200,  200,  200]
             , [  10,   11,   12,   13,   14,   15]
             ]
         );
@@ -102,11 +106,12 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_add_smaller_row():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 12
+        );
 
         matrix.add_row([10, 11]);
 
@@ -114,57 +119,60 @@ class MatrixTest extends haxe.unit.TestCase
             [ [   1,    2,    3]
             , [   4,    5,    6]
             , [   7,    8,    9]
-            , [  10,   11, null]
+            , [  10,   11,   12]
             ]
         );
     }
 
     public function test_2x2_grow_to_4x4_width_first():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2]
             , [3, 4]
-            ];
+            ], 1234
+        );
 
         matrix.width = 4;
         matrix.height = 4;
 
         this.assert_matrix(matrix,
-            [ [   1,    2, null, null]
-            , [   3,    4, null, null]
-            , [null, null, null, null]
-            , [null, null, null, null]
+            [ [   1,    2, 1234, 1234]
+            , [   3,    4, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
             ]
         );
     }
 
     public function test_2x2_grow_to_4x4_height_first():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2]
             , [3, 4]
-            ];
+            ], 1234
+        );
 
         matrix.height = 4;
         matrix.width = 4;
 
         this.assert_matrix(matrix,
-            [ [   1,    2, null, null]
-            , [   3,    4, null, null]
-            , [null, null, null, null]
-            , [null, null, null, null]
+            [ [   1,    2, 1234, 1234]
+            , [   3,    4, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
+            , [1234, 1234, 1234, 1234]
             ]
         );
     }
 
     public function test_4x4_shrink_to_2x2_width_first():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 20
+        );
 
         matrix.width = 2;
         matrix.height = 2;
@@ -178,12 +186,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_4x4_shrink_to_2x2_height_first():Void
     {
-        var matrix:Matrix<Null<Int>> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 20
+        );
 
         matrix.height = 2;
         matrix.width = 2;
@@ -197,14 +206,15 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_3x3_map():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [1, 2, 3]
             , [4, 5, 6]
             , [7, 8, 9]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> =
-            matrix.map(function(x:Int, y:Int, val:Int) return val + 1);
+            matrix.map(function(x:Int, y:Int, val:Int) return val + 1, 0);
 
         this.assert_matrix(new_matrix,
             [ [ 2,  3,  4]
@@ -216,12 +226,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_get_cross():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         this.assertEquals( 1, matrix.get(0, 0));
         this.assertEquals( 6, matrix.get(1, 1));
@@ -236,12 +247,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_manipulate_cross():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         for (i in 0...4) {
             matrix.set(i, i, 42);
@@ -259,12 +271,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_first_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(0);
 
@@ -279,12 +292,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_last_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(-1);
 
@@ -299,12 +313,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_to_end_exceed_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(2, 3);
 
@@ -319,12 +334,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_to_negative_end_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(2, -1);
 
@@ -339,12 +355,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_two_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(1, 2);
 
@@ -359,12 +376,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_nonexistant_cols():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(4, 2);
 
@@ -379,12 +397,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_delete_no_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         matrix.delete_col(2, 0);
 
@@ -399,12 +418,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_inner():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract(1, 1, 2, 2);
 
@@ -417,12 +437,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_full():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract();
 
@@ -437,12 +458,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_to_out_of_bounds():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract(2, 2, 6, 6);
 
@@ -455,12 +477,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_one_row():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract(0, 2, -1, 1);
 
@@ -472,12 +495,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_one_col():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract(2, 0, 1);
 
@@ -492,12 +516,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_inner_negative():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> = matrix.extract(-3, -3, 2, 2);
 
@@ -510,12 +535,13 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_extract_rect():Void
     {
-        var matrix:Matrix<Int> =
+        var matrix:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var rect:hase.geom.Rect = new hase.geom.Rect(1, 1, 2, 2);
         var new_matrix:Matrix<Int> = matrix.extract_rect(rect);
@@ -529,22 +555,24 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_zip_multiply():Void
     {
-        var matrix1:Matrix<Int> =
+        var matrix1:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
-        var matrix2:Matrix<Int> =
+        var matrix2:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Int> =
-            matrix1.zip(matrix2, function(m1:Int, m2:Int) return m1 * m2);
+            matrix1.zip(matrix2, function(m1:Int, m2:Int) return m1 * m2, 0);
 
         this.assert_matrix(new_matrix,
             [ [  1,   4,   9,  16]
@@ -557,23 +585,25 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_zip_different_return_type():Void
     {
-        var matrix1:Matrix<Int> =
+        var matrix1:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
-        var matrix2:Matrix<Int> =
+        var matrix2:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<String> =
             matrix1.zip(matrix2, function(m1:Int, m2:Int)
-                                 return Std.string(m1) + Std.string(m2));
+                                 return Std.string(m1) + Std.string(m2), "");
 
         this.assert_matrix(new_matrix,
             [ [  "11",   "22",   "33",   "44"]
@@ -586,24 +616,26 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_zip_all_different_types():Void
     {
-        var matrix1:Matrix<String> =
+        var matrix1:Matrix<String> = Matrix.from_2d_array(
             [ ["a", "b", "c", "d"]
             , ["e", "f", "g", "h"]
             , ["i", "J", "K", "L"]
             , ["M", "N", "O", "P"]
-            ];
+            ], ""
+        );
 
-        var matrix2:Matrix<Int> =
+        var matrix2:Matrix<Int> = Matrix.from_2d_array(
             [ [ 1,  2,  3,  4]
             , [ 5,  6,  7,  8]
             , [ 9, 10, 11, 12]
             , [13, 14, 15, 16]
-            ];
+            ], 0
+        );
 
         var new_matrix:Matrix<Bool> =
             matrix1.zip(matrix2, function(m1:String, m2:Int) {
                 return ((m1.toUpperCase() == m1 ? 2 : 1) + m2) % 2 == 0;
-            });
+            }, false);
 
         this.assert_matrix(new_matrix,
             [ [ true, false,  true, false]
@@ -616,7 +648,7 @@ class MatrixTest extends haxe.unit.TestCase
 
     public function test_create_simple():Void
     {
-        var matrix:Matrix<Int> = Matrix.create(4, 4, 666);
+        var matrix:Matrix<Int> = Matrix.create(4, 4, 666, 0);
         this.assert_matrix(matrix,
             [ [666, 666, 666, 666]
             , [666, 666, 666, 666]

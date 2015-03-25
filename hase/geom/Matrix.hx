@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,106 +20,106 @@
  */
 package hase.geom;
 
-private typedef MatrixBase<T> = {
-    var data:Array<T>;
-    var width:Int;
-    var height:Int;
-}
-
-abstract Matrix<T> (MatrixBase<T>)
+class Matrix<T>
 {
+    private var _width:Int;
+    private var _height:Int;
+    private var data:Array<T>;
+    private var default_value:T;
+
     public var width(get, set):Int;
     public var height(get, set):Int;
 
-    private inline function new(width:Int, height:Int, data:Array<T>)
-        this = { width: width, height: height, data: data };
-
-    private inline function get_default_value():T
-        return null;
-
-    public inline function get_width():Int
-        return this.width;
-
-    public inline function set_width(new_width:Int):Int
+    private inline function new(width:Int, height:Int, data:Array<T>, defval:T)
     {
-        while (this.width < new_width) {
-            for (y in 1...(this.height + 1))
-                this.data.insert(y * this.width + (y - 1),
-                                 Matrix.get_default_value());
-            this.width++;
-        }
-
-        if (this.width > new_width) {
-            for (y in 1...(this.height + 1))
-                this.data.splice(y * new_width, this.width - new_width);
-
-            this.width = new_width;
-        }
-
-        return this.width;
+        this._width = width;
+        this._height = height;
+        this.data = data;
+        this.default_value = defval;
     }
 
-    public inline function get_height():Int
-        return this.height;
+    private inline function get_width():Int
+        return this._width;
 
-    public inline function set_height(new_height:Int):Int
+    private inline function set_width(new_width:Int):Int
     {
-        while (this.height < new_height) {
-            for (x in 0...this.width)
-                this.data.push(Matrix.get_default_value());
-            this.height++;
+        while (this._width < new_width) {
+            for (y in 1...(this._height + 1))
+                this.data.insert(y * this._width + (y - 1), this.default_value);
+            this._width++;
         }
 
-        while (this.height > new_height) {
-            for (x in 0...this.width)
+        if (this._width > new_width) {
+            for (y in 1...(this._height + 1))
+                this.data.splice(y * new_width, this._width - new_width);
+
+            this._width = new_width;
+        }
+
+        return this._width;
+    }
+
+    private inline function get_height():Int
+        return this._height;
+
+    private inline function set_height(new_height:Int):Int
+    {
+        while (this._height < new_height) {
+            for (x in 0...this._width) this.data.push(this.default_value);
+            this._height++;
+        }
+
+        while (this._height > new_height) {
+            for (x in 0...this._width)
                 this.data.pop();
-            this.height--;
+            this._height--;
         }
 
-        return this.height;
+        return this._height;
     }
 
     public inline function get(x:Int, y:Int):T
-        return this.data[y * this.width + x];
+        return this.data[y * this._width + x];
 
     public inline function set(x:Int, y:Int, val:T):T
-        return this.data[y * this.width + x] = val;
+        return this.data[y * this._width + x] = val;
 
     public inline function map_(f:Int -> Int -> T -> Void):Void
     {
-        for (y in 0...this.height)
-            for (x in 0...this.width)
-                f(x, y, Matrix.get(x, y));
+        for (y in 0...this._height)
+            for (x in 0...this._width)
+                f(x, y, this.get(x, y));
     }
 
-    public inline function map<R>(f:Int -> Int -> T -> R):Matrix<R>
+    public inline function map<R>(f:Int -> Int -> T -> R, def:R):Matrix<R>
     {
         var out:Array<R> = new Array();
 
-        for (y in 0...this.height)
-            for (x in 0...this.width)
-                out.push(f(x, y, Matrix.get(x, y)));
+        for (y in 0...this._height)
+            for (x in 0...this._width)
+                out.push(f(x, y, this.get(x, y)));
 
-        return new Matrix(this.width, this.height, out);
+        return new Matrix(this._width, this._height, out, def);
     }
 
-    public inline function zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R):Matrix<R>
+    public inline function
+        zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R, def:R):Matrix<R>
     {
-        return Matrix.map(inline function(x:Int, y:Int, sym:T)
-                          return f(sym, m.get(x, y)));
+        return this.map(
+            inline function(x:Int, y:Int, sym:T) return f(sym, m.get(x, y)),
+            def
+        );
     }
 
     public inline function add_row(row:Array<T>):Array<T>
     {
-        if (row.length > this.width)
-            Matrix.set_width(row.length);
+        if (row.length > this._width)
+            this.set_width(row.length);
 
-        for (x in 0...this.width)
-            this.data.push(x >= row.length
-                           ? Matrix.get_default_value()
-                           : row[x]);
+        for (x in 0...this._width)
+            this.data.push(x >= row.length ? this.default_value : row[x]);
 
-        this.height++;
+        this._height++;
 
         return row;
     }
@@ -127,16 +127,16 @@ abstract Matrix<T> (MatrixBase<T>)
     public inline function delete_col(pos:Int, len:Int = 1):Void
     {
         if (pos < 0)
-            pos = this.width + pos;
+            pos = this._width + pos;
         if (len < 0)
-            len = this.width + len - pos + 1;
-        if (pos + len > this.width)
-            len = this.width - pos;
+            len = this._width + len - pos + 1;
+        if (pos + len > this._width)
+            len = this._width - pos;
 
-        this.width -= len;
+        this._width -= len;
 
-        for (y in 0...this.height)
-            this.data.splice(y * this.width + pos, len);
+        for (y in 0...this._height)
+            this.data.splice(y * this._width + pos, len);
     }
 
     public inline function
@@ -145,52 +145,46 @@ abstract Matrix<T> (MatrixBase<T>)
         var new_data:Array<T> = new Array();
 
         if (x < 0)
-            x = this.width + x;
+            x = this._width + x;
         if (y < 0)
-            y = this.width + y;
+            y = this._width + y;
         if (width < 0)
-            width = this.width + width - x + 1;
+            width = this._width + width - x + 1;
         if (height < 0)
-            height = this.height + height - y + 1;
-        if (x + width > this.width)
-            width = this.width - x;
-        if (y + height > this.height)
-            height = this.height - y;
+            height = this._height + height - y + 1;
+        if (x + width > this._width)
+            width = this._width - x;
+        if (y + height > this._height)
+            height = this._height - y;
 
         for (yi in y...(y + height))
             for (xi in x...(x + width))
-                new_data.push(Matrix.get(xi, yi));
+                new_data.push(this.get(xi, yi));
 
-        return new Matrix(width, height, new_data);
+        return new Matrix(width, height, new_data, this.default_value);
     }
 
     public inline function extract_rect(rect:Rect):Matrix<T>
-        return Matrix.extract(rect.x, rect.y, rect.width, rect.height);
+        return this.extract(rect.x, rect.y, rect.width, rect.height);
 
     public inline function to_2d_array():Array<Array<T>>
     {
-        return [for (y in 0...this.height)
-                [for (x in 0...this.width) Matrix.get(x, y)]];
+        return [for (y in 0...this._height)
+                [for (x in 0...this._width) this.get(x, y)]];
     }
 
     public static inline function
-        create<T>(width:Int, height:Int, val:T):Matrix<T>
-        return new Matrix(width, height, [for (_ in 0...(width * height)) val]);
+        create<T>(width:Int, height:Int, val:T, def:T):Matrix<T>
+        return new
+              Matrix(width, height, [for (_ in 0...(width * height)) val], def);
 
-    private static inline function fold_maxsize<O>(array:Array<O>, acc:Int):Int
-        return array.length > acc ? array.length : acc;
-
-    @:from public static inline function
-        from_internal<O, T>(int:MatrixBase<O>):Matrix<T>
-        return cast int;
-
-    @:from public static inline function
-        from_2d_array<O, T>(array:Array<Array<O>>):Matrix<T>
+    public static inline function
+        from_2d_array<T>(array:Array<Array<T>>, def:T):Matrix<T>
     {
-        var new_matrix:Matrix<T> = new Matrix(0, 0, []);
+        var new_matrix:Matrix<T> = new Matrix(0, 0, [], def);
 
         for (row in array)
-            new_matrix.add_row(cast row);
+            new_matrix.add_row(row);
 
         return new_matrix;
     }
