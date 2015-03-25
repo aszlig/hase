@@ -170,12 +170,12 @@ class Matrix<T>
               Matrix(width, height, [for (_ in 0...(width * height)) val], def);
 
     public static inline function
-        from_2d_array<O, T>(array:Array<Array<O>>, def:T):Matrix<T>
+        from_2d_array<T>(array:Array<Array<T>>, def:T):Matrix<T>
     {
         var new_matrix:Matrix<T> = new Matrix(0, 0, [], def);
 
         for (row in array)
-            new_matrix.add_row(cast row);
+            new_matrix.add_row(row);
 
         return new_matrix;
     }
