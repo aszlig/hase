@@ -50,6 +50,9 @@ import hase.term.internal.Font;
         this.font_canvas = null;
     }
 
+    public inline function exit(code:Int):Void
+        js.Browser.document.body.removeChild(this.canvas);
+
     private inline function cursor2x(x:Int):Int
     {
 #if debug

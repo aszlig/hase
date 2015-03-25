@@ -80,7 +80,9 @@ class Example implements hase.Application
         this.dragon.x = Std.int(this.delta / 4500 * this.root.width) - 100;
         this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4) + 8;
 
-        if (this.dragon.x > this.root.width + 10)
+        if (this.dragon.x > this.root.width + 10) {
             this.root.remove_child(this.dragon);
+            this.exit();
+        }
     }
 }

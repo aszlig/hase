@@ -38,6 +38,8 @@ class Test implements Interface
             this.area.push(new hase.display.Symbol(" ".code));
     }
 
+    public inline function exit(code:Int):Void {}
+
     public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
     {
         this.area[y * this.width + x] = sym;

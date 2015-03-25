@@ -24,7 +24,7 @@ import hase.geom.Rect;
 
 class Surface extends Object
 {
-    private var terminal:hase.term.Interface;
+    public var terminal(default, null):hase.term.Interface;
     private var sprites:Array<Sprite>;
 
     public function new(terminal:hase.term.Interface)

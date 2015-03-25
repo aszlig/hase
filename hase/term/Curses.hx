@@ -90,6 +90,19 @@ typedef TermSize = {
         #end
     }
 
+    public inline function exit(code:Int):Void
+    {
+        this.begin_op();
+
+        this.write_csi("?25h");
+        this.write_csi("2J");
+        this.buffer.add("\x1b8");
+
+        this.flush_op();
+
+        Sys.exit(code);
+    }
+
     private inline function get_termsize():TermSize
     {
         #if cpp

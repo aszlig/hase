@@ -28,4 +28,5 @@ interface Interface
     // XXX: These should be handled by events (such as resize).
     public var width:Int;
     public var height:Int;
+    public function exit(code:Int):Void;
 }

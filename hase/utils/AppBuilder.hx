@@ -102,20 +102,27 @@ class AppBuilder
     {
         var complex_fields:ComplexType = macro : {
             private var root:hase.display.Surface;
+            private var __timer:Null<hase.Timer>;
 
             public function new(term:hase.term.Interface)
             {
                 this.root = new hase.display.Surface(term);
+                this.__timer = null;
                 this.init();
             }
 
             public inline function run():Void
             {
-                var timer = new hase.Timer(this.root);
-                timer.on_tick = this.update;
-                timer.start();
+                this.__timer = new hase.Timer(this.root);
+                this.__timer.on_tick = this.update;
+                this.__timer.start();
             }
 
+            public function exit(code:Int = 0):Void
+            {
+                if (this.__timer != null) this.__timer.stop();
+                this.root.terminal.exit(code);
+            }
         };
 
         return switch (complex_fields) {
