@@ -30,7 +30,7 @@ class Test implements Interface
     public function new()
     {
         this.width = 40;
-        this.height = 15;
+        this.height = 25;
 
         this.area = new Array();
 
