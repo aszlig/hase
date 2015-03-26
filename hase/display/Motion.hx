@@ -24,18 +24,19 @@ import hase.geom.PVector;
 
 class Motion extends Object
 {
-    /* characters per second */
-    public var accel:PVector;
     public var velocity:PVector;
+    public var force:PVector;
+    public var mass:Float;
 
     private var delta:PVector;
 
     public function new()
     {
         super();
-        this.accel    = new PVector(0.0, 0.0);
         this.velocity = new PVector(0.0, 0.0);
+        this.force    = new PVector(0.0, 0.0);
         this.delta    = new PVector(0.0, 0.0);
+        this.mass     = 1.0;
     }
 
     private inline function move():Void
@@ -57,8 +58,8 @@ class Motion extends Object
     {
         super.update(td);
 
-        if (this.accel != new PVector(0.0, 0.0) && this.parent != null) {
-            this.velocity += this.accel * (td / 1000);
+        if (this.force != new PVector(0.0, 0.0) && this.parent != null) {
+            this.velocity += (this.force / this.mass) * (td / 1000);
 
             var base:PVector = new PVector(
                 this.parent.center_x,

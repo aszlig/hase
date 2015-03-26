@@ -49,7 +49,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 5
         );
 
-        motion.accel = new PVector(1.0, 1.0);
+        motion.force = new PVector(1.0, 1.0);
         this.update();
 
         this.assert_area(
@@ -72,7 +72,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 5
         );
 
-        motion.accel = new PVector(-1.0, 0.0);
+        motion.force = new PVector(-1.0, 0.0);
         this.update();
 
         this.assert_area(
@@ -101,7 +101,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 9
         );
 
-        motion.accel = new PVector(0.0, -3.0);
+        motion.force = new PVector(0.0, -3.0);
         this.update();
 
         this.assert_area(
