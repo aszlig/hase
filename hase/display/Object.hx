@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,8 @@
  */
 package hase.display;
 
+import hase.geom.PVector;
+
 class Object
 {
     public var parent:Object;
@@ -37,6 +39,10 @@ class Object
 
     public var absolute_x(get, null):Int;
     public var absolute_y(get, null):Int;
+
+    public var vector(get, null):PVector;
+    public var center_vector(get, null):PVector;
+    public var abs_vector(get, null):PVector;
 
     public var is_dirty:Bool;
 
@@ -103,6 +109,18 @@ class Object
 
         return to;
     }
+
+    private inline function get_vector():PVector
+        return new PVector(this.x, this.y);
+
+    private inline function get_center_vector():PVector
+        return new PVector(this.center_x, this.center_y);
+
+    private inline function get_abs_vector():PVector
+        return new PVector(this.absolute_x, this.absolute_y);
+
+    public inline function center_distance_to(other:Object):PVector
+        return other.abs_vector - this.abs_vector;
 
     private inline function set_x(val:Int):Int
         return this.x = this.set_dirty(this.x, val);

@@ -20,6 +20,8 @@
  */
 package hase.test.cases;
 
+import hase.geom.PVector;
+
 class SpriteTest extends hase.test.SurfaceTestCase
 {
     public function test_simple():Void
@@ -532,5 +534,140 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "        `-------'        "
             ], 0, 0, 25, 7
         );
+    }
+
+    public function test_distance_vector():Void
+    {
+        var copter:hase.display.Sprite = this.create_sprite(
+            [ "   _________   "
+            , " _     | __    "
+            , " ;`---/'[__>.  "
+            , "  ;```-.--.--' "
+            , "     --'--'--' "
+            ]
+        );
+
+        var house:hase.display.Sprite = this.create_sprite(
+            [ "              ~             "
+            , "            ~~~~            "
+            , "          ~~~~~             "
+            , "         ~~~                "
+            , "        ~~                  "
+            , "      ~~                    "
+            , "      ~                     "
+            , "     |`'|-.'-.'-.'-.        "
+            , "     |  |.''.'.'.'.'`.      "
+            , "   ,'.'.'.''.'.'.'.'.'`.    "
+            , " ,'.'.'.'.''.'.'.'.'.'.'`.  "
+            , " ``'|  __    __    __  |`'' "
+            , "    | |  |  |  |  |  | |    "
+            , "    | |__|  |__|  |__| |    "
+            , "    |  __    __    __  |    "
+            , "    | |  |  |  |  |  | |    "
+            , "    | |__|  | '|  |__| |    "
+            , "    |_______|__|_______|    "
+            ]
+        );
+
+        house.x = 27;
+        house.y = 16;
+        house.center_x = 14;
+        house.center_y = 16;
+
+        copter.x = 9;
+        copter.y = 15;
+        copter.center_x = 9;
+        copter.center_y = 2;
+
+        this.root.add_child(house);
+        this.root.add_child(copter);
+
+        this.update();
+
+        this.assert_area(
+            [ "                           ~            "
+            , "                         ~~~~           "
+            , "                       ~~~~~            "
+            , "                      ~~~               "
+            , "                     ~~                 "
+            , "                   ~~                   "
+            , "                   ~                    "
+            , "                  |`'|-.'-.'-.'-.       "
+            , "                  |  |.''.'.'.'.'`.     "
+            , "                ,'.'.'.''.'.'.'.'.'`.   "
+            , "              ,'.'.'.'.''.'.'.'.'.'.'`. "
+            , "              ``'|  __    __    __  |`''"
+            , "                 | |  |  |  |  |  | |   "
+            , "   _________     | |__|  |__|  |__| |   "
+            , " _     | __      |  __    __    __  |   "
+            , " ;`---/'[__>.    | |  |  |  |  |  | |   "
+            , "  ;```-.--.--'   | |__|  | '|  |__| |   "
+            , "     --'--'--'   |_______|__|_______|   "
+            ], 0, 0, 40, 18
+        );
+
+        var dist:PVector = house.center_distance_to(copter);
+        this.assertEquals(-18.0, dist.x);
+        this.assertEquals(-1.0, dist.y);
+
+        copter.y -= 4;
+        copter.x += 4;
+        this.update();
+
+        this.assert_area(
+            [ "                           ~            "
+            , "                         ~~~~           "
+            , "                       ~~~~~            "
+            , "                      ~~~               "
+            , "                     ~~                 "
+            , "                   ~~                   "
+            , "                   ~                    "
+            , "                  |`'|-.'-.'-.'-.       "
+            , "                  |  |.''.'.'.'.'`.     "
+            , "       _________,'.'.'.''.'.'.'.'.'`.   "
+            , "     _     | __'.'.'.'.''.'.'.'.'.'.'`. "
+            , "     ;`---/'[__>.|  __    __    __  |`''"
+            , "      ;```-.--.--' |  |  |  |  |  | |   "
+            , "         --'--'--' |__|  |__|  |__| |   "
+            , "                 |  __    __    __  |   "
+            , "                 | |  |  |  |  |  | |   "
+            , "                 | |__|  | '|  |__| |   "
+            , "                 |_______|__|_______|   "
+            ], 0, 0, 40, 18
+        );
+
+        var dist:PVector = house.center_distance_to(copter);
+        this.assertEquals(-14.0, dist.x);
+        this.assertEquals(-5.0, dist.y);
+
+        copter.y -= 9;
+        copter.x += 14;
+        this.update();
+
+        this.assert_area(
+            [ "       _________          "
+            , "     _     |~__           "
+            , "     ;`---/'[__>.         "
+            , "      ;```-.--.--'        "
+            , "       ~~--'--'--'        "
+            , "     ~~                   "
+            , "     ~                    "
+            , "    |`'|-.'-.'-.'-.       "
+            , "    |  |.''.'.'.'.'`.     "
+            , "  ,'.'.'.''.'.'.'.'.'`.   "
+            , ",'.'.'.'.''.'.'.'.'.'.'`. "
+            , "``'|  __    __    __  |`''"
+            , "   | |  |  |  |  |  | |   "
+            , "   | |__|  |__|  |__| |   "
+            , "   |  __    __    __  |   "
+            , "   | |  |  |  |  |  | |   "
+            , "   | |__|  | '|  |__| |   "
+            , "   |_______|__|_______|   "
+            ], 14, 0, 26, 18
+        );
+
+        var dist:PVector = house.center_distance_to(copter);
+        this.assertEquals(0.0, dist.x);
+        this.assertEquals(-14.0, dist.y);
     }
 }
