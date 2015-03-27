@@ -150,4 +150,9 @@ class PVectorTest extends haxe.unit.TestCase
         this.assert_normalized(-0.6247,  0.7809, -4,  5);
         this.assert_normalized(-0.6247, -0.7809, -4, -5);
     }
+
+    public function test_normalize_div_zero():Void
+    {
+        this.assert_vector(0, 0, new PVector(0, 0).normalize());
+    }
 }

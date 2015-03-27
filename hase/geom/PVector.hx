@@ -50,7 +50,9 @@ abstract PVector (Array<Float>)
     {
         var len:Float = Math.sqrt(PVector.x * PVector.x +
                                   PVector.y * PVector.y);
-        return new PVector(PVector.x / len, PVector.y / len);
+        return (len == 0.0 || len == 1.0)
+            ? new PVector(PVector.x, PVector.y)
+            : new PVector(PVector.x / len, PVector.y / len);
     }
 
     @:op(A + B)
