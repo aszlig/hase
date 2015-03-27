@@ -23,7 +23,7 @@ package hase.display;
 import hase.geom.PVector;
 
 enum Force {
-    Following(target:Object, eagerness:Float, break_at:Float);
+    Following(target:Object, eagerness:Float, break_at:Float, into:Bool);
 }
 
 class Motion extends Object
@@ -61,15 +61,16 @@ class Motion extends Object
         }
     }
 
-    public inline function
-        follow(target:Object, eagerness:Float, stop_radius:Float):Void
-        this.forces.add(Following(target, eagerness, stop_radius));
+    public inline function follow( target:Object, eagerness:Float
+                                 , stop_radius:Float, into:Bool = false
+                                 ):Void
+        this.forces.add(Following(target, eagerness, stop_radius, into));
 
     public inline function unfollow(target:Object):Void
     {
         for (f in this.forces) {
             switch (f) {
-                case Following(target, _, _): this.forces.remove(f);
+                case Following(target, _, _, _): this.forces.remove(f);
                 default:
             }
         }
@@ -79,7 +80,7 @@ class Motion extends Object
     {
         for (f in this.forces) {
             switch (f) {
-                case Following(_, _, _): this.forces.remove(f);
+                case Following(_, _, _, _): this.forces.remove(f);
                 default:
             }
         }
@@ -98,9 +99,11 @@ class Motion extends Object
 
         for (f in this.forces) {
             switch (f) {
-                case Following(target, eagerness, stop_radius):
-                    var dist:PVector = this.parent.center_distance_to(target)
-                                     - this.delta;
+                case Following(target, eagerness, stop_radius, into):
+                    var dist:PVector =
+                        (into ? this.parent.center_distance_to(target)
+                              : this.parent.distance_to(target)
+                        ) - this.delta;
 
                     // FIXME: This is not nice, because if we have too much
                     // acceleration, we might surpass the destination.

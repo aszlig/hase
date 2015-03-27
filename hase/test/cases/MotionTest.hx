@@ -127,7 +127,7 @@ class MotionTest extends hase.test.SurfaceTestCase
         );
     }
 
-    public function test_follow():Void
+    public function test_follow_into():Void
     {
         var ball:hase.display.Sprite = this.create_sprite(
             [ ".-."
@@ -143,7 +143,7 @@ class MotionTest extends hase.test.SurfaceTestCase
 
         var motion:Motion = new Motion();
         motion.mass = 30;
-        motion.follow(square, 1, 5);
+        motion.follow(square, 1, 5, true);
         ball.add_child(motion);
 
         ball.z = 10;
@@ -246,6 +246,64 @@ class MotionTest extends hase.test.SurfaceTestCase
             [ "                                        "
             , "                                     .-."
             , "                                     `-'"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+    }
+
+    public function test_follow():Void
+    {
+        var ball:hase.display.Sprite = this.create_sprite(
+            [ ".-."
+            , "`-'"
+            ]
+        );
+
+        var square:hase.display.Sprite = this.create_sprite(
+            [ " _ "
+            , "|_|"
+            ]
+        );
+
+        var motion:Motion = new Motion();
+        motion.mass = 30;
+        motion.follow(square, 1, 5, false);
+        ball.add_child(motion);
+
+        ball.width = 3;
+        ball.height = 2;
+        ball.z = 10;
+
+        square.width = 3;
+        square.height = 2;
+        square.x = 37;
+        square.y = 1;
+
+        this.root.add_child(ball);
+        this.root.add_child(square);
+
+        for (_ in 0...10) {
+            this.assert_msg(
+                ball.x >= 0,
+                'Ball x is below 0: ${ball.x}'
+            );
+            this.assert_msg(
+                ball.x + ball.width <= square.x,
+                'Ball x + width surpassed square x: ' +
+                '${ball.x + ball.width} > ${square.x}'
+            );
+            this.assert_msg(
+                ball.y <= square.y,
+                'Ball y surpassed square y: ${ball.y} > ${square.y}'
+            );
+            this.update();
+        }
+
+        this.assert_area(
+            [ "                                  .-.   "
+            , "                                  `-' _ "
+            , "                                     |_|"
             , "                                        "
             , "                                        "
             ], 0, 0, 40, 5
