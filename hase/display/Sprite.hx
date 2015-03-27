@@ -25,13 +25,13 @@ import hase.geom.Rect;
 class Sprite extends Object
 {
     public var ascii(default, set):Image;
-    public var rect(default, null):Rect;
+    public var dirty_rect(default, null):Rect;
 
     public function new()
     {
         super();
         this.ascii = null;
-        this.rect = null;
+        this.dirty_rect = null;
     }
 
     private inline function set_ascii(val:Image):Image
@@ -55,14 +55,16 @@ class Sprite extends Object
         var width:Int = this.ascii.width;
         var height:Int = this.ascii.height;
 
-        var old_rect:Rect = this.rect;
-        this.rect = new Rect(
+        var old_rect:Rect = this.dirty_rect;
+        this.dirty_rect = new Rect(
             this.absolute_x - this.center_x,
             this.absolute_y - this.center_y,
             width, height
         );
 
-        old_rect = old_rect == null ? this.rect : old_rect.union(this.rect);
+        old_rect = old_rect == null
+                 ? this.dirty_rect
+                 : old_rect.union(this.dirty_rect);
         this.surface.redraw_rect(old_rect);
 
         this.is_dirty = false;

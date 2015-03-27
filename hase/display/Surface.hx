@@ -58,8 +58,8 @@ class Surface extends Object
     private inline function unregister_sprite(sprite:Sprite):Sprite
     {
         this.sprites.remove(sprite);
-        if (sprite.rect != null)
-            this.redraw_rect(sprite.rect);
+        if (sprite.dirty_rect != null)
+            this.redraw_rect(sprite.dirty_rect);
         return sprite;
     }
 
@@ -70,11 +70,11 @@ class Surface extends Object
                                       " ".code, " ".code);
 
         for (sprite in this.sprites) {
-            if (sprite.rect == null || sprite.ascii == null)
+            if (sprite.dirty_rect == null || sprite.ascii == null)
                 continue;
 
             // intersection between redraw rectangle and current sprite
-            var common:Null<Rect> = sprite.rect & rect;
+            var common:Null<Rect> = sprite.dirty_rect & rect;
             if (common == null)
                 continue;
 
@@ -83,8 +83,8 @@ class Surface extends Object
             var rel_redraw_y:Int = common.y - rect.y;
 
             // relative within current sprite
-            var rel_sprite_x:Int = common.x - sprite.rect.x;
-            var rel_sprite_y:Int = common.y - sprite.rect.y;
+            var rel_sprite_x:Int = common.x - sprite.dirty_rect.x;
+            var rel_sprite_y:Int = common.y - sprite.dirty_rect.y;
 
             for (y in rel_redraw_y...(rel_redraw_y + common.height)) {
                 for (x in rel_redraw_x...(rel_redraw_x + common.width)) {
