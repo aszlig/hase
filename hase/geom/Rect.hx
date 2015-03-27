@@ -27,7 +27,9 @@ abstract Rect (Array<Int>)
     public var width(get, never):Int;
     public var height(get, never):Int;
 
+    public var left(get, never):Int;
     public var right(get, never):Int;
+    public var top(get, never):Int;
     public var bottom(get, never):Int;
 
     public inline function new(x:Int, y:Int, width:Int, height:Int)
@@ -45,8 +47,14 @@ abstract Rect (Array<Int>)
     private inline function get_height():Int
         return this[3];
 
+    private inline function get_left():Int
+        return Rect.x;
+
     private inline function get_right():Int
         return Rect.x + Rect.width;
+
+    private inline function get_top():Int
+        return Rect.y;
 
     private inline function get_bottom():Int
         return Rect.y + Rect.height;
