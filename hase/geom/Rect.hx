@@ -86,6 +86,18 @@ abstract Rect (Array<Int>)
             && Rect.y <= y && Rect.bottom > y;
     }
 
+    public static inline function distance_to(r1:Rect, r2:Rect):PVector
+    {
+        return new PVector(
+              r1.right < r2.x ? r2.x - r1.right
+            : r1.x > r2.right ? r2.right - r1.x
+            : 0.0,
+              r1.bottom < r2.y ? r2.y - r1.bottom
+            : r1.y > r2.bottom ? r2.bottom - r1.y
+            : 0.0
+        );
+    }
+
     @:op(A & B)
     public static inline function intersection(r1:Rect, r2:Rect):Null<Rect>
     {
