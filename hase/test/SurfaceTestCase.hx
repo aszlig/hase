@@ -98,6 +98,18 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return out;
     }
 
+    public function assert_msg(cond:Bool, msg:String, ?pi:haxe.PosInfos):Void
+    {
+        this.currentTest.done = true;
+
+        if (cond != true) {
+            this.currentTest.success = false;
+            this.currentTest.error = msg;
+            this.currentTest.posInfos = pi;
+            throw this.currentTest;
+        }
+    }
+
     public function assert_area( expect:Array<String>
                                , x:Int, y:Int
                                , width:Int, height:Int
