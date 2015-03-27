@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,9 @@
 package;
 
 import hase.display.Animation;
+import hase.display.Motion;
+import hase.geom.PVector;
+import hase.input.Key;
 
 class Example implements hase.Application
 {
@@ -28,19 +31,19 @@ class Example implements hase.Application
     private var dragon:Animation;
     private var dragon_head:Animation;
     private var dragon_wing:Animation;
-    private var delta:Float;
+
+    private var car_motion:Motion;
+    private var dragon_motion:Motion;
 
     public function init():Void
     {
         this.root.autoresize = false;
-        this.delta = -1000;
 
         this.dragon = Animation.from_file("gfx/dragon.cat");
-        this.dragon.x = -700;
-        this.dragon.y = 8;
+        this.dragon.x = (this.root.width - this.dragon.width) >> 1;
+        this.dragon.y = (this.root.height - this.dragon.width) >> 2;
         this.dragon.fps = 17;
         this.dragon.loopback = true;
-        this.root.add_child(this.dragon);
 
         this.dragon_head = Animation.from_file("gfx/dragon_head.cat");
         this.dragon_head.x = 39;
@@ -64,27 +67,39 @@ class Example implements hase.Application
 
         this.dragon_wing.z = -1;
 
+        this.dragon_motion = new Motion();
+        this.dragon_motion.mass = 1000.0;
+        this.dragon.add_child(this.dragon_motion);
+
+        this.root.add_child(this.dragon);
+
         this.car = Animation.from_file("gfx/car.cat");
-        this.car.x = -20;
-        this.car.y = this.dragon.height + 4;
+        this.car.x = (this.root.width - this.car.width) >> 1;
+        this.car.y = Std.int((this.root.height - this.car.height) * 0.75);
         this.car.fps = 10;
+
+        this.car_motion = new Motion();
+        this.car_motion.mass = 1.5;
+        this.car.add_child(this.car_motion);
+
         this.root.add_child(this.car);
+        this.dragon_motion.follow(this.car, 10, 20);
+    }
+
+    public inline function on_keypress(k:Key):Void
+    {
+        switch (k) {
+            case Char("a".code):            this.car_motion.force.x = -10;
+            case Char("o".code | "s".code): this.car_motion.force.y =  10;
+            case Char("e".code | "d".code): this.car_motion.force.x =  10;
+            case Char(",".code | "w".code): this.car_motion.force.y = -10;
+            case Char("q".code):            this.exit();
+            default:
+        }
     }
 
     public function update(td:Float):Void
     {
-        this.delta += td;
-
-        this.car.x = Std.int(this.delta / 4000 * this.root.width);
-
-        this.dragon.x = Std.int(this.delta / 4500 * this.root.width) - 100;
-        this.dragon.y = Std.int(Math.sin(this.dragon.x / 10) * 4) + 8;
-
-        if (this.dragon.x > this.root.width + 10) {
-            this.root.remove_child(this.dragon);
-            this.exit();
-        }
+        this.car_motion.force *= 0.9 * (td / 100);
     }
-
-    public function on_keypress(k:hase.input.Key):Void {}
 }
