@@ -77,6 +77,10 @@ abstract PVector (Array<Float>)
     public static inline function eq(a:PVector, b:PVector):Bool
         return a.x == b.x && a.y == b.y;
 
+    @:op(A != B)
+    public static inline function ne(a:PVector, b:PVector):Bool
+        return !(a == b);
+
     @:op(A < B)
     public static inline function lt(a:PVector, b:PVector):Bool
         return a.x < b.x && a.y < b.y;

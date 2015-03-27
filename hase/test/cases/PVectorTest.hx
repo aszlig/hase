@@ -34,6 +34,8 @@ class PVectorTest extends haxe.unit.TestCase
     {
         this.assertTrue(new PVector(10, 20) == new PVector(10, 20));
         this.assertFalse(new PVector(10, 20) == new PVector(20, 10));
+        this.assertFalse(new PVector(10, 20) != new PVector(10, 20));
+        this.assertTrue(new PVector(10, 20) != new PVector(20, 10));
     }
 
     public function test_lower_than():Void
