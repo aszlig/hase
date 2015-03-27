@@ -25,7 +25,9 @@ import hase.geom.Rect;
 class Sprite extends Object
 {
     public var ascii(default, set):Image;
-    public var dirty_rect(default, null):Rect;
+
+    @:allow(hase.display.Surface)
+    private var dirty_rect(default, null):Rect;
 
     public function new()
     {
