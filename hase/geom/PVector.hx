@@ -24,6 +24,7 @@ abstract PVector (Array<Float>)
 {
     public var x(get, set):Float;
     public var y(get, set):Float;
+    public var length(get, never):Float;
 
     public inline function new(x:Float, y:Float)
         this = [x, y];
@@ -40,20 +41,17 @@ abstract PVector (Array<Float>)
     public inline function set_y(val:Float):Float
         return this[1] = val;
 
+    public inline function get_length():Float
+        return Math.sqrt(PVector.x * PVector.x + PVector.y * PVector.y);
+
     public inline function dot_product(other:PVector):Float
         return PVector.x * other.x + PVector.y * other.y;
 
     public inline function cross_product(other:PVector):Float
         return PVector.x * other.y - PVector.y * other.x;
 
-    public inline function normalize():PVector
-    {
-        var len:Float = Math.sqrt(PVector.x * PVector.x +
-                                  PVector.y * PVector.y);
-        return (len == 0.0 || len == 1.0)
-            ? new PVector(PVector.x, PVector.y)
-            : new PVector(PVector.x / len, PVector.y / len);
-    }
+    public inline static function normalize(v:PVector):PVector
+        return (v.length == 0.0 || v.length == 1.0) ? v : v / v.length;
 
     @:op(A + B)
     public static inline function add(a:PVector, b:PVector):PVector

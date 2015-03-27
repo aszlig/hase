@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -154,5 +154,16 @@ class PVectorTest extends haxe.unit.TestCase
     public function test_normalize_div_zero():Void
     {
         this.assert_vector(0, 0, new PVector(0, 0).normalize());
+    }
+
+    public function test_length():Void
+    {
+        this.assertEquals(0.0,  new PVector(0, 0).length);
+        this.assertEquals(10.0, new PVector(10, 0).length);
+        this.assertEquals(10.0, new PVector(0, 10).length);
+        this.assertEquals(10.0, new PVector(-10, 0).length);
+        this.assertEquals(10.0, new PVector(0, -10).length);
+        this.assertEquals(5.0,  new PVector(3, 4).length);
+        this.assertEquals(5.0,  new PVector(4, 3).length);
     }
 }
