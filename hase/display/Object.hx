@@ -21,6 +21,7 @@
 package hase.display;
 
 import hase.geom.PVector;
+import hase.geom.Rect;
 
 class Object
 {
@@ -43,6 +44,9 @@ class Object
     public var vector(get, null):PVector;
     public var center_vector(get, null):PVector;
     public var abs_vector(get, null):PVector;
+
+    public var rect(get, null):Rect;
+    public var abs_rect(get, null):Rect;
 
     public var is_dirty:Bool;
 
@@ -119,8 +123,19 @@ class Object
     private inline function get_abs_vector():PVector
         return new PVector(this.absolute_x, this.absolute_y);
 
+    private inline function get_rect():Rect
+        return new Rect(this.x, this.y, this.width, this.height);
+
+    private inline function get_abs_rect():Rect
+        return new Rect(
+            this.absolute_x, this.absolute_y, this.width, this.height
+        );
+
     public inline function center_distance_to(other:Object):PVector
         return other.abs_vector - this.abs_vector;
+
+    public inline function distance_to(other:Object):PVector
+        return this.abs_rect.distance_to(other.abs_rect);
 
     private inline function set_x(val:Int):Int
         return this.x = this.set_dirty(this.x, val);
