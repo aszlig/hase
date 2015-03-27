@@ -126,4 +126,129 @@ class MotionTest extends hase.test.SurfaceTestCase
             ], 0, 0, 9, 4
         );
     }
+
+    public function test_follow():Void
+    {
+        var ball:hase.display.Sprite = this.create_sprite(
+            [ ".-."
+            , "`-'"
+            ]
+        );
+
+        var square:hase.display.Sprite = this.create_sprite(
+            [ " _ "
+            , "|_|"
+            ]
+        );
+
+        var motion:Motion = new Motion();
+        motion.mass = 30;
+        motion.follow(square, 1, 5);
+        ball.add_child(motion);
+
+        ball.z = 10;
+        square.x = 37;
+        square.y = 1;
+
+        this.root.add_child(ball);
+        this.root.add_child(square);
+
+        this.update();
+
+        this.assert_area(
+            [ " .-.                                    "
+            , " `-'                                  _ "
+            , "                                     |_|"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "   .-.                                  "
+            , "   `-'                                _ "
+            , "                                     |_|"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "       .-.                              "
+            , "       `-'                            _ "
+            , "                                     |_|"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+
+        // we should now be in range for the slow down
+        this.assert_area(
+            [ "                             .-.        "
+            , "                             `-'      _ "
+            , "                                     |_|"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "                                    .-. "
+            , "                                    `-' "
+            , "                                     |_|"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        this.update();
+
+        this.assert_area(
+            [ "                                        "
+            , "                                     .-."
+            , "                                     `-'"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+
+        // make sure that we have enough updates to check
+        // whether the ball stays at its destination and
+        // also doesn't surpass it.
+        for (_ in 0...50) {
+            this.assert_msg(
+                ball.x >= 0,
+                'Ball x is below 0: ${ball.x}'
+            );
+            this.assert_msg(
+                ball.x <= square.x,
+                'Ball x surpassed square x: ${ball.x} > ${square.x}'
+            );
+            this.assert_msg(
+                ball.y <= square.y,
+                'Ball y surpassed square y: ${ball.y} > ${square.y}'
+            );
+            this.update();
+        }
+
+        this.assert_area(
+            [ "                                        "
+            , "                                     .-."
+            , "                                     `-'"
+            , "                                        "
+            , "                                        "
+            ], 0, 0, 40, 5
+        );
+    }
 }
