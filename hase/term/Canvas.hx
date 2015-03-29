@@ -39,7 +39,7 @@ import hase.term.internal.Font;
     {
         this.canvas = canvas;
 
-        this.width = Std.int(canvas.width / (Font.WIDTH + 1));
+        this.width = Std.int(canvas.width / Font.WIDTH);
         this.height = Std.int(canvas.height / Font.HEIGHT);
 
         this.ctx = canvas.getContext2d();
@@ -60,12 +60,12 @@ import hase.term.internal.Font;
     private inline function cursor2x(x:Int):Int
     {
 #if debug
-        if (x * (Font.WIDTH + 1) > this.canvas.width)
+        if (x * Font.WIDTH > this.canvas.width)
             trace("X cursor value of " + x + " exceeds width of " +
                   this.canvas.width + " pixels!");
 #end
 
-        return x * (Font.WIDTH + 1);
+        return x * Font.WIDTH;
     }
 
     private inline function cursor2y(y:Int):Int
