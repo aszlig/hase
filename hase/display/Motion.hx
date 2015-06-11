@@ -38,12 +38,18 @@ class Motion extends Object
     public function new()
     {
         super();
+        this.forces = new List();
+        this.reset();
+    }
+
+    public inline function reset():Void
+    {
         this.velocity = new PVector(0.0, 0.0);
         this.force    = new PVector(0.0, 0.0);
         this.delta    = new PVector(0.0, 0.0);
         this.mass     = 1.0;
 
-        this.forces = new List();
+        this.forces.clear();
     }
 
     private inline function move():Void
