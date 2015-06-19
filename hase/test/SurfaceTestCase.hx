@@ -117,10 +117,16 @@ class SurfaceTestCase extends haxe.unit.TestCase
     {
         this.currentTest.done = true;
 
-        var width:Int = 0;
-        for (row in expect)
-            if (row.length > width)
-                width = row.length;
+        var width:Int = expect.length > 0 ? expect[0].length : 0;
+        for (row in expect) {
+            if (row.length != width) {
+                this.currentTest.success = false;
+                this.currentTest.error =
+                    "Expected value has irregular row lengths.";
+                this.currentTest.posInfos = pi;
+                throw this.currentTest;
+            }
+        }
         var height:Int = expect.length;
 
         var fraction:Array<String> =
