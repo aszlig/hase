@@ -46,7 +46,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "         "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
 
         motion.force = new PVector(1.0, 1.0);
@@ -58,7 +58,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , " `-'     "
             , "         "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
 
         this.update();
@@ -69,7 +69,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "   .-.   "
             , "   `-'   "
-            ], 0, 0, 9, 5
+            ]
         );
 
         motion.force = new PVector(-1.0, 0.0);
@@ -83,7 +83,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "    .-.  "
             , "    `-'  "
-            ], 0, 0, 9, 7
+            ]
         );
 
         this.update();
@@ -98,7 +98,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "    .-.  "
             , "    `-'  "
-            ], 0, 0, 9, 9
+            ]
         );
 
         motion.force = new PVector(0.0, -3.0);
@@ -113,7 +113,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "    .-.  "
             , "    `-'  "
-            ], 0, 0, 9, 8
+            ]
         );
 
         this.update();
@@ -123,7 +123,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "         "
             , "    .-.  "
             , "    `-'  "
-            ], 0, 0, 9, 4
+            ]
         );
     }
 
@@ -161,7 +161,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         this.update();
@@ -172,7 +172,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         this.update();
@@ -183,7 +183,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         this.update();
@@ -198,7 +198,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         this.update();
@@ -209,7 +209,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         this.update();
@@ -220,7 +220,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     `-'"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
 
         // make sure that we have enough updates to check
@@ -248,7 +248,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     `-'"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
     }
 
@@ -306,7 +306,7 @@ class MotionTest extends hase.test.SurfaceTestCase
             , "                                     |_|"
             , "                                        "
             , "                                        "
-            ], 0, 0, 40, 5
+            ]
         );
     }
 }

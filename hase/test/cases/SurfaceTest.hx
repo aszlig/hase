@@ -47,7 +47,7 @@ class SurfaceTest extends hase.test.SurfaceTestCase
             , " - "
             , " - "
             , "   "
-            ], this.root.width - 2, 0, 3, 6
+            ], this.root.width - 2
         );
     }
 
@@ -70,7 +70,7 @@ class SurfaceTest extends hase.test.SurfaceTestCase
             [ "      "
             , "||||| "
             , "      "
-            ], 0, this.root.height - 2, 6, 3
+            ], 0, this.root.height - 2
         );
     }
 }

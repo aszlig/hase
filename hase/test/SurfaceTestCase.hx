@@ -111,12 +111,17 @@ class SurfaceTestCase extends haxe.unit.TestCase
     }
 
     public function assert_area( expect:Array<String>
-                               , x:Int, y:Int
-                               , width:Int, height:Int
+                               , x:Int = 0, y:Int = 0
                                , ?pi:haxe.PosInfos
                                ):Void
     {
         this.currentTest.done = true;
+
+        var width:Int = 0;
+        for (row in expect)
+            if (row.length > width)
+                width = row.length;
+        var height:Int = expect.length;
 
         var fraction:Array<String> =
             this.terminal.extract(x, y, width, height);

@@ -49,7 +49,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "   ,'.   "
             , " -'   `- "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
     }
 
@@ -68,7 +68,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
         this.update();
         this.update();
 
-        this.assert_area([], 0, 0, 0, 0);
+        this.assert_area([]);
     }
 
     public function test_one_frame():Void
@@ -93,7 +93,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "|_/| |"
             , "   | |"
             , "   |/ "
-            ], 0, 0, 6, 5
+            ]
         );
 
         anim.loopback = true;
@@ -108,7 +108,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "|_/| |"
             , "   | |"
             , "   |/ "
-            ], 0, 0, 6, 5
+            ]
         );
     }
 
@@ -145,7 +145,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " _,'     `._ "
             , "             "
             , "             "
-            ], 0, 0, 13, 8
+            ]
         );
     }
 
@@ -172,7 +172,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "         "
             , "         "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
     }
 
@@ -210,7 +210,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "    X    "
             , "         "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
 
         anim.x += 1;
@@ -227,7 +227,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "      _,'     `._ "
             , "                  "
             , "                  "
-            ], 0, 0, 18, 10
+            ]
         );
     }
 
@@ -273,7 +273,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "  ,' '`o.o'` `.  "
             , "  :','^^^^^`,`:  "
             , "                 "
-            ], 0, 0, 17, 6
+            ]
         );
 
         bat.y += 1;
@@ -288,7 +288,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "  ,' '`o o'` `.  "
             , "  :','^^^^^`,`:  "
             , "                 "
-            ], 2, 0, 17, 7
+            ], 2
         );
     }
 
@@ -337,7 +337,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " `. | ,'    |"
             , "   `-'      |"
             , "    `-------'"
-            ], 0, 0, 13, 6
+            ]
         );
     }
 
@@ -390,7 +390,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "    ||      :  "
             , "    LL      :  "
             , "               "
-            ], 0, 0, 15, 6
+            ]
         );
 
         bird.x += 2;
@@ -404,7 +404,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "    ||      :  "
             , "    LL      :  "
             , "               "
-            ], 2, 0, 15, 6
+            ], 2
         );
 
         balloon.x += 3;
@@ -418,7 +418,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "   ||       :     "
             , "   ^^             "
             , "                  "
-            ], 3, 0, 18, 6
+            ], 3
         );
     }
 
@@ -470,7 +470,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "   ||        "
             , "  /'|        "
             , "             "
-            ], 2, 0, 13, 6
+            ], 2
         );
 
         bullet.x += 4;
@@ -484,7 +484,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "   ||               "
             , "  /'|               "
             , "                    "
-            ], 2, 0, 20, 6
+            ], 2
         );
 
         shooter.x += 5;
@@ -498,7 +498,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "   ||            "
             , "  /'|            "
             , "                 "
-            ], 7, 0, 17, 6
+            ], 7
         );
     }
 
@@ -533,7 +533,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " ||      "
             , "/'|      "
             , "         "
-            ], 0, 0, 9, 6
+            ]
         );
 
         this.clear_surface();
@@ -546,7 +546,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "         "
             , "         "
             , "         "
-            ], 0, 0, 9, 6
+            ]
         );
     }
 
@@ -632,7 +632,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "  |   |  "
             , "  |   |  "
             , "  `---'  "
-            ], 0, 0, 9, 14
+            ]
         );
 
         tris[1].y = 3;
@@ -654,7 +654,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "  |   |  "
             , "  |   |  "
             , "  `---'  "
-            ], 0, 0, 9, 14
+            ]
         );
 
         tris[2].y = 5;
@@ -676,7 +676,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , "  |   |  "
             , "  |   |  "
             , "  `---'  "
-            ], 0, 0, 9, 14
+            ]
         );
 
         tris[3].y = 9;
@@ -698,7 +698,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " ,'   `. "
             , ",'|   |`."
             , "`-------'"
-            ], 0, 0, 9, 14
+            ]
         );
     }
 
@@ -743,7 +743,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " :   x   : "
             , " `.     ,' "
             , "   `---'   "
-            ], 0, 0, 11, 5
+            ]
         );
 
         this.update();
@@ -756,7 +756,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " ----x   : "
             , " `.     ,' "
             , "   `---'   "
-            ], 0, 0, 11, 5
+            ]
         );
 
         this.update();
@@ -767,7 +767,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " :   x   : "
             , " `.  |  ,' "
             , "   `-|-'   "
-            ], 0, 0, 11, 5
+            ]
         );
 
         this.update();
@@ -778,7 +778,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " :   x---- "
             , " `.     ,' "
             , "   `---'   "
-            ], 0, 0, 11, 5
+            ]
         );
 
         this.update();
@@ -789,7 +789,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " :   x   : "
             , " `.     ,' "
             , "   `---'   "
-            ], 0, 0, 11, 5
+            ]
         );
 
         this.update();
@@ -800,7 +800,7 @@ class AnimationTest extends hase.test.SurfaceTestCase
             , " :   x---- "
             , " `.     ,' "
             , "   `---'   "
-            ], 0, 0, 11, 5
+            ]
         );
     }
 }

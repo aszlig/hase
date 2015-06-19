@@ -44,7 +44,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , " :     ; "
             , "  `-.-'  "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
     }
 
@@ -70,7 +70,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "      :     ; "
             , "       `-.-'  "
             , "              "
-            ], 0, 0, 14, 5
+            ]
         );
     }
 
@@ -101,7 +101,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , " :     ; "
             , "  `-.-'  "
             , "         "
-            ], 0, 0, 9, 10
+            ]
         );
     }
 
@@ -147,7 +147,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "|:  ^  ;|"
             , "| `-.-' |"
             , "`-------'"
-            ], 0, 0, 9, 6
+            ]
         );
     }
 
@@ -186,7 +186,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "|:     ;|"
             , "| `-.-' |"
             , "`-------'"
-            ], 0, 0, 9, 6
+            ]
         );
     }
 
@@ -228,7 +228,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "  `-.-'     |"
             , "    |       |"
             , "    `-------'"
-            ], 0, 0, 13, 6
+            ]
         );
     }
 
@@ -270,7 +270,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "  `-.-'     |"
             , "    |       |"
             , "    `-------'"
-            ], 0, 0, 13, 6
+            ]
         );
     }
 
@@ -342,7 +342,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "       `-.-'`.   "
             , "       ,'     `. "
             , "      `---------'"
-            ], 9, 0, 17, 9
+            ], 9
         );
     }
 
@@ -366,7 +366,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , " :     ; "
             , "  `-.-'  "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
 
         this.clear_surface();
@@ -378,7 +378,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "         "
             , "         "
             , "         "
-            ], 0, 0, 9, 5
+            ]
         );
     }
 
@@ -432,7 +432,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "  ,'|`.  "
             , "-'  |  `-"
             , "    |    "
-            ], 0, 0, 9, 6
+            ]
         );
     }
 
@@ -488,7 +488,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "|       |:     :|       |"
             , "`---------`-.-'---------'"
             , "        `-------'        "
-            ], 0, 0, 25, 6
+            ]
         );
 
         bar.y -= 1;
@@ -502,7 +502,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "`--------:-----:--------'"
             , "        | `-.-' |        "
             , "        `-------'        "
-            ], 0, 0, 25, 6
+            ]
         );
 
         rect.y += 1;
@@ -517,7 +517,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "        | `-.-' |        "
             , "        |       |        "
             , "        `-------'        "
-            ], 0, 0, 25, 7
+            ]
         );
 
         rect.z = 30;
@@ -532,7 +532,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "        | `-.-' |        "
             , "        |       |        "
             , "        `-------'        "
-            ], 0, 0, 25, 7
+            ]
         );
     }
 
@@ -603,7 +603,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , " ;`---/'[__>.    | |  |  |  |  |  | |   "
             , "  ;```-.--.--'   | |__|  | '|  |__| |   "
             , "     --'--'--'   |_______|__|_______|   "
-            ], 0, 0, 40, 18
+            ]
         );
 
         var dist:PVector = house.center_distance_to(copter);
@@ -633,7 +633,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "                 | |  |  |  |  |  | |   "
             , "                 | |__|  | '|  |__| |   "
             , "                 |_______|__|_______|   "
-            ], 0, 0, 40, 18
+            ]
         );
 
         var dist:PVector = house.center_distance_to(copter);
@@ -663,7 +663,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "   | |  |  |  |  |  | |   "
             , "   | |__|  | '|  |__| |   "
             , "   |_______|__|_______|   "
-            ], 14, 0, 26, 18
+            ], 14
         );
 
         var dist:PVector = house.center_distance_to(copter);

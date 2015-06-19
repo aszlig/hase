@@ -108,7 +108,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , "it  "
             , "le! "
             , "    "
-            ], 0, 0, 4, 4
+            ]
         );
 
         this.update();
@@ -119,7 +119,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , "     I      "
             , "G!          "
             , "            "
-            ], 0, 0, 12, 5
+            ]
         );
     }
 
@@ -194,7 +194,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , "              ' |,`|,'   "
             , "               ,' /'     "
             , "                         "
-            ], 0, 0, 25, 11
+            ]
         );
 
         this.update();
@@ -203,7 +203,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " not that small "
             , " smaller        "
             , "                "
-            ], 0, 0, 16, 3
+            ]
         );
     }
 
@@ -294,7 +294,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , "         "
             , " `-----' "
             , "         "
-            ], 4, 6, 9, 5
+            ], 4, 6
         );
 
         this.update();
@@ -305,7 +305,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , " !     ! "
             , " .-----. "
             , "         "
-            ], 6, 6, 9, 5
+            ], 6, 6
         );
     }
 
@@ -367,7 +367,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " `-----' "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -375,7 +375,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " O     O "
             , "    ^    "
             , " `-----' "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -383,7 +383,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " `-----' "
-            ], 0, 0, 9, 3
+            ]
         );
 
         anim.key = "meh";
@@ -393,7 +393,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " `-----. "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -401,7 +401,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " .-----' "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -409,7 +409,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " `-----. "
-            ], 0, 0, 9, 3
+            ]
         );
 
         anim.key = "sad";
@@ -419,7 +419,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " .-----. "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -427,7 +427,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " O     O "
             , "    ^    "
             , " .-----. "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -435,7 +435,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " X     X "
             , "    ^    "
             , " .-----. "
-            ], 0, 0, 9, 3
+            ]
         );
 
         this.update();
@@ -448,7 +448,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " O     O "
             , "    ^    "
             , " .-----. "
-            ], 0, 0, 9, 3
+            ]
         );
     }
 }
