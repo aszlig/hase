@@ -15,13 +15,17 @@ in stdenv.mkDerivation {
 
   buildPhase = ''
     (cd example && haxe example.hxml)
+    haxe -main hase.test.Main -cpp test -D HXCPP_M64
   '';
 
   doCheck = true;
   checkPhase = ''
-    haxe --macro 'hase.test.Main.main()'
-    haxe -main hase.test.Main -cpp test -D HXCPP_M64
+    header "running C++ tests"
     ./test/Main
+    stopNest
+    header "running Neko tests"
+    haxe --macro 'hase.test.Main.main()'
+    stopNest
   '';
 
   installPhase = ''
