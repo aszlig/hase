@@ -218,8 +218,10 @@ class AnimationParser
         return frames;
     }
 
+    #if macro
     public static function parse_file(path:String):Array<FrameData>
     {
         return new AnimationParser(sys.io.File.getContent(path)).parse();
     }
+    #end
 }
