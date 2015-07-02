@@ -35,6 +35,9 @@ class Main
         runner.add(new hase.test.cases.RectTest());
         runner.add(new hase.test.cases.SpriteTest());
         runner.add(new hase.test.cases.SurfaceTest());
-        runner.run();
+        var result:Bool = runner.run();
+        #if (cpp || neko)
+        Sys.exit(result ? 0 : 1);
+        #end
     }
 }
