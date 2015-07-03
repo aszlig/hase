@@ -53,4 +53,12 @@ class MiscTest extends haxe.unit.TestCase
         this.assertEquals(3, (-3).intabs());
         this.assertEquals(1024, (-1024).intabs());
     }
+
+    public function test_signum():Void
+    {
+        this.assertEquals(0, 0.signum());
+        this.assertEquals(1, 3.signum());
+        this.assertEquals(-1, (-3).signum());
+        this.assertEquals(-1, (-1024).signum());
+    }
 }

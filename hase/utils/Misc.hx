@@ -35,4 +35,7 @@ class Misc
 
     public static inline function intabs(i:Int):Int
         return i < 0 ? -i : i;
+
+    public static inline function signum(i:Int):Int
+        return i < 0 ? -1 : i > 0 ? 1 : 0;
 }
