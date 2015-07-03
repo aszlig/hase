@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 aszlig
+/* Copyright (C) 2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +18,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.test;
+package hase.test.cases;
 
-class Main
+using hase.utils.Misc;
+
+class MiscTest extends haxe.unit.TestCase
 {
-    public static function main():Void
+    public function test_binomial():Void
     {
-        var runner = new haxe.unit.TestRunner();
-        runner.add(new hase.test.cases.AnimationParserTest());
-        runner.add(new hase.test.cases.AnimationTest());
-        runner.add(new hase.test.cases.ColorTableTest());
-        runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MatrixTest());
-        runner.add(new hase.test.cases.MiscTest());
-        runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PVectorTest());
-        runner.add(new hase.test.cases.RectTest());
-        runner.add(new hase.test.cases.SpriteTest());
-        runner.add(new hase.test.cases.SurfaceTest());
-        var result:Bool = runner.run();
-        #if (cpp || neko)
-        Sys.exit(result ? 0 : 1);
-        #end
+        this.assertEquals(10, 5.binomial(3));
+        this.assertEquals(120, 10.binomial(3));
+        this.assertEquals(210, 10.binomial(4));
+        this.assertEquals(45, 10.binomial(8));
+        this.assertEquals(19600, 50.binomial(3));
+    }
+
+    public function test_binomial_ones():Void
+    {
+        this.assertEquals(1, 5.binomial(5));
+        this.assertEquals(1, 9.binomial(0));
+    }
+
+    public function test_binomial_zeroes():Void
+    {
+        this.assertEquals(0, 2.binomial(3));
+        this.assertEquals(0, (-1).binomial(3));
+        this.assertEquals(0, 2.binomial(-1));
     }
 }

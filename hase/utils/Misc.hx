@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 aszlig
+/* Copyright (C) 2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,27 +18,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.test;
+package hase.utils;
 
-class Main
+class Misc
 {
-    public static function main():Void
+    public static inline function binomial(n:Int, k:Int):Int
     {
-        var runner = new haxe.unit.TestRunner();
-        runner.add(new hase.test.cases.AnimationParserTest());
-        runner.add(new hase.test.cases.AnimationTest());
-        runner.add(new hase.test.cases.ColorTableTest());
-        runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MatrixTest());
-        runner.add(new hase.test.cases.MiscTest());
-        runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PVectorTest());
-        runner.add(new hase.test.cases.RectTest());
-        runner.add(new hase.test.cases.SpriteTest());
-        runner.add(new hase.test.cases.SurfaceTest());
-        var result:Bool = runner.run();
-        #if (cpp || neko)
-        Sys.exit(result ? 0 : 1);
-        #end
+        var result:Float = 1;
+        if (k < 0 || n < k) return 0;
+        if (k == 0 || n == k) return 1;
+        if (k > n - k) k = n - k;
+        for (i in 1...(k + 1))
+            result *= (n - i + 1) / i;
+        return Std.int(result);
     }
 }
