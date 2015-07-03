@@ -38,4 +38,7 @@ class Misc
 
     public static inline function signum(i:Int):Int
         return i < 0 ? -1 : i > 0 ? 1 : 0;
+
+    public static inline function sigcmp(start:Int, end:Int):Int
+        return start < end ? 1 : start > end ? -1 : 0;
 }
