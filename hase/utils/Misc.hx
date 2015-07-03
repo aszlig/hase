@@ -32,4 +32,7 @@ class Misc
             result *= (n - i + 1) / i;
         return Std.int(result);
     }
+
+    public static inline function intabs(i:Int):Int
+        return i < 0 ? -i : i;
 }

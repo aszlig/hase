@@ -45,4 +45,12 @@ class MiscTest extends haxe.unit.TestCase
         this.assertEquals(0, (-1).binomial(3));
         this.assertEquals(0, 2.binomial(-1));
     }
+
+    public function test_intabs():Void
+    {
+        this.assertEquals(0, 0.intabs());
+        this.assertEquals(3, 3.intabs());
+        this.assertEquals(3, (-3).intabs());
+        this.assertEquals(1024, (-1024).intabs());
+    }
 }
