@@ -32,6 +32,7 @@ class Main
         runner.add(new hase.test.cases.MatrixTest());
         runner.add(new hase.test.cases.MiscTest());
         runner.add(new hase.test.cases.MotionTest());
+        runner.add(new hase.test.cases.PathTest());
         runner.add(new hase.test.cases.PVectorTest());
         runner.add(new hase.test.cases.RectTest());
         runner.add(new hase.test.cases.SpriteTest());
