@@ -20,6 +20,32 @@
  */
 package hase.utils;
 
+private class RangeIter
+{
+    private var start:Int;
+    private var end:Int;
+    private var increment:Int;
+
+    public function new(start:Int, end:Int, increment:Int)
+    {
+        this.start = start;
+        this.end = end;
+        this.increment = increment;
+    }
+
+    public inline function hasNext():Bool
+        return this.increment > 0
+             ? this.start < this.end
+             : this.start > this.end;
+
+    public inline function next():Int
+    {
+        var current:Int = this.start;
+        this.start += this.increment;
+        return current;
+    }
+}
+
 class Misc
 {
     public static inline function binomial(n:Int, k:Int):Int
@@ -28,7 +54,7 @@ class Misc
         if (k < 0 || n < k) return 0;
         if (k == 0 || n == k) return 1;
         if (k > n - k) k = n - k;
-        for (i in 1...(k + 1))
+        for (i in Misc.range(1, k))
             result *= (n - i + 1) / i;
         return Std.int(result);
     }
@@ -41,4 +67,19 @@ class Misc
 
     public static inline function sigcmp(start:Int, end:Int):Int
         return start < end ? 1 : start > end ? -1 : 0;
+
+    public static inline function
+        range( start:Int, end:Int
+             , increment:Int = null
+             , inclusive:Bool = true
+             ):RangeIter
+    {
+        var end_mod = inclusive ? 1 : 0;
+        var real_end:Int = start <= end ? end + end_mod : end - end_mod;
+
+        if (increment == null)
+            increment = Misc.sigcmp(start, real_end);
+
+        return new RangeIter(start, real_end, increment);
+    }
 }

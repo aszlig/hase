@@ -68,4 +68,51 @@ class MiscTest extends haxe.unit.TestCase
         this.assertEquals(1, 5.sigcmp(10));
         this.assertEquals(-1, 10.sigcmp(5));
     }
+
+    private function assert_range(expect:Array<Int>, result:Iterator<Int>)
+    {
+        var str_result:String = [for (i in result) i].toString();
+        this.assertEquals(expect.toString(), str_result);
+    }
+
+    public function test_range_singleton():Void
+    {
+        this.assert_range([], 4.range(4, null, false));
+        this.assert_range([4], 4.range(4));
+    }
+
+    public function test_range_exclusive():Void
+    {
+        this.assert_range([0, 1, 2, 3, 4], 0.range(5, null, false));
+        this.assert_range([5, 4, 3, 2, 1], 5.range(0, null, false));
+    }
+
+    public function test_range_inclusive():Void
+    {
+        this.assert_range([0, 1, 2, 3, 4, 5], 0.range(5));
+        this.assert_range([5, 4, 3, 2, 1, 0], 5.range(0));
+    }
+
+    public function test_range_negative():Void
+    {
+        this.assert_range([0, -1, -2, -3, -4, -5], 0.range(-5));
+        this.assert_range([-2, -3, -4, -5, -6], (-2).range(-7, null, false));
+    }
+
+    public function test_range_custom_increment():Void
+    {
+        this.assert_range([0, 2, 4], 0.range(5, 2, true));
+        this.assert_range([0, 2, 4], 0.range(6, 2, false));
+        this.assert_range([0, 2, 4, 6], 0.range(6, 2, true));
+        this.assert_range([0, -2, -4], 0.range(-5, -2, true));
+    }
+
+    public function test_range_invalid():Void
+    {
+        this.assert_range([], 0.range(-5, 2, true));
+        this.assert_range([], 0.range(5, -2, true));
+        this.assert_range([], (-5).range(0, -2, false));
+        this.assert_range([], 5.range(0, 2, false));
+        this.assert_range([], 0.range(5, 0, false));
+    }
 }
