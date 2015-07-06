@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 aszlig
+/* Copyright (C) 2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.test;
+package hase.geom;
 
-class Main
+using hase.utils.Misc;
+
+class Bezier
 {
-    public static function main():Void
+    private var curve:Array<PVector>;
+
+    public function new(curve:Array<PVector>)
+        this.curve = curve;
+
+    public function bezier(points:Array<PVector>, t:Float):PVector
     {
-        var runner = new haxe.unit.TestRunner();
-        runner.add(new hase.test.cases.AnimationParserTest());
-        runner.add(new hase.test.cases.AnimationTest());
-        runner.add(new hase.test.cases.BezierTest());
-        runner.add(new hase.test.cases.ColorTableTest());
-        runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MatrixTest());
-        runner.add(new hase.test.cases.MiscTest());
-        runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PathTest());
-        runner.add(new hase.test.cases.PVectorTest());
-        runner.add(new hase.test.cases.RectTest());
-        runner.add(new hase.test.cases.SpriteTest());
-        runner.add(new hase.test.cases.SurfaceTest());
-        var result:Bool = runner.run();
-        #if (cpp || neko)
-        Sys.exit(result ? 0 : 1);
-        #end
+        if (points.length == 1) {
+            return points[0];
+        } else {
+            return this.bezier([for (i in 0...(points.length - 1)) new PVector(
+                (1 - t) * points[i].x + t * points[i + 1].x,
+                (1 - t) * points[i].y + t * points[i + 1].y
+            )], t);
+        }
+    }
+
+    public function
+        map2matrix<T>(m:Matrix<T>, f:Int -> Int -> T -> T):Matrix<T>
+    {
+        var steps:Int = 6000;
+
+        var path:Array<PVector> = new Array();
+
+        for (s in 0.range(steps)) {
+            var t:Float = s / steps;
+            path.push(this.bezier(this.curve, t));
+        }
+
+        return new Path(path).map2matrix(m, f);
     }
 }
