@@ -21,7 +21,7 @@
 package hase.test.cases;
 
 import hase.display.Symbol;
-import hase.geom.Bezier;
+import hase.geom.Path;
 import hase.geom.PVector;
 
 class BezierTest extends hase.test.SurfaceTestCase
@@ -29,7 +29,7 @@ class BezierTest extends hase.test.SurfaceTestCase
     public function
         assert_bezier(curve:Array<PVector>, expect:Array<String>):Void
     {
-        var b = new Bezier(curve);
+        var b = Path.bezier(curve);
         var area:hase.display.Sprite = this.create_sprite([]);
         b.map2matrix(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
             return new Symbol("x".code);

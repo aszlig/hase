@@ -82,4 +82,32 @@ abstract Path (Array<PVector>)
 
         return m;
     }
+
+    private static function decasteljau(points:Array<PVector>, t:Float):PVector
+    {
+        if (points.length == 1) {
+            return points[0];
+        } else {
+            return Path.decasteljau([
+                for (i in 0...(points.length - 1)) new PVector(
+                    (1 - t) * points[i].x + t * points[i + 1].x,
+                    (1 - t) * points[i].y + t * points[i + 1].y
+                )
+            ], t);
+        }
+    }
+
+    public static function bezier(curve:Array<PVector>):Path
+    {
+        var steps:Int = 6000;
+
+        var path:Array<PVector> = new Array();
+
+        for (s in 0.range(steps)) {
+            var t:Float = s / steps;
+            path.push(Path.decasteljau(curve, t));
+        }
+
+        return new Path(path);
+    }
 }
