@@ -618,4 +618,103 @@ class PathTest extends hase.test.SurfaceTestCase
             ]
         );
     }
+
+    public function test_bezier_circle():Void
+    {
+        this.assert_path(
+            Path.bezier(
+                [ new PVector(7, 1)
+                , new PVector(-1, 1)
+                , new PVector(-1, 6)
+                , new PVector(-1, 11)
+                , new PVector(7, 11)
+                , new PVector(15, 11)
+                , new PVector(15, 6)
+                , new PVector(15, 1)
+                , new PVector(7, 1)
+                ]
+            ),
+            [ "               "
+            , "    dcbONML    "
+            , "  gfe     KJI  "
+            , " ih         HG "
+            , " j           F "
+            , " k           E "
+            , " l           D "
+            , " mn         BC "
+            , "  opq     yzA  "
+            , "    rstuvwx    "
+            , "               "
+            ]
+        );
+    }
+
+    public function test_bezier_x():Void
+    {
+        this.assert_path(
+            Path.bezier(
+                [ new PVector(1, 1)
+                , new PVector(1, 6)
+                , new PVector(56, 26)
+                , new PVector(9, 3)
+                , new PVector(-22, 6)
+                , new PVector(9, 9)
+                , new PVector(56, -14)
+                , new PVector(1, 6)
+                , new PVector(1, 11)
+                ]
+            ),
+            [ "                    "
+            , " a              Z21 "
+            , " bc           W543  "
+            , "  def       T876    "
+            , "    gh     ba9      "
+            , "     ijk edc        "
+            , "       hgfO         "
+            , "     kji oNM        "
+            , "    ml     LKt      "
+            , "  pon       JIHw    "
+            , " rq           GFEz  "
+            , " s              DCB "
+            , "                    "
+            ]
+        );
+    }
+
+    public function test_shaky_wave():Void
+    {
+        this.assert_path(
+            Path.bezier(
+                [ new PVector(1, 14)
+                , new PVector(3, -26)
+                , new PVector(5, 14)
+                , new PVector(7, 64)
+                , new PVector(9, 14)
+                , new PVector(11, -82)
+                , new PVector(13, 14)
+                , new PVector(15, 64)
+                , new PVector(17, 14)
+                , new PVector(19, -26)
+                , new PVector(21, 14)
+                ]
+            ),
+            [ "                       "
+            , "  op       X       vw  "
+            , "  nq      VYZ      ux  "
+            , "  mrs     U 0     sty  "
+            , "  l t    ST 12    r z  "
+            , "  k u    R   3    q A  "
+            , " ij v    Q   4    p BC "
+            , " h  w    P   5    o  D "
+            , " g  xy  NO   67  mn  E "
+            , " f   z  M     8  l   F "
+            , " e   A  L     9  k   G "
+            , " d   B  K     a  j   H "
+            , " c   C IJ     bc i   I "
+            , " b   DEH       dgh   J "
+            , " a    FG       ef    K "
+            , "                       "
+            ]
+        );
+    }
 }
