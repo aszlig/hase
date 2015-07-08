@@ -27,9 +27,8 @@ import hase.geom.PVector;
 class PathTest extends hase.test.SurfaceTestCase
 {
     public function
-        assert_path(path:Array<PVector>, expect:Array<String>):Void
+        assert_path(path:Path, expect:Array<String>):Void
     {
-        var b = new Path(path);
         var area:hase.display.Sprite = this.create_sprite([]);
 
         var syms:List<Int> = Lambda.fold([
@@ -45,7 +44,7 @@ class PathTest extends hase.test.SurfaceTestCase
             return b;
         }, new List());
 
-        b.map2matrix(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
+        path.map2matrix(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
             this.assertTrue(syms.length > 0);
             return new Symbol(syms.pop());
         });
@@ -56,13 +55,13 @@ class PathTest extends hase.test.SurfaceTestCase
 
     public function test_null():Void
     {
-        this.assert_path([], []);
+        this.assert_path(new Path([]), []);
     }
 
     public function test_point():Void
     {
         this.assert_path(
-            [new PVector(1, 1)],
+            new Path([new PVector(1, 1)]),
             [ "   "
             , " a "
             , "   "
@@ -73,9 +72,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_vertical():Void
     {
         this.assert_path(
-            [ new PVector(1, 1)
-            , new PVector(1, 10)
-            ],
+            new Path(
+                [ new PVector(1, 1)
+                , new PVector(1, 10)
+                ]
+            ),
             [ "   "
             , " a "
             , " b "
@@ -92,9 +93,11 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [ new PVector(1, 10)
-            , new PVector(1, 1)
-            ],
+            new Path(
+                [ new PVector(1, 10)
+                , new PVector(1, 1)
+                ]
+            ),
             [ "   "
             , " j "
             , " i "
@@ -114,9 +117,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_horizontal():Void
     {
         this.assert_path(
-            [ new PVector(1, 1)
-            , new PVector(10, 1)
-            ],
+            new Path(
+                [ new PVector(1, 1)
+                , new PVector(10, 1)
+                ]
+            ),
             [ "            "
             , " abcdefghij "
             , "            "
@@ -124,9 +129,11 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [ new PVector(10, 1)
-            , new PVector(1, 1)
-            ],
+            new Path(
+                [ new PVector(10, 1)
+                , new PVector(1, 1)
+                ]
+            ),
             [ "            "
             , " jihgfedcba "
             , "            "
@@ -137,9 +144,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_diagonal():Void
     {
         this.assert_path(
-            [ new PVector(1, 1)
-            , new PVector(20, 11)
-            ],
+            new Path(
+                [ new PVector(1, 1)
+                , new PVector(20, 11)
+                ]
+            ),
             [ "                      "
             , " a                    "
             , "  bc                  "
@@ -157,9 +166,11 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [ new PVector(20, 1)
-            , new PVector(1, 11)
-            ],
+            new Path(
+                [ new PVector(20, 1)
+                , new PVector(1, 11)
+                ]
+            ),
             [ "                      "
             , " a                  a "
             , "  bc              cb  "
@@ -180,12 +191,14 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_box():Void
     {
         this.assert_path(
-            [ new PVector(1, 1)
-            , new PVector(1, 5)
-            , new PVector(5, 5)
-            , new PVector(5, 1)
-            , new PVector(1, 1)
-            ],
+            new Path(
+                [ new PVector(1, 1)
+                , new PVector(1, 5)
+                , new PVector(5, 5)
+                , new PVector(5, 1)
+                , new PVector(1, 1)
+                ]
+            ),
             [ "       "
             , " qponm "
             , " b   l "
@@ -200,11 +213,13 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_triangle():Void
     {
         this.assert_path(
-            [ new PVector(1, 1)
-            , new PVector(1, 11)
-            , new PVector(11, 11)
-            , new PVector(1, 1)
-            ],
+            new Path(
+                [ new PVector(1, 1)
+                , new PVector(1, 11)
+                , new PVector(11, 11)
+                , new PVector(1, 1)
+                ]
+            ),
             [ "             "
             , " E           "
             , " bD          "
@@ -225,7 +240,7 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_star_incremential():Void
     {
         this.assert_path(
-            [new PVector(6, 6), new PVector(1, 6)],
+            new Path([new PVector(6, 6), new PVector(1, 6)]),
             [ "             "
             , "             "
             , "             "
@@ -243,7 +258,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(11, 6)],
+            new Path([new PVector(6, 6), new PVector(11, 6)]),
             [ "             "
             , "             "
             , "             "
@@ -261,7 +276,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(6, 1)],
+            new Path([new PVector(6, 6), new PVector(6, 1)]),
             [ "             "
             , "      f      "
             , "      e      "
@@ -279,7 +294,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(6, 11)],
+            new Path([new PVector(6, 6), new PVector(6, 11)]),
             [ "             "
             , "      f      "
             , "      e      "
@@ -297,7 +312,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(1, 1)],
+            new Path([new PVector(6, 6), new PVector(1, 1)]),
             [ "             "
             , " f    f      "
             , "  e   e      "
@@ -315,7 +330,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(11, 1)],
+            new Path([new PVector(6, 6), new PVector(11, 1)]),
             [ "             "
             , " f    f    f "
             , "  e   e   e  "
@@ -333,7 +348,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(11, 11)],
+            new Path([new PVector(6, 6), new PVector(11, 11)]),
             [ "             "
             , " f    f    f "
             , "  e   e   e  "
@@ -351,7 +366,7 @@ class PathTest extends hase.test.SurfaceTestCase
         );
 
         this.assert_path(
-            [new PVector(6, 6), new PVector(1, 11)],
+            new Path([new PVector(6, 6), new PVector(1, 11)]),
             [ "             "
             , " f    f    f "
             , "  e   e   e  "
@@ -372,13 +387,15 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_pentagram():Void
     {
         this.assert_path(
-            [ new PVector(6, 1)
-            , new PVector(12, 11)
-            , new PVector(18, 1)
-            , new PVector(1, 7)
-            , new PVector(23, 7)
-            , new PVector(6, 1)
-            ],
+            new Path(
+                [ new PVector(6, 1)
+                , new PVector(12, 11)
+                , new PVector(18, 1)
+                , new PVector(1, 7)
+                , new PVector(23, 7)
+                , new PVector(6, 1)
+                ]
+            ),
             [ "                         "
             , "      on         vu      "
             , "       bmlk   yxwt       "
@@ -399,19 +416,21 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_circle():Void
     {
         this.assert_path(
-            [ new PVector(2, 3)
-            , new PVector(5, 1)
-            , new PVector(8, 1)
-            , new PVector(11, 3)
-            , new PVector(12, 4)
-            , new PVector(12, 7)
-            , new PVector(11, 8)
-            , new PVector(8, 10)
-            , new PVector(5, 10)
-            , new PVector(2, 8)
-            , new PVector(1, 7)
-            , new PVector(1, 4)
-            ],
+            new Path(
+                [ new PVector(2, 3)
+                , new PVector(5, 1)
+                , new PVector(8, 1)
+                , new PVector(11, 3)
+                , new PVector(12, 4)
+                , new PVector(12, 7)
+                , new PVector(11, 8)
+                , new PVector(8, 10)
+                , new PVector(5, 10)
+                , new PVector(2, 8)
+                , new PVector(1, 7)
+                , new PVector(1, 4)
+                ]
+            ),
             [ "              "
             , "     defg     "
             , "   bc    hi   "
