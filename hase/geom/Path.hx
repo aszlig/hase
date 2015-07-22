@@ -24,6 +24,8 @@ using hase.utils.Misc;
 
 abstract Path (Array<PVector>)
 {
+    public var length(get, never):Float;
+
     public inline function new(path:Array<PVector>)
         this = path;
 
@@ -81,6 +83,16 @@ abstract Path (Array<PVector>)
         );
 
         return m;
+    }
+
+    public inline function get_length():Float
+    {
+        var result:Float = 0;
+
+        for (i in 0...(this.length - 1))
+            result += (this[i + 1] - this[i]).length;
+
+        return result;
     }
 
     private static function decasteljau(points:Array<PVector>, t:Float):PVector
