@@ -85,6 +85,15 @@ abstract Path (Array<PVector>)
         return m;
     }
 
+    public inline function add(x:Float, y:Float):Path
+        return Path.add_pvector(new PVector(x, y));
+
+    public inline function add_pvector(what:PVector):Path
+    {
+        this.push(what);
+        return cast this;
+    }
+
     public inline function get_length():Float
     {
         var result:Float = 0;
