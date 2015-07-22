@@ -26,8 +26,8 @@ abstract Path (Array<PVector>)
 {
     public var length(get, never):Float;
 
-    public inline function new(path:Array<PVector>)
-        this = path;
+    public inline function new(?path:Array<PVector>)
+        this = path == null ? new Array() : path;
 
     private function bresenham( from:PVector, to:PVector
                               , f:Int -> Int -> Void
