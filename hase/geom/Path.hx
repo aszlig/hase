@@ -110,10 +110,8 @@ abstract Path (Array<PVector>)
             return points[0];
         } else {
             return Path.decasteljau([
-                for (i in 0...(points.length - 1)) new PVector(
-                    (1 - t) * points[i].x + t * points[i + 1].x,
-                    (1 - t) * points[i].y + t * points[i + 1].y
-                )
+                for (i in 0...(points.length - 1))
+                    points[i] * (1 - t) + points[i + 1] * t
             ], t);
         }
     }
