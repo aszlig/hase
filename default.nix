@@ -16,6 +16,7 @@ in stdenv.mkDerivation {
   buildPhase = ''
     (cd example && haxe example.hxml)
     haxe -main hase.test.Main -cpp test -D HXCPP_M64
+    haxe -main hase.test.Main -js test.js
   '';
 
   doCheck = true;
@@ -25,6 +26,9 @@ in stdenv.mkDerivation {
     stopNest
     header "running Neko tests"
     haxe --macro 'hase.test.Main.main()'
+    stopNest
+    header "running JS tests"
+    ${phantomjs}/bin/phantomjs test.js
     stopNest
   '';
 
