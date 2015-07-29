@@ -25,6 +25,12 @@ class Main
     public static function main():Void
     {
         var runner = new haxe.unit.TestRunner();
+        #if js
+        if (untyped __js__("typeof phantom") != "undefined") {
+            var system = untyped __js__("require")("system");
+            haxe.unit.TestRunner.print = system.stdout.write;
+        }
+        #end
         runner.add(new hase.test.cases.AnimationParserTest());
         runner.add(new hase.test.cases.AnimationTest());
         runner.add(new hase.test.cases.ColorTableTest());
