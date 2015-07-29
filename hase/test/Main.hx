@@ -38,7 +38,10 @@ class Main
         runner.add(new hase.test.cases.SpriteTest());
         runner.add(new hase.test.cases.SurfaceTest());
         var result:Bool = runner.run();
-        #if (cpp || neko)
+        #if js
+        if (untyped __js__("typeof phantom") != "undefined")
+            untyped __js__("phantom.exit")(result ? 0 : 1);
+        #elseif (cpp || neko)
         Sys.exit(result ? 0 : 1);
         #end
     }
