@@ -94,6 +94,13 @@ abstract Path (Array<PVector>)
         return cast this;
     }
 
+    @:op(A + B)
+    public inline static function concat(a:Path, b:Path):Path
+        return new Path(a.to_array().concat(b.to_array()));
+
+    private inline function to_array():Array<PVector>
+        return this;
+
     public inline function get_length():Float
     {
         var result:Float = 0;

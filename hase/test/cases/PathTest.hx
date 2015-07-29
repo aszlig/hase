@@ -475,6 +475,23 @@ class PathTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_concat():Void
+    {
+        var path1:Path = new Path([new PVector(1, 1)]);
+        var path2:Path = new Path([new PVector(5, 5)]);
+        this.assert_path(
+            path1 + path2,
+            [ "       "
+            , " a     "
+            , "  b    "
+            , "   c   "
+            , "    d  "
+            , "     e "
+            , "       "
+            ]
+        );
+    }
+
     public function test_bezier_line_vertical():Void
     {
         this.assert_path(
