@@ -15,8 +15,8 @@ in stdenv.mkDerivation {
 
   buildPhase = ''
     (cd example && haxe example.hxml)
-    haxe -main hase.test.Main -cpp test -D HXCPP_M64
-    haxe -main hase.test.Main -js test.js
+    haxe -main hase.test.Main -cpp test -D HXCPP_M64 -dce full
+    haxe -main hase.test.Main -js test.js -dce full
   '';
 
   doCheck = true;
