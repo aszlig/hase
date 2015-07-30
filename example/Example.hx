@@ -83,7 +83,7 @@ class Example implements hase.Application
         this.car.add_child(this.car_motion);
 
         this.root.add_child(this.car);
-        this.dragon_motion.follow(this.car, 10, 20);
+        this.dragon_motion.follow(this.car, 10, 20, true);
     }
 
     public inline function on_keypress(k:Key):Void
