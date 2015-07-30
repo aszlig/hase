@@ -111,30 +111,32 @@ abstract Path (Array<PVector>)
         return result;
     }
 
-    private static function decasteljau(points:Array<PVector>, t:Float):PVector
+    private static function decasteljau( start:PVector
+                                       , c1:PVector
+                                       , c2:PVector
+                                       , end:PVector
+                                       , t:Float
+                                       ):PVector
     {
-        if (points.length == 1) {
-            return points[0];
-        } else {
-            return Path.decasteljau([
-                for (i in 0...(points.length - 1))
-                    points[i] * (1 - t) + points[i + 1] * t
-            ], t);
-        }
+        var ti:Float = 1 - t;
+
+        var p0:PVector = start * ti + c1 * t;
+        var p1:PVector = c1 * ti + c2 * t;
+        var p2:PVector = c2 * ti + end * t;
+
+        return (p0 * ti + p1 * t) * ti + (p1 * ti + p2 * t) * t;
     }
 
     public static function
-        bezier(p0:PVector, p1:PVector, p2:PVector, p3:PVector):Path
+        bezier(start:PVector, c1:PVector, c2:PVector, end:PVector):Path
     {
-        var curve:Array<PVector> = [p0, p1, p2, p3];
-
         var steps:Int = 6000;
 
         var path:Array<PVector> = new Array();
 
         for (s in 0.range(steps)) {
             var t:Float = s / steps;
-            path.push(Path.decasteljau(curve, t));
+            path.push(Path.decasteljau(start, c1, c2, end, t));
         }
 
         return new Path(path);
