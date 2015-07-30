@@ -123,8 +123,11 @@ abstract Path (Array<PVector>)
         }
     }
 
-    public static function bezier(curve:Array<PVector>):Path
+    public static function
+        bezier(p0:PVector, p1:PVector, p2:PVector, p3:PVector):Path
     {
+        var curve:Array<PVector> = [p0, p1, p2, p3];
+
         var steps:Int = 6000;
 
         var path:Array<PVector> = new Array();

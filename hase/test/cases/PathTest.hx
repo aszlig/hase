@@ -495,11 +495,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_line_vertical():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(1, 6)
-                        , new PVector(1, -9)
-                        , new PVector(1, 14)
-                        , new PVector(1, 9)
-                        ]),
+            Path.bezier( new PVector(1, 6)
+                       , new PVector(1, -9)
+                       , new PVector(1, 14)
+                       , new PVector(1, 9)
+                       ),
             [ "   "
             , " f "
             , " g "
@@ -519,11 +519,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_line_horizontal():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(6, 1)
-                        , new PVector(-9, 1)
-                        , new PVector(14, 1)
-                        , new PVector(9, 1)
-                        ]),
+            Path.bezier( new PVector(6, 1)
+                       , new PVector(-9, 1)
+                       , new PVector(14, 1)
+                       , new PVector(9, 1)
+                       ),
             [ "            "
             , " fghijklmpo "
             , "            "
@@ -534,11 +534,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_line_diagonal():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(6, 6)
-                        , new PVector(-9, -9)
-                        , new PVector(14, 14)
-                        , new PVector(9, 9)
-                        ]),
+            Path.bezier( new PVector(6, 6)
+                       , new PVector(-9, -9)
+                       , new PVector(14, 14)
+                       , new PVector(9, 9)
+                       ),
             [ "            "
             , " f          "
             , "  g         "
@@ -558,11 +558,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_ribbon():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(0, 12)
-                        , new PVector(40, -4)
-                        , new PVector(-20, -4)
-                        , new PVector(20, 12)
-                        ]),
+            Path.bezier( new PVector(0, 12)
+                       , new PVector(40, -4)
+                       , new PVector(-20, -4)
+                       , new PVector(20, 12)
+                       ),
             [ "       HGFEDCB       "
             , "      JI     Az      "
             , "      K       y      "
@@ -583,11 +583,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_s():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(13, 1)
-                        , new PVector(-20, 7)
-                        , new PVector(34, 7)
-                        , new PVector(1, 13)
-                        ]),
+            Path.bezier( new PVector(13, 1)
+                       , new PVector(-20, 7)
+                       , new PVector(34, 7)
+                       , new PVector(1, 13)
+                       ),
             [ "               "
             , "          dcba "
             , "      ihgfe    "
@@ -610,16 +610,16 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_inconspicuous_wave():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(1, 5)
-                        , new PVector(3, -1)
-                        , new PVector(9, -1)
-                        , new PVector(11, 5)
-                        ]) +
-            Path.bezier([ new PVector(11, 5)
-                        , new PVector(13, -1)
-                        , new PVector(19, -1)
-                        , new PVector(21, 5)
-                        ]),
+            Path.bezier( new PVector(1, 5)
+                       , new PVector(3, -1)
+                       , new PVector(9, -1)
+                       , new PVector(11, 5)
+                       ) +
+            Path.bezier( new PVector(11, 5)
+                       , new PVector(13, -1)
+                       , new PVector(19, -1)
+                       , new PVector(21, 5)
+                       ),
             [ "                       "
             , "   ghijklm   yzABCDE   "
             , "  ef     no wx     FG  "
@@ -634,11 +634,11 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_cusp_down():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(1, 1)
-                        , new PVector(21, 11)
-                        , new PVector(11, 11)
-                        , new PVector(11, 1)
-                        ]),
+            Path.bezier( new PVector(1, 1)
+                       , new PVector(21, 11)
+                       , new PVector(11, 11)
+                       , new PVector(11, 1)
+                       ),
             [ "                "
             , " ab        E    "
             , "  cde      D    "
@@ -657,16 +657,16 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_circle():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(7, 1)
-                        , new PVector(-1, 1)
-                        , new PVector(-1, 9)
-                        , new PVector(7, 9)
-                        ]) +
-            Path.bezier([ new PVector(7, 9)
-                        , new PVector(15, 9)
-                        , new PVector(15, 1)
-                        , new PVector(7, 1)
-                        ]),
+            Path.bezier( new PVector(7, 1)
+                       , new PVector(-1, 1)
+                       , new PVector(-1, 9)
+                       , new PVector(7, 9)
+                       ) +
+            Path.bezier( new PVector(7, 9)
+                       , new PVector(15, 9)
+                       , new PVector(15, 1)
+                       , new PVector(7, 1)
+                       ),
             [ "               "
             , "    dcbONML    "
             , "  gfe     KJI  "
@@ -685,16 +685,16 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_bezier_x():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(1, 1)
-                        , new PVector(13, 11)
-                        , new PVector(13, 1)
-                        , new PVector(1, 11)
-                        ]) +
-            Path.bezier([ new PVector(18, 1)
-                        , new PVector(5, 11)
-                        , new PVector(5, 1)
-                        , new PVector(18, 11)
-                        ]),
+            Path.bezier( new PVector(1, 1)
+                       , new PVector(13, 11)
+                       , new PVector(13, 1)
+                       , new PVector(1, 11)
+                       ) +
+            Path.bezier( new PVector(18, 1)
+                       , new PVector(5, 11)
+                       , new PVector(5, 1)
+                       , new PVector(18, 11)
+                       ),
             [ "                    "
             , " ab              UT "
             , "  cd            WV  "
@@ -715,26 +715,26 @@ class PathTest extends hase.test.SurfaceTestCase
     public function test_shaky_wave():Void
     {
         this.assert_path(
-            Path.bezier([ new PVector(1, 14)
-                        , new PVector(1, 9)
-                        , new PVector(2, -1)
-                        , new PVector(3, 1)
-                        ]) +
-            Path.bezier([ new PVector(3, 1)
-                        , new PVector(7, 29)
-                        , new PVector(8, 4)
-                        , new PVector(11, 1)
-                        ]) +
-            Path.bezier([ new PVector(11, 1)
-                        , new PVector(14, 4)
-                        , new PVector(15, 29)
-                        , new PVector(19, 1)
-                        ]) +
-            Path.bezier([ new PVector(19, 1)
-                        , new PVector(20, -1)
-                        , new PVector(21, 9)
-                        , new PVector(21, 14)
-                        ]),
+            Path.bezier( new PVector(1, 14)
+                       , new PVector(1, 9)
+                       , new PVector(2, -1)
+                       , new PVector(3, 1)
+                       ) +
+            Path.bezier( new PVector(3, 1)
+                       , new PVector(7, 29)
+                       , new PVector(8, 4)
+                       , new PVector(11, 1)
+                       ) +
+            Path.bezier( new PVector(11, 1)
+                       , new PVector(14, 4)
+                       , new PVector(15, 29)
+                       , new PVector(19, 1)
+                       ) +
+            Path.bezier( new PVector(19, 1)
+                       , new PVector(20, -1)
+                       , new PVector(21, 9)
+                       , new PVector(21, 14)
+                       ),
             [ "                       "
             , "  op       X       vw  "
             , "  nq      VYZ      ux  "
