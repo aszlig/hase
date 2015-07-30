@@ -45,7 +45,7 @@ class SurfaceTestCase extends haxe.unit.TestCase
             img.push(introw);
         }
 
-        return hase.geom.Matrix.from_2d_array(img, 0);
+        return hase.geom.Raster.from_2d_array(img, 0);
     }
 
     public function clear_surface():Void

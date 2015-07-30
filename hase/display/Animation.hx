@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -166,7 +166,7 @@ class Animation extends Sprite
         }];
 
         return macro [for (fd in $v{raw_data}) {
-            image: hase.geom.Matrix.from_2d_array(fd.raw_image, 0),
+            image: hase.geom.Raster.from_2d_array(fd.raw_image, 0),
             refpoint_x: fd.refpoint_x,
             refpoint_y: fd.refpoint_y,
             key: fd.key,

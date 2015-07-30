@@ -44,7 +44,7 @@ class PathTest extends hase.test.SurfaceTestCase
             return b;
         }, new List());
 
-        path.map2matrix(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
+        path.rasterize(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
             this.assertTrue(syms.length > 0);
             return new Symbol(syms.pop());
         });

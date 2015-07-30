@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package hase.utils;
 import hase.display.Animation;
 import hase.display.Image;
 import hase.display.Symbol;
-import hase.geom.Matrix;
+import hase.geom.Raster;
 
 import hase.utils.ParserTypes;
 
@@ -134,7 +134,7 @@ class AnimationParser
                 container_data.push(line);
         }
 
-        var container_area:Image = Matrix.from_2d_array([
+        var container_area:Image = Raster.from_2d_array([
             for (line in container_data)
                 [for (c in 0...line.length) line.charCodeAt(c)]
         ], 0);
@@ -156,7 +156,7 @@ class AnimationParser
         if (containers.length == 1)
             return containers[0];
 
-        var merged:Matrix<ColorMixer> = Matrix.from_2d_array([
+        var merged:Raster<ColorMixer> = Raster.from_2d_array([
             for (y in 0...containers[0].body.height)
                 [for (x in 0...containers[0].body.width) new ColorMixer()]
         ], new ColorMixer());

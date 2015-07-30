@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 aszlig
+/* Copyright (C) 2013-2015 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,4 +20,4 @@
  */
 package hase.display;
 
-typedef Image = hase.geom.Matrix<Symbol>;
+typedef Image = hase.geom.Raster<Symbol>;

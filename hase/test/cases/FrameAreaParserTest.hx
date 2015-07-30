@@ -29,7 +29,7 @@ class FrameAreaParserTest extends haxe.unit.TestCase
 {
     private function parse(data:Array<String>):Array<Container>
     {
-        var img:Image = hase.geom.Matrix.from_2d_array([
+        var img:Image = hase.geom.Raster.from_2d_array([
             for (row in data) [for (c in 0...row.length) row.charCodeAt(c)]
         ], 0);
         return (new hase.utils.FrameAreaParser(img)).parse();

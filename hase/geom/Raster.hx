@@ -20,7 +20,7 @@
  */
 package hase.geom;
 
-class Matrix<T>
+class Raster<T>
 {
     private var _width:Int;
     private var _height:Int;
@@ -106,7 +106,7 @@ class Matrix<T>
                 f(x, y, this.unsafe_get(x, y));
     }
 
-    public inline function map<R>(f:Int -> Int -> T -> R, def:R):Matrix<R>
+    public inline function map<R>(f:Int -> Int -> T -> R, def:R):Raster<R>
     {
         var out:Array<R> = new Array();
 
@@ -114,11 +114,11 @@ class Matrix<T>
             for (x in 0...this._width)
                 out.push(f(x, y, this.unsafe_get(x, y)));
 
-        return new Matrix(this._width, this._height, out, def);
+        return new Raster(this._width, this._height, out, def);
     }
 
     public inline function
-        zip<R, T2>(m:Matrix<T2>, f:T -> T2 -> R, def:R):Matrix<R>
+        zip<R, T2>(m:Raster<T2>, f:T -> T2 -> R, def:R):Raster<R>
     {
         if (this._width > m._width)
             m.width = this._width
@@ -166,7 +166,7 @@ class Matrix<T>
     }
 
     public inline function
-        extract(x:Int = 0, y:Int = 0, width:Int = -1, height:Int = -1):Matrix<T>
+        extract(x:Int = 0, y:Int = 0, width:Int = -1, height:Int = -1):Raster<T>
     {
         var new_data:Array<T> = new Array();
 
@@ -187,10 +187,10 @@ class Matrix<T>
             for (xi in x...(x + width))
                 new_data.push(this.unsafe_get(xi, yi));
 
-        return new Matrix(width, height, new_data, this.default_value);
+        return new Raster(width, height, new_data, this.default_value);
     }
 
-    public inline function extract_rect(rect:Rect):Matrix<T>
+    public inline function extract_rect(rect:Rect):Raster<T>
         return this.extract(rect.x, rect.y, rect.width, rect.height);
 
     public inline function to_2d_array():Array<Array<T>>
@@ -202,18 +202,18 @@ class Matrix<T>
     }
 
     public static inline function
-        create<T>(width:Int, height:Int, val:T, def:T):Matrix<T>
+        create<T>(width:Int, height:Int, val:T, def:T):Raster<T>
         return new
-              Matrix(width, height, [for (_ in 0...(width * height)) val], def);
+              Raster(width, height, [for (_ in 0...(width * height)) val], def);
 
     public static inline function
-        from_2d_array<T>(array:Array<Array<T>>, def:T):Matrix<T>
+        from_2d_array<T>(array:Array<Array<T>>, def:T):Raster<T>
     {
-        var new_matrix:Matrix<T> = new Matrix(0, 0, [], def);
+        var new_raster:Raster<T> = new Raster(0, 0, [], def);
 
         for (row in array)
-            new_matrix.add_row(row);
+            new_raster.add_row(row);
 
-        return new_matrix;
+        return new_raster;
     }
 }

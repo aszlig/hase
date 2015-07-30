@@ -69,7 +69,7 @@ abstract Path (Array<PVector>)
     }
 
     public inline function
-        map2matrix<T>(m:Matrix<T>, f:Int -> Int -> T -> T):Matrix<T>
+        rasterize<T>(m:Raster<T>, f:Int -> Int -> T -> T):Raster<T>
     {
         if (this.length == 1) {
             var x:Int = Std.int(this[0].x);

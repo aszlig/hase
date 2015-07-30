@@ -35,7 +35,7 @@ class Main
         runner.add(new hase.test.cases.AnimationTest());
         runner.add(new hase.test.cases.ColorTableTest());
         runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MatrixTest());
+        runner.add(new hase.test.cases.RasterTest());
         runner.add(new hase.test.cases.MiscTest());
         runner.add(new hase.test.cases.MotionTest());
         runner.add(new hase.test.cases.PathTest());
