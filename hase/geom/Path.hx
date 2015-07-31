@@ -111,20 +111,17 @@ abstract Path (Array<PVector>)
         return result;
     }
 
-    private static function decasteljau( start:PVector
-                                       , c1:PVector
-                                       , c2:PVector
-                                       , end:PVector
-                                       , t:Float
-                                       ):PVector
+    private static function cubic_bezier( start:PVector
+                                        , c1:PVector
+                                        , c2:PVector
+                                        , end:PVector
+                                        , t:Float
+                                        ):PVector
     {
-        var ti:Float = 1 - t;
-
-        var p0:PVector = start * ti + c1 * t;
-        var p1:PVector = c1 * ti + c2 * t;
-        var p2:PVector = c2 * ti + end * t;
-
-        return (p0 * ti + p1 * t) * ti + (p1 * ti + p2 * t) * t;
+        var p0:PVector = end + 3 * (c1 - c2) - start;
+        var p1:PVector = 3 * (c2 - c1 - c1 + start);
+        var p2:PVector = 3 * (c1 - start);
+        return ((p0 * t + p1) * t + p2) * t + start;
     }
 
     public static function
@@ -136,7 +133,7 @@ abstract Path (Array<PVector>)
 
         for (s in 0.range(steps)) {
             var t:Float = s / steps;
-            path.push(Path.decasteljau(start, c1, c2, end, t));
+            path.push(Path.cubic_bezier(start, c1, c2, end, t));
         }
 
         return new Path(path);
