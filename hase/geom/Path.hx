@@ -127,7 +127,14 @@ abstract Path (Array<PVector>)
     public static function
         bezier(start:PVector, c1:PVector, c2:PVector, end:PVector):Path
     {
-        var steps:Int = 6000;
+        var steps:Int = Math.ceil(Lambda.fold([
+            start - c1,
+            c2 - end,
+            (start - c2) / 2,
+            (c1 - end) / 2,
+        ], inline function (a:PVector, b:Float) {
+            return Math.max(a.dot_product(a), b);
+        }, 1.0) * 3.0);
 
         var path:Array<PVector> = new Array();
 
