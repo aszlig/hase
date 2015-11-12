@@ -32,12 +32,19 @@ import hase.term.internal.Font;
     private var font_cache:Map<Int,Int>;
     private var font_canvas:js.html.CanvasElement;
 
+    private var key_queue:List<js.html.KeyboardEvent>;
+
     public var width:Int;
     public var height:Int;
 
     public function new(canvas:js.html.CanvasElement)
     {
         this.canvas = canvas;
+
+        this.key_queue = new List();
+        js.Browser.window.addEventListener(
+            "keypress", this.key_queue.add, false
+        );
 
         this.width = Std.int(canvas.width / Font.WIDTH);
         this.height = Std.int(canvas.height / Font.HEIGHT);
@@ -55,7 +62,13 @@ import hase.term.internal.Font;
         js.Browser.document.body.removeChild(this.canvas);
 
     public inline function get_key():Key
-        return None;
+    {
+        var key:Null<js.html.KeyboardEvent> = this.key_queue.pop();
+        if (key == null)
+            return None;
+
+        return Char(key.keyCode);
+    }
 
     private inline function cursor2x(x:Int):Int
     {
