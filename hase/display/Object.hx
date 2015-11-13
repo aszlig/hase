@@ -92,6 +92,7 @@ class Object
             child.surface = this.surface;
 
         this.children.push(child);
+        this.set_dirty();
         return child;
     }
 
