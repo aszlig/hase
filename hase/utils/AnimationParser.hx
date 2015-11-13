@@ -161,8 +161,12 @@ class AnimationParser
                 [for (x in 0...containers[0].body.width) new ColorMixer()]
         ], new ColorMixer());
 
+        var headers:Array<Header> = new Array();
+
         for (container in containers) {
             for (header in container.headers) {
+                headers.push(header);
+
                 var merger = function(cm:ColorMixer, sym:Symbol):ColorMixer {
                     switch (header) {
                         case Variant(Plain):      cm.plain = sym.ordinal;
@@ -181,7 +185,7 @@ class AnimationParser
         }
 
         return {
-            headers: new Array(),
+            headers: headers,
             body: merged.map(function(x, y, cm:ColorMixer) return cm.merge(), 0)
         }
     }

@@ -518,4 +518,76 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             );
         }
     }
+
+    public function test_keyframes_and_other_containers():Void
+    {
+        var result = this.parse_anim(
+            [ "+key: traffic_green"
+            , ": plain  : green  :"
+            , "|  .--.  |  5555  |"
+            , "| | GG | | 5    5 |"
+            , "| `.__.' | 555555 |"
+            , "-"
+            , "+key: traffic_yellow"
+            , ": plain  : green  : red    :"
+            , "|  .--.  |  5555  |  5555  |"
+            , "| | YY | | 5    5 | 5    5 |"
+            , "| `.__.' | 555555 | 555555 |"
+            , "-"
+            , "+key: traffic_red"
+            , ": plain  : red    :"
+            , "|  .--.  |  5555  |"
+            , "| | RR | | 5    5 |"
+            , "| `.__.' | 555555 |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+
+        this.root.add_child(anim);
+
+        anim.key = "traffic_green";
+        this.update();
+        this.assert_area(
+            [ "  .--.  "
+            , " | GG | "
+            , " `.__.' "
+            ]
+        );
+
+        this.update();
+        this.assert_area(
+            [ "  .--.  "
+            , " | GG | "
+            , " `.__.' "
+            ]
+        );
+
+        anim.key = "traffic_yellow";
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+        this.assert_area(
+            [ "  .--.  "
+            , " | YY | "
+            , " `.__.' "
+            ]
+        );
+
+        anim.key = "traffic_red";
+        this.update();
+        this.update();
+        this.update();
+        this.update();
+        this.assert_area(
+            [ "  .--.  "
+            , " | RR | "
+            , " `.__.' "
+            ]
+        );
+    }
 }
