@@ -702,6 +702,99 @@ class AnimationTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_stop_anim():Void
+    {
+        var anim:hase.display.Animation = this.create_animation([
+            [ "                                     "
+            , "                         .---------. "
+            , "      .-_.-_.-_..==)   ./  H E L P | "
+            , "   ,'`         .'  |  /.-----------' "
+            , "  ,'       _.''    o                 "
+            , " ,'      .'       /|                 "
+            , "       .'         /|                 "
+            , "       :          ''                 "
+            , "      .'                             "
+            , "     '                               "
+            ],
+            [ "                                     "
+            , "                                     "
+            , "      .-_.-_.-_.. *CRACK*            "
+            , "   ,'`         ..;                   "
+            , "  ,'       _.''  '|                  "
+            , " ,'      .'        o                 "
+            , "       .'         /|                 "
+            , "       :          /|                 "
+            , "      .'          ''                 "
+            , "     '                               "
+            ],
+            [ "                                     "
+            , "                                     "
+            , "      .-_.-_.-_..                    "
+            , "   ,'`         ..;  N                "
+            , "  ,'       _.'' ,'  O                "
+            , " ,'      .'     '   O                "
+            , "       .'        '  O                "
+            , "       :         ,  O                "
+            , "      .'         '' o                "
+            , "     '              o                "
+            ],
+        ]);
+
+        this.root.add_child(anim);
+
+        this.update();
+        anim.stop();
+        this.update();
+
+        this.assert_area(
+            [ "                                     "
+            , "                         .---------. "
+            , "      .-_.-_.-_..==)   ./  H E L P | "
+            , "   ,'`         .'  |  /.-----------' "
+            , "  ,'       _.''    o                 "
+            , " ,'      .'       /|                 "
+            , "       .'         /|                 "
+            , "       :          ''                 "
+            , "      .'                             "
+            , "     '                               "
+            ]
+        );
+
+        anim.fps = 1;
+        this.update();
+        this.assert_area(
+            [ "                                     "
+            , "                                     "
+            , "      .-_.-_.-_.. *CRACK*            "
+            , "   ,'`         ..;                   "
+            , "  ,'       _.''  '|                  "
+            , " ,'      .'        o                 "
+            , "       .'         /|                 "
+            , "       :          /|                 "
+            , "      .'          ''                 "
+            , "     '                               "
+            ]
+        );
+
+        anim.stop();
+        for (i in 0...20) {
+            this.update();
+            this.assert_area(
+                [ "                                     "
+                , "                                     "
+                , "      .-_.-_.-_.. *CRACK*            "
+                , "   ,'`         ..;                   "
+                , "  ,'       _.''  '|                  "
+                , " ,'      .'        o                 "
+                , "       .'         /|                 "
+                , "       :          /|                 "
+                , "      .'          ''                 "
+                , "     '                               "
+                ]
+            );
+        }
+    }
+
     public function test_loopback():Void
     {
         var anim:hase.display.Animation = this.create_animation([

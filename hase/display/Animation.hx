@@ -35,7 +35,7 @@ class Animation extends Sprite
     public var current:Int; // XXX: make this private and refactor
 
     private var td:Null<Float>;
-    private var shift:Float;
+    private var shift:Null<Float>;
 
     public var fps(default, set):Float;
     public var key:Null<String>;
@@ -124,9 +124,12 @@ class Animation extends Sprite
         this.ascii = this.frames[frame_id].image;
     }
 
+    public function stop():Void
+        this.shift = null;
+
     public override function update(td:Float):Void
     {
-        if (this.frames.length == 0)
+        if (this.frames.length == 0 || this.shift == null)
             return;
 
         if (this.td == null) {
