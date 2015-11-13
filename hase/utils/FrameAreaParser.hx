@@ -55,6 +55,10 @@ private class Border
         if (this.x != border.x)
             return false;
 
+        if (this.headings.length > 0 && border.headings.length > 0 &&
+            this.length > this.headings.length)
+            return false;
+
         if (this.y + this.length == border.y) {
             this.length += border.length;
             this.headings.concat(border.headings);
