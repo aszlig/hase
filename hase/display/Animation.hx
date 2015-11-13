@@ -107,7 +107,7 @@ class Animation extends Sprite
                 if (++frame_id >= this.frames.length)
                     frame_id = 0;
                 if (frame_id == this.current)
-                    return this.current + 1;
+                    return this.current;
             }
             return frame_id;
         }

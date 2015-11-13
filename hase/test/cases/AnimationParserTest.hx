@@ -451,4 +451,71 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             ]
         );
     }
+
+    public function test_single_keyframes():Void
+    {
+        var result = this.parse_anim(
+            [ "+key: single"
+            , ": plain    :"
+            , "|  (_  _)  |"
+            , "| : o^^o : |"
+            , "| `._.._.' |"
+            , "|  `-__-'  |"
+            , "-"
+            , "+key: two"
+            , ": plain        :"
+            , "|   __---.   . |"
+            , "| ,'o;))  `-'| |"
+            , "| `--___||.-.| |"
+            , "|       `'   ` |"
+            , "-"
+            , "+key: two"
+            , ": plain        :"
+            , "|   __--^^   . |"
+            , "| ,'o;))''`-'| |"
+            , "| `--_____.-.| |"
+            , "|            ` |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+
+        this.root.add_child(anim);
+
+        anim.key = "single";
+
+        for (i in 0...10) {
+            this.update();
+            this.assert_area(
+                [ "  (_  _)  "
+                , " : o^^o : "
+                , " `._.._.' "
+                , "  `-__-'  "
+                ]
+            );
+        }
+
+        anim.key = "two";
+
+        for (i in 0...10) {
+            this.update();
+            this.assert_area(
+                [ "   __---.   . "
+                , " ,'o;))  `-'| "
+                , " `--___||.-.| "
+                , "       `'   ` "
+                ]
+            );
+
+            this.update();
+            this.assert_area(
+                [ "   __--^^   . "
+                , " ,'o;))''`-'| "
+                , " `--_____.-.| "
+                , "            ` "
+                ]
+            );
+        }
+    }
 }
