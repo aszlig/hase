@@ -20,8 +20,8 @@
  */
 package hase.timer;
 
-import js.html.RequestAnimationFrameCallback;
-typedef FrameHandler = RequestAnimationFrameCallback -> Void;
+typedef FrameCallback = Float -> Void;
+typedef FrameHandler = FrameCallback -> Void;
 
 class JS
 {
@@ -66,7 +66,7 @@ class JS
             return null;
     }
 
-    private inline function legacy_timer(cb:RequestAnimationFrameCallback):Void
+    private inline function legacy_timer(cb:FrameCallback):Void
         haxe.Timer.delay(cb.bind(haxe.Timer.stamp() * 1000), this.interval);
 
     private function loop(time:Float):Bool
