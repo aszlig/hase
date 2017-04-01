@@ -114,7 +114,7 @@ class AppBuilder
             public inline function run():Void
             {
                 this.__timer = new hase.Timer(this.root);
-                this.__timer.on_tick = inline function(td:Float) {
+                this.__timer.on_tick = function(td:Float) {
                     this.on_keypress(this.root.terminal.get_key());
                     return this.update(td);
                 };

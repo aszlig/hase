@@ -99,7 +99,7 @@ class Surface extends Object
             }
         }
 
-        base.map_(inline function(x:Int, y:Int, sym:Symbol):Void
+        base.map_(function(x:Int, y:Int, sym:Symbol):Void
                   this.draw_char(rect.x + x, rect.y + y, sym));
     }
 

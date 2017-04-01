@@ -244,7 +244,7 @@ class FrameAreaParser
     {
         var borders:BorderGroup = new BorderGroup();
 
-        this.area.map_(inline function(x:Int, y:Int, sym:Symbol) {
+        this.area.map_(function(x:Int, y:Int, sym:Symbol) {
             if (sym == ":".code) borders.add(new Border(x, y, true))
             else if (sym == "|".code) borders.add(new Border(x, y));
         });

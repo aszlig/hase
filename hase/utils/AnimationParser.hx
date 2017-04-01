@@ -40,7 +40,7 @@ class AnimationParser
     private function apply_refchar(frame:FrameData, refchar:Symbol):FrameData
     {
         frame.image = frame.image.map(
-            inline function(x:Int, y:Int, sym:Symbol) {
+            function(x:Int, y:Int, sym:Symbol) {
                 if (sym == refchar) {
                     frame.refpoint_x = x;
                     frame.refpoint_y = y;

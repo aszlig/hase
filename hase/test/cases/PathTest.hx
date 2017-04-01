@@ -38,13 +38,13 @@ class PathTest extends hase.test.SurfaceTestCase
             "a".code..."z".code,
             "A".code..."Z".code,
             "0".code..."9".code,
-        ], inline function(a:IntIterator, b:List<Int>) {
+        ], function(a:IntIterator, b:List<Int>) {
             for (i in a) b.add(i);
             b.add(b.last() + 1);
             return b;
         }, new List());
 
-        path.rasterize(area.ascii, inline function(x:Int, y:Int, v:Symbol) {
+        path.rasterize(area.ascii, function(x:Int, y:Int, v:Symbol) {
             this.assertTrue(syms.length > 0);
             return new Symbol(syms.pop());
         });

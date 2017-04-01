@@ -131,7 +131,7 @@ class Raster<T>
             this.height = m._height;
 
         return this.map(
-            inline function(x:Int, y:Int, sym:T)
+            function(x:Int, y:Int, sym:T)
                 return f(sym, m.unsafe_get(x, y)),
             def
         );

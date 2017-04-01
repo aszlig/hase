@@ -63,7 +63,7 @@ typedef TermSize = {
     {
         #if cpp
         RawTerm.setraw();
-        RawTerm.add_cleanup(inline function(signal:Int) {
+        RawTerm.add_cleanup(function(signal:Int) {
             this.exit(1);
         });
         #end

@@ -77,7 +77,7 @@ abstract Path (Array<PVector>)
             m.set(x, y, f(x, y, m.get(x, y)));
         } else for (i in 0...(this.length - 1)) Path.bresenham(
             this[i], this[i + 1],
-            inline function(x:Int, y:Int) {
+            function(x:Int, y:Int) {
                 m.set(x, y, f(x, y, m.get(x, y)));
             }, i != 0
         );
@@ -132,7 +132,7 @@ abstract Path (Array<PVector>)
             c2 - end,
             (start - c2) / 2,
             (c1 - end) / 2,
-        ], inline function (a:PVector, b:Float) {
+        ], function (a:PVector, b:Float) {
             return Math.max(a.dot_product(a), b);
         }, 1.0) * 3.0);
 

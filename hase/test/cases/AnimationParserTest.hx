@@ -34,7 +34,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
     private inline function assert_row(row:String, actual:Image, pos:Int):Void
     {
         this.assertEquals(row.length, actual.width);
-        actual.map_(inline function(x:Int, y:Int, sym:Symbol) {
+        actual.map_(function(x:Int, y:Int, sym:Symbol) {
             if (y == pos) this.assertEquals(new Symbol(row.charCodeAt(x)), sym);
         });
     }
@@ -167,7 +167,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
 
         var got_it:Bool = false;
 
-        result[0].image.map_(inline function(x:Int, y:Int, sym:Symbol) {
+        result[0].image.map_(function(x:Int, y:Int, sym:Symbol) {
             if (y == 2 && x >= 9 && x <= 12) {
                 this.assertEquals(red_dash, sym);
                 got_it = true;

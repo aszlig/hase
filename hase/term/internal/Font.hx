@@ -38,14 +38,14 @@ class Font
 
         var y:Int = 0;
         return {
-            hasNext: inline function() return y < char.length * 2,
-            next: inline function() {
+            hasNext: function() return y < char.length * 2,
+            next: function() {
                 var row:Int = char[y >> 1];
                 var and:Int = y++ % 2 == 0 ? 1 << Font.WIDTH : 1;
                 var x:Int = 0;
                 return {
-                    hasNext: inline function() return x < Font.WIDTH,
-                    next: inline function() return (row >> x++) & and != 0
+                    hasNext: function() return x < Font.WIDTH,
+                    next: function() return (row >> x++) & and != 0
                 };
             }
         };
