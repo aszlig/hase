@@ -181,14 +181,16 @@ class RectTest extends haxe.unit.TestCase
     }
 
     public function
-        assert_vec(x:Float, y:Float, v2:PVector, ?pi:haxe.PosInfos):Void
+        assert_vec(x:Float, y:Float, r1:Rect, r2:Rect, ?pi:haxe.PosInfos):Void
     {
         this.currentTest.done = true;
 
-        if (new PVector(x, y) != v2) {
+        var dv:PVector = Rect.distance_to(r1, r2);
+
+        if (new PVector(x, y) != dv) {
             this.currentTest.success = false;
             this.currentTest.error = 'expected PVector (${x},${y}) but '
-                                   + 'got PVector (${v2.x},${v2.y}) instead';
+                                   + 'got PVector (${dv.x},${dv.y}) instead';
             this.currentTest.posInfos = pi;
             throw this.currentTest;
         }
@@ -198,16 +200,16 @@ class RectTest extends haxe.unit.TestCase
     public function test_distance():Void
     {
         var r:Rect = new Rect(5, 5, 5, 5);
-        this.assert_vec(  0,   0, r.distance_to(new Rect(  5,   5,  5,  5)));
-        this.assert_vec(  5,   5, r.distance_to(new Rect( 15,  15,  5,  5)));
-        this.assert_vec(-10, -10, r.distance_to(new Rect(-10, -10,  5,  5)));
-        this.assert_vec( -5,  -5, r.distance_to(new Rect(-10, -10, 10, 10)));
-        this.assert_vec(  0,   0, r.distance_to(new Rect(  2,   2,  3,  3)));
-        this.assert_vec( -1,  -1, r.distance_to(new Rect(  2,   2,  2,  2)));
-        this.assert_vec(  1,   1, r.distance_to(new Rect( 11,  11,  2,  2)));
-        this.assert_vec(  0,   5, r.distance_to(new Rect(  5,  15,  5,  5)));
-        this.assert_vec(  0, -15, r.distance_to(new Rect(  5, -15,  5,  5)));
-        this.assert_vec(  5,   0, r.distance_to(new Rect( 15,   5,  5,  5)));
-        this.assert_vec(-15,   0, r.distance_to(new Rect(-15,   5,  5,  5)));
+        this.assert_vec(  0,   0, r, new Rect(  5,   5,  5,  5));
+        this.assert_vec(  5,   5, r, new Rect( 15,  15,  5,  5));
+        this.assert_vec(-10, -10, r, new Rect(-10, -10,  5,  5));
+        this.assert_vec( -5,  -5, r, new Rect(-10, -10, 10, 10));
+        this.assert_vec(  0,   0, r, new Rect(  2,   2,  3,  3));
+        this.assert_vec( -1,  -1, r, new Rect(  2,   2,  2,  2));
+        this.assert_vec(  1,   1, r, new Rect( 11,  11,  2,  2));
+        this.assert_vec(  0,   5, r, new Rect(  5,  15,  5,  5));
+        this.assert_vec(  0, -15, r, new Rect(  5, -15,  5,  5));
+        this.assert_vec(  5,   0, r, new Rect( 15,   5,  5,  5));
+        this.assert_vec(-15,   0, r, new Rect(-15,   5,  5,  5));
     }
 }

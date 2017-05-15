@@ -136,7 +136,7 @@ class Object
         return other.abs_vector - this.abs_vector;
 
     public inline function distance_to(other:Object):PVector
-        return this.abs_rect.distance_to(other.abs_rect);
+        return Rect.distance_to(this.abs_rect, other.abs_rect);
 
     private inline function set_x(val:Int):Int
         return this.x = this.set_dirty(this.x, val);
