@@ -41,7 +41,7 @@ class Object
     public var absolute_x(get, null):Int;
     public var absolute_y(get, null):Int;
 
-    public var vector(get, null):PVector;
+    public var vector(get, set):PVector;
     public var center_vector(get, null):PVector;
     public var abs_vector(get, null):PVector;
 
@@ -117,6 +117,13 @@ class Object
 
     private inline function get_vector():PVector
         return new PVector(this.x, this.y);
+
+    private inline function set_vector(vec:PVector):PVector
+    {
+        this.x = Std.int(vec.x);
+        this.y = Std.int(vec.y);
+        return vec;
+    }
 
     private inline function get_center_vector():PVector
         return new PVector(this.center_x, this.center_y);
