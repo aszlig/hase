@@ -41,10 +41,10 @@ class AnimationParser
     {
         frame.image = frame.image.map(
             function(x:Int, y:Int, sym:Symbol) {
-                if (sym == refchar) {
+                if (sym.ordinal == refchar.ordinal) {
                     frame.refpoint_x = x;
                     frame.refpoint_y = y;
-                    return new Symbol(0);
+                    return new Symbol(0, sym.fgcolor, sym.bgcolor);
                 }
 
                 return sym;
