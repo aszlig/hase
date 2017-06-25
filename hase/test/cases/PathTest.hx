@@ -754,4 +754,156 @@ class PathTest extends hase.test.SurfaceTestCase
             ]
         );
     }
+
+    public function test_pos_at_polyline():Void
+    {
+        var poly = new Path(
+            [ new PVector(1, 1)
+            , new PVector(2, 11)
+            , new PVector(3, 1)
+            , new PVector(4, 11)
+            , new PVector(5, 1)
+            ]
+        );
+
+        var cross:hase.display.Sprite = this.create_sprite(
+            [ "`. .'"
+            , "  X  "
+            , ".' `."
+            ]
+        );
+
+        this.root.add_child(cross);
+        this.update();
+
+        this.assert_area(
+            [ "`. .'"
+            , "  X  "
+            , ".' `."
+            ]
+        );
+
+        cross.vector = poly.pos_at(0.25);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 1, 10
+        );
+
+        cross.vector = poly.pos_at(0.75);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 3, 10
+        );
+
+        cross.vector = poly.pos_at(0.5);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 2
+        );
+    }
+
+    public function test_pos_at_bezier():Void
+    {
+        var s_shape = Path.bezier( new PVector(13, 1)
+                                 , new PVector(-20, 7)
+                                 , new PVector(34, 7)
+                                 , new PVector(1, 13)
+                                 );
+
+        var cross:hase.display.Sprite = this.create_sprite(
+            [ "`. .'"
+            , "  X  "
+            , ".' `."
+            ]
+        );
+
+        this.root.add_child(cross);
+        this.update();
+
+        this.assert_area(
+            [ "`. .'"
+            , "  X  "
+            , ".' `."
+            ]
+        );
+
+        cross.vector = s_shape.pos_at(0.0);
+        this.update();
+
+        this.assert_area(
+            [ "                       "
+            , "             `. .'     "
+            , "               X       "
+            , "             .' `.     "
+            , "                       "
+            ]
+        );
+
+        cross.vector = s_shape.pos_at(0.2);
+        this.update();
+
+        this.assert_area(
+            [ "                       "
+            , "                       "
+            , "      `. .'            "
+            , "        X              "
+            , "      .' `.            "
+            , "                       "
+            ]
+        );
+
+        cross.vector = s_shape.pos_at(0.7);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 10, 9
+        );
+
+        cross.vector = s_shape.pos_at(1.0);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 0, 12
+        );
+
+        cross.vector = s_shape.pos_at(2.0);
+        this.update();
+
+        this.assert_area(
+            [ "       "
+            , " `. .' "
+            , "   X   "
+            , " .' `. "
+            , "       "
+            ], 0, 12
+        );
+    }
 }

@@ -85,6 +85,26 @@ abstract Path (Array<PVector>)
         return m;
     }
 
+    public inline function pos_at<T>(offset:Float):PVector
+    {
+        var current:Float = 0.0;
+        var result:PVector = this[this.length - 1];
+        var len_offset:Float = Path.get_length() * offset;
+
+        for (i in 0...(this.length - 1)) {
+            var inner:PVector = this[i + 1] - this[i];
+            var newlen:Float = inner.length;
+            if (newlen + current >= len_offset) {
+                result = this[i] + PVector.normalize(inner)
+                       * (len_offset - current);
+                break;
+            }
+            current += newlen;
+        }
+
+        return result;
+    }
+
     public inline function add(x:Float, y:Float):Path
         return Path.add_pvector(new PVector(x, y));
 
