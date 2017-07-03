@@ -390,9 +390,35 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
 
         var anim:Animation = new Animation(result);
         anim.fps = 1;
-        anim.key = "happy";
+        anim.key = "meh";
 
         this.root.add_child(anim);
+
+        this.update(2000);
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----. "
+            ]
+        );
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " .-----' "
+            ]
+        );
+
+        this.update();
+        this.assert_area(
+            [ " o     o "
+            , "    ^    "
+            , " `-----. "
+            ]
+        );
+
+        anim.key = "happy";
 
         this.update();
         this.assert_area(
@@ -415,32 +441,6 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             [ " o     o "
             , "    ^    "
             , " `-----' "
-            ]
-        );
-
-        anim.key = "meh";
-
-        this.update();
-        this.assert_area(
-            [ " o     o "
-            , "    ^    "
-            , " `-----. "
-            ]
-        );
-
-        this.update();
-        this.assert_area(
-            [ " o     o "
-            , "    ^    "
-            , " .-----' "
-            ]
-        );
-
-        this.update();
-        this.assert_area(
-            [ " o     o "
-            , "    ^    "
-            , " `-----. "
             ]
         );
 
@@ -470,11 +470,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             ]
         );
 
-        this.update();
-        this.update();
-        this.update();
-        this.update();
-        this.update();
+        this.update(5000);
 
         this.assert_area(
             [ " O     O "
@@ -482,6 +478,48 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
             , " .-----. "
             ]
         );
+    }
+
+    public function test_nonexisting_keyframe(?pi:haxe.PosInfos):Void
+    {
+        var result = this.parse_anim(
+            [ "+key: existing"
+            , ": plain   :"
+            , "| o     o |"
+            , "|    ^    |"
+            , "| `-----' |"
+            , "-"
+            , "+key: existing"
+            , ": plain   :"
+            , "| O     O |"
+            , "|    ^    |"
+            , "| `-----' |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+        anim.fps = 1;
+        anim.key = "nonexisting";
+
+        this.root.add_child(anim);
+
+        var thrown:Bool = true;
+        try {
+            this.update(2000);
+            thrown = false;
+        } catch (e:String) {
+            this.assertEquals(e, "Unknown animation key \"nonexisting\".");
+        }
+
+        if (!thrown) {
+            this.currentTest.done = true;
+
+            this.currentTest.success = false;
+            this.currentTest.error =
+                "No exception thrown for nonexisting animation key.";
+            this.currentTest.posInfos = pi;
+            throw this.currentTest;
+        }
     }
 
     public function test_single_keyframes():Void

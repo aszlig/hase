@@ -99,24 +99,28 @@ class Animation extends Sprite
         }
     }
 
-    private function find_next_keyframe():Int
+    private inline function find_next_keyframe():Int
     {
-        if (this.key != null) {
-            var frame_id:Int = this.current + 1;
-            if (frame_id >= this.frames.length) frame_id = 0;
-            while (this.frames[frame_id].key != this.key) {
-                if (++frame_id >= this.frames.length)
-                    frame_id = 0;
-                if (frame_id == this.current)
-                    return this.current;
+        var frame_id:Int = this.current + 1;
+        if (frame_id >= this.frames.length) frame_id = 0;
+        while (this.frames[frame_id].key != this.key) {
+            if (++frame_id >= this.frames.length)
+                frame_id = 0;
+
+            if (frame_id == this.current) {
+                if (this.frames[frame_id].key != this.key)
+                    throw 'Unknown animation key "${this.key}".';
+                else
+                    break;
             }
-            return frame_id;
         }
-        return this.current + 1;
+        return frame_id;
     }
 
     private inline function increment_current():Int
-        return this.current = this.find_next_keyframe();
+        return this.current = this.key != null
+                            ? this.find_next_keyframe()
+                            : this.current + 1;
 
     private function switch_frame():Void
     {
