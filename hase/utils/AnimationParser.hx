@@ -208,6 +208,10 @@ class AnimationParser
                 switch (header) {
                     case ChrAttr("reference", c):
                         framedata = this.apply_refchar(framedata, c);
+                    case IntAttr("reference_x", xref):
+                        framedata.refpoint_x = xref;
+                    case IntAttr("reference_y", yref):
+                        framedata.refpoint_y = yref;
                     case StrAttr("key", key):
                         framedata.key = key;
                     default:

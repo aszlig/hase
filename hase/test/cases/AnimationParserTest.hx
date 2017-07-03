@@ -341,6 +341,39 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_references_with_coords()
+    {
+        var result = this.parse_anim(
+            [ "+reference_x: 6"
+            , "+reference_y: 3"
+            , ": plain       :"
+            , "|  __   ___   |"
+            , "| {__}_{___}  |"
+            , "|   {___}___  |"
+            , "|  {__}_{___} |"
+            , "|    {____}   |"
+            , "|             |"
+            ]
+        );
+
+        var anim:Animation = new Animation(result);
+
+        anim.x = 6;
+        anim.y = 3;
+        this.root.add_child(anim);
+        this.update();
+
+        this.assert_area(
+            [ "  __   ___   "
+            , " {__}_{___}  "
+            , "   {___}___  "
+            , "  {__}_{___} "
+            , "    {____}   "
+            , "             "
+            ]
+        );
+    }
+
     public function test_keyframes()
     {
         var result = this.parse_anim(
