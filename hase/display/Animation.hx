@@ -54,6 +54,7 @@ class Animation extends Sprite
 
         this.td = null;
         this.fps = 1;
+        this.key = null;
 
         this.loopback = false;
 
