@@ -267,6 +267,7 @@ class FrameAreaParser
             case "red": Variant(ColorRed);
             case "green": Variant(ColorGreen);
             case "blue": Variant(ColorBlue);
+            case "grey": Variant(ColorGrey);
             default: null;
         };
     }

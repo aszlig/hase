@@ -58,53 +58,38 @@ class ColorMixer
         return 16 + (red * 36) + (green * 6) + blue;
     }
 
+    private function get_grey():Int
+    {
+        if (this.grey < "a".code || this.grey > "x".code)
+            return 0;
+
+        return 232 + (this.grey - "a".code);
+    }
+
     private function get_fgcolor():Int
     {
-        return switch (this.grey) {
-            case "a".code: 232;
-            case "b".code: 233;
-            case "c".code: 234;
-            case "d".code: 235;
-            case "e".code: 236;
-            case "f".code: 237;
-            case "g".code: 238;
-            case "h".code: 239;
-            case "i".code: 240;
-            case "j".code: 241;
-            case "k".code: 242;
-            case "l".code: 243;
-            case "m".code: 244;
-            case "n".code: 245;
-            case "o".code: 246;
-            case "p".code: 247;
-            case "q".code: 248;
-            case "r".code: 249;
-            case "s".code: 250;
-            case "t".code: 251;
-            case "u".code: 252;
-            case "v".code: 253;
-            case "w".code: 254;
-            case "x".code: 255;
-            default:
-                switch (this.ansi) {
-                    case "k".code: 0;
-                    case "r".code: 1;
-                    case "g".code: 2;
-                    case "y".code: 3;
-                    case "b".code: 4;
-                    case "m".code: 5;
-                    case "c".code: 6;
-                    case "w".code: 7;
-                    case "K".code: 8;
-                    case "R".code: 9;
-                    case "G".code: 10;
-                    case "Y".code: 11;
-                    case "B".code: 12;
-                    case "M".code: 13;
-                    case "C".code: 14;
-                    case "W".code: 15;
-                    default: this.get_6cube();
-                }
+        var greyval:Int = this.get_grey();
+        if (greyval > 0)
+            return greyval;
+
+        return switch (this.ansi) {
+            case "k".code: 0;
+            case "r".code: 1;
+            case "g".code: 2;
+            case "y".code: 3;
+            case "b".code: 4;
+            case "m".code: 5;
+            case "c".code: 6;
+            case "w".code: 7;
+            case "K".code: 8;
+            case "R".code: 9;
+            case "G".code: 10;
+            case "Y".code: 11;
+            case "B".code: 12;
+            case "M".code: 13;
+            case "C".code: 14;
+            case "W".code: 15;
+            default: this.get_6cube();
         }
     }
 

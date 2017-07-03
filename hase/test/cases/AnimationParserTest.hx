@@ -261,6 +261,47 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
         this.assertEquals(15, result[0].image.height);
     }
 
+    public function test_color_channels()
+    {
+        var result = this.parse_anim(
+            [ ": plain  : red    : green  : blue   : grey   :"
+            , "|        |        |        |        |        |"
+            , "| red__0 | 123456 |        |        |        |"
+            , "| green0 |        | 123456 |        |        |"
+            , "| blue_0 |        |        | 123456 |        |"
+            , "| grey_0 |        |        |        | abcdef |"
+            , "| grey_1 |        |        |        | ghijkl |"
+            , "| grey_2 |        |        |        | mnopqr |"
+            , "| grey_3 |        |        |        | stuvwx |"
+            , "| grey_4 |        |        |        | yz0123 |"
+            , "|        |        |        |        |        |"
+            ]
+        );
+
+        this.assertEquals(1, result.length);
+
+        var expect:Array<Array<Int>> = [
+            [ 52,  88, 124, 160, 196,  16],
+            [ 22,  28,  34,  40,  46,  16],
+            [ 17,  18,  19,  20,  21,  16],
+            [232, 233, 234, 235, 236, 237],
+            [238, 239, 240, 241, 242, 243],
+            [244, 245, 246, 247, 248, 249],
+            [250, 251, 252, 253, 254, 255],
+            [ 16,  16,  16,  16,  16,  16],
+        ];
+
+        var max_x:Int = expect[0].length;
+        var max_y:Int = expect.length;
+
+        result[0].image.map_(function(x:Int, y:Int, sym:Symbol) {
+            if (x >= 1 && x <= max_x && y >= 1 && y <= max_y)
+                this.assertEquals(expect[y - 1][x - 1], sym.fgcolor);
+            else
+                this.assertEquals(7, sym.fgcolor);
+        });
+    }
+
     public function test_references()
     {
         var result = this.parse_anim(
