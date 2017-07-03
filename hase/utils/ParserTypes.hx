@@ -29,6 +29,7 @@ enum Variant {
     ColorRed;
     ColorGreen;
     ColorBlue;
+    ColorGrey;
 }
 
 enum Header {

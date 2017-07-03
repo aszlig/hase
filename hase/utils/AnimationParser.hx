@@ -115,6 +115,7 @@ class AnimationParser
                 case "red": ColorRed;
                 case "green": ColorGreen;
                 case "blue": ColorBlue;
+                case "grey": ColorGrey;
                 default: throw 'Unable to parse header "$data"!';
             };
 
@@ -174,6 +175,7 @@ class AnimationParser
                         case Variant(ColorRed):   cm.red   = sym.ordinal;
                         case Variant(ColorGreen): cm.green = sym.ordinal;
                         case Variant(ColorBlue):  cm.blue  = sym.ordinal;
+                        case Variant(ColorGrey):  cm.grey  = sym.ordinal;
                         default:
                     };
 
