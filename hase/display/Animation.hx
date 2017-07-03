@@ -134,8 +134,10 @@ class Animation extends Sprite
 
     public override function update(td:Float):Void
     {
-        if (this.frames.length == 0 || this.shift == null)
+        if (this.frames.length == 0 || this.shift == null) {
+            super.update(td);
             return;
+        }
 
         if (this.td == null) {
             this.td = td;
