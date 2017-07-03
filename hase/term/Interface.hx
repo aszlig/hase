@@ -21,10 +21,11 @@
 package hase.term;
 
 import hase.display.Symbol;
+import hase.display.Image;
 
 interface Interface
 {
-    public function draw_char(x:Int, y:Int, sym:Symbol):Void;
+    public function draw_area(x:Int, y:Int, mx:Int, my:Int, area:Image):Void;
     // XXX: These should be handled by events (such as resize).
     public var width:Int;
     public var height:Int;

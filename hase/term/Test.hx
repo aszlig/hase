@@ -41,9 +41,13 @@ class Test implements Interface
     public inline function exit(code:Int):Void {}
     public inline function get_key():hase.input.Key return None;
 
-    public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
+    public function
+        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
     {
-        this.area[y * this.width + x] = sym;
+        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
+            if (x + lx >= 0 && y + ly >= 0 && x + lx <= mx && y + ly <= my)
+                this.area[(y + ly) * this.width + (x + lx)] = sym;
+        });
     }
 
     public function clear():Void

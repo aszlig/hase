@@ -135,16 +135,22 @@ import hase.term.internal.Font;
         return cached;
     }
 
-    public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
+    public function
+        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
     {
-        var cached:Int = this.font_cache.get(sym.get_hash());
+        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
+            if (x + lx < 0 || y + ly < 0 || x + lx > mx || y + ly > my)
+                return;
 
-        if (cached == null)
-            cached = this.add_to_font_cache(sym);
+            var cached:Int = this.font_cache.get(sym.get_hash());
 
-        this.ctx.drawImage(this.font_canvas,
-            cached, 0, Font.WIDTH, Font.HEIGHT,
-            this.cursor2x(x), this.cursor2y(y),
-            Font.WIDTH, Font.HEIGHT);
+            if (cached == null)
+                cached = this.add_to_font_cache(sym);
+
+            this.ctx.drawImage(this.font_canvas,
+                cached, 0, Font.WIDTH, Font.HEIGHT,
+                this.cursor2x(x+ lx), this.cursor2y(y + ly),
+                Font.WIDTH, Font.HEIGHT);
+        });
     }
 }

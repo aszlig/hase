@@ -207,19 +207,28 @@ typedef TermSize = {
             this.write_csi(mods.join(";") + "m");
     }
 
-    public function draw_char(x:Int, y:Int, sym:hase.display.Symbol):Void
+    public function
+        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
     {
-        this.begin_op();
+        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
+            var abs_x:Int = x + lx;
+            var abs_y:Int = y + ly;
 
-        if (this.last_y != y || this.last_x != x)
-            this.write_csi('${y + 1};${x + 1}f');
+            if (abs_x < 0 || abs_y < 0 || abs_x > mx || abs_y > my)
+                return;
 
-        this.set_color(sym.fgcolor, sym.bgcolor);
-        this.buffer.addChar(sym.ordinal);
+            this.begin_op();
 
-        this.last_x = x >= this.width ? x : x + 1;
-        this.last_y = y;
+            if (this.last_y != abs_y || this.last_x != abs_x)
+                this.write_csi('${abs_y + 1};${abs_x + 1}f');
 
-        this.flush_op();
+            this.set_color(sym.fgcolor, sym.bgcolor);
+            this.buffer.addChar(sym.ordinal);
+
+            this.last_x = abs_x >= this.width ? abs_x : abs_x + 1;
+            this.last_y = abs_y;
+
+            this.flush_op();
+        });
     }
 }

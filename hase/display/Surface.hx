@@ -99,13 +99,8 @@ class Surface extends Object
             }
         }
 
-        base.map_(function(x:Int, y:Int, sym:Symbol):Void
-                  this.draw_char(rect.x + x, rect.y + y, sym));
-    }
-
-    private inline function draw_char(x:Int, y:Int, sym:Symbol):Void
-    {
-        if (x >= 0 && y >= 0 && x < this.width && y < this.height)
-            this.terminal.draw_char(x, y, sym);
+        this.terminal.draw_area(
+            rect.x, rect.y, this.width - 1, this.height - 1, base
+        );
     }
 }
