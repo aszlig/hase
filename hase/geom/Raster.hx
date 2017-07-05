@@ -78,6 +78,15 @@ class Raster<T>
         return this._height;
     }
 
+    public inline function clear(?val:T):Void
+    {
+        if (val == null)
+            val = this.default_value;
+
+        for (i in 0...this.data.length)
+            this.data[i] = val;
+    }
+
     public inline function unsafe_get(x:Int, y:Int):T
         return this.data[y * this._width + x];
 
