@@ -153,8 +153,12 @@ class Object
 
     private function set_z(val:Int):Int
     {
-        this.z = this.set_dirty(this.z, val);
-        if (this.surface != null) this.surface.z_reorder();
+        if (val != this.z) {
+            this.z = val;
+            this.is_dirty = true;
+            if (this.surface != null)
+                this.surface.z_reorder();
+        }
         return this.z;
     }
 
