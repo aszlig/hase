@@ -27,6 +27,7 @@ class Sprite extends Object
     public var ascii(default, set):Image;
 
     @:allow(hase.display.Surface)
+    @:allow(hase.term.renderer.Interface)
     private var dirty_rect(default, null):Rect;
 
     public function new()

@@ -139,9 +139,6 @@ import hase.term.internal.Font;
         draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
     {
         area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
-            if (x + lx < 0 || y + ly < 0 || x + lx > mx || y + ly > my)
-                return;
-
             var cached:Int = this.font_cache.get(sym.get_hash());
 
             if (cached == null)

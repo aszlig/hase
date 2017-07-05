@@ -25,21 +25,20 @@ import hase.geom.Rect;
 class Surface extends Object
 {
     public var terminal(default, null):hase.term.Interface;
-    private var sprites:Array<Sprite>;
 
-    private var redraw_image:Image;
+    private var sprites:Array<Sprite>;
+    private var renderer:hase.term.renderer.Interface;
 
     public function new(terminal:hase.term.Interface)
     {
         super();
         this.is_surface = true;
         this.terminal = terminal;
+        this.renderer = new hase.term.renderer.CharRenderer(terminal);
         this.width = terminal.width;
         this.height = terminal.height;
         this.autoresize = false;
         this.sprites = new Array();
-
-        this.redraw_image = Image.create(0, 0, " ".code, " ".code);
     }
 
     @:allow(hase.display.Object.set_z)
@@ -70,42 +69,8 @@ class Surface extends Object
     @:allow(hase.display.Sprite.blit)
     private function redraw_rect(rect:Rect):Void
     {
-        this.redraw_image.clear();
-        this.redraw_image.width = rect.width;
-        this.redraw_image.height = rect.height;
-
-        for (sprite in this.sprites) {
-            if (sprite.dirty_rect == null || sprite.ascii == null)
-                continue;
-
-            // intersection between redraw rectangle and current sprite
-            var common:Null<Rect> = sprite.dirty_rect & rect;
-            if (common == null)
-                continue;
-
-            // relative within redraw rectangle
-            var rel_redraw_x:Int = common.x - rect.x;
-            var rel_redraw_y:Int = common.y - rect.y;
-
-            // relative within current sprite
-            var rel_sprite_x:Int = common.x - sprite.dirty_rect.x;
-            var rel_sprite_y:Int = common.y - sprite.dirty_rect.y;
-
-            for (y in rel_redraw_y...(rel_redraw_y + common.height)) {
-                for (x in rel_redraw_x...(rel_redraw_x + common.width)) {
-                    var sym:Symbol = sprite.ascii.get(
-                        rel_sprite_x + (x - rel_redraw_x),
-                        rel_sprite_y + (y - rel_redraw_y)
-                    );
-
-                    if (!sym.is_alpha())
-                        this.redraw_image.set(x, y, sym);
-                }
-            }
-        }
-
-        this.terminal.draw_area(
-            rect.x, rect.y, this.width - 1, this.height - 1, this.redraw_image
-        );
+        var render_rect:Rect = this.rect & rect;
+        if (render_rect != null)
+            this.renderer.render(render_rect, this.sprites);
     }
 }

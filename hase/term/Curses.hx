@@ -214,9 +214,6 @@ typedef TermSize = {
             var abs_x:Int = x + lx;
             var abs_y:Int = y + ly;
 
-            if (abs_x < 0 || abs_y < 0 || abs_x > mx || abs_y > my)
-                return;
-
             this.begin_op();
 
             if (this.last_y != abs_y || this.last_x != abs_x)
