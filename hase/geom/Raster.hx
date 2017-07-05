@@ -30,7 +30,7 @@ class Raster<T>
     public var width(get, set):Int;
     public var height(get, set):Int;
 
-    private inline function new(width:Int, height:Int, data:Array<T>, defval:T)
+    private function new(width:Int, height:Int, data:Array<T>, defval:T)
     {
         this._width = width;
         this._height = height;
@@ -41,7 +41,7 @@ class Raster<T>
     private inline function get_width():Int
         return this._width;
 
-    private inline function set_width(new_width:Int):Int
+    private function set_width(new_width:Int):Int
     {
         while (this._width < new_width) {
             for (y in 1...(this._height + 1))
@@ -62,7 +62,7 @@ class Raster<T>
     private inline function get_height():Int
         return this._height;
 
-    private inline function set_height(new_height:Int):Int
+    private function set_height(new_height:Int):Int
     {
         while (this._height < new_height) {
             for (x in 0...this._width) this.data.push(this.default_value);
@@ -78,7 +78,7 @@ class Raster<T>
         return this._height;
     }
 
-    public inline function clear(?val:T):Void
+    public function clear(?val:T):Void
     {
         if (val == null)
             val = this.default_value;
@@ -93,13 +93,13 @@ class Raster<T>
     public inline function unsafe_set(x:Int, y:Int, val:T):T
         return this.data[y * this._width + x] = val;
 
-    public inline function get(x:Int, y:Int):T
+    public function get(x:Int, y:Int):T
     {
         return (x < 0 || y < 0 || x >= this._width || y >= this.height)
              ? this.default_value : this.unsafe_get(x, y);
     }
 
-    public inline function set(x:Int, y:Int, val:T):T
+    public function set(x:Int, y:Int, val:T):T
     {
         if (x < 0) x = 0;
         if (y < 0) y = 0;
@@ -108,14 +108,14 @@ class Raster<T>
         return this.unsafe_set(x, y, val);
     }
 
-    public inline function map_(f:Int -> Int -> T -> Void):Void
+    public function map_(f:Int -> Int -> T -> Void):Void
     {
         for (y in 0...this._height)
             for (x in 0...this._width)
                 f(x, y, this.unsafe_get(x, y));
     }
 
-    public inline function map<R>(f:Int -> Int -> T -> R, def:R):Raster<R>
+    public function map<R>(f:Int -> Int -> T -> R, def:R):Raster<R>
     {
         var out:Array<R> = new Array();
 
@@ -126,8 +126,7 @@ class Raster<T>
         return new Raster(this._width, this._height, out, def);
     }
 
-    public inline function
-        zip<R, T2>(m:Raster<T2>, f:T -> T2 -> R, def:R):Raster<R>
+    public function zip<R, T2>(m:Raster<T2>, f:T -> T2 -> R, def:R):Raster<R>
     {
         if (this._width > m._width)
             m.width = this._width
@@ -146,7 +145,7 @@ class Raster<T>
         );
     }
 
-    public inline function add_row(row:Array<T>):Array<T>
+    public function add_row(row:Array<T>):Array<T>
     {
         if (row.length > this._width)
             this.set_width(row.length);
@@ -159,7 +158,7 @@ class Raster<T>
         return row;
     }
 
-    public inline function delete_col(pos:Int, len:Int = 1):Void
+    public function delete_col(pos:Int, len:Int = 1):Void
     {
         if (pos < 0)
             pos = this._width + pos;
@@ -174,7 +173,7 @@ class Raster<T>
             this.data.splice(y * this._width + pos, len);
     }
 
-    public inline function
+    public function
         extract(x:Int = 0, y:Int = 0, width:Int = -1, height:Int = -1):Raster<T>
     {
         var new_data:Array<T> = new Array();
@@ -202,7 +201,7 @@ class Raster<T>
     public inline function extract_rect(rect:Rect):Raster<T>
         return this.extract(rect.x, rect.y, rect.width, rect.height);
 
-    public inline function to_2d_array():Array<Array<T>>
+    public function to_2d_array():Array<Array<T>>
     {
         return [
             for (y in 0...this._height)
@@ -210,12 +209,12 @@ class Raster<T>
         ];
     }
 
-    public static inline function
+    public inline static function
         create<T>(width:Int, height:Int, val:T, def:T):Raster<T>
         return new
               Raster(width, height, [for (_ in 0...(width * height)) val], def);
 
-    public static inline function
+    public static function
         from_2d_array<T>(array:Array<Array<T>>, def:T):Raster<T>
     {
         var new_raster:Raster<T> = new Raster(0, 0, [], def);
