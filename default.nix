@@ -8,10 +8,13 @@ let
     allowed = comp1 == "example" || comp1 == "hase" || comp1 == "test.hxml";
   in splitted != [] && allowed;
 
-in stdenv.mkDerivation {
-  name = "hase-example";
+in stdenv.mkDerivation rec {
+  name = "hase";
+  version = "0.1.0";
   src = builtins.filterSource isAllowed ./.;
   buildInputs = [ haxe hxcpp neko ];
+
+  outputs = [ "out" "example" ];
 
   buildPhase = ''
     (cd example && haxe example.hxml)
@@ -33,9 +36,15 @@ in stdenv.mkDerivation {
   '';
 
   installPhase = ''
-    install -vD example/build/Example "$out/bin/example"
-    install -vD example/example.n "$out/libexec/hase/example.n"
-    install -m 0644 -vD example/example.js "$out/share/hase/example.js"
-    install -m 0644 -vD example/example.html "$out/share/hase/example.html"
+    install -vD example/build/Example "$example/bin/example"
+    install -vD example/example.n "$example/libexec/hase/example.n"
+    install -m 0644 -vD example/example.js "$example/share/hase/example.js"
+    install -m 0644 -vD example/example.html "$example/share/hase/example.html"
+
+    ${haxePackages.installLibHaxe {
+      libname = "hase";
+      inherit version;
+      files = "hase";
+    }}
   '';
 }
