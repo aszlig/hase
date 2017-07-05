@@ -22,6 +22,7 @@ package hase.term;
 
 import hase.input.Key;
 import hase.term.internal.Font;
+import hase.geom.Rect;
 
 @:require(js) class Canvas implements Interface
 {
@@ -34,6 +35,8 @@ import hase.term.internal.Font;
 
     private var key_queue:List<js.html.KeyboardEvent>;
 
+    private var renderer:hase.term.renderer.Interface;
+
     public var width:Int;
     public var height:Int;
 
@@ -45,6 +48,8 @@ import hase.term.internal.Font;
         js.Browser.window.addEventListener(
             "keypress", this.key_queue.add, false
         );
+
+        this.renderer = new hase.term.renderer.CharRenderer(this);
 
         this.width = Std.int(canvas.width / Font.WIDTH);
         this.height = Std.int(canvas.height / Font.HEIGHT);
@@ -135,10 +140,9 @@ import hase.term.internal.Font;
         return cached;
     }
 
-    public function
-        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
+    private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
-        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
+        area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
             var cached:Int = this.font_cache.get(sym.get_hash());
 
             if (cached == null)
@@ -146,7 +150,7 @@ import hase.term.internal.Font;
 
             this.ctx.drawImage(this.font_canvas,
                 cached, 0, Font.WIDTH, Font.HEIGHT,
-                this.cursor2x(x+ lx), this.cursor2y(y + ly),
+                this.cursor2x(rect.x + x), this.cursor2y(rect.y + y),
                 Font.WIDTH, Font.HEIGHT);
         });
     }

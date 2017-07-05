@@ -27,14 +27,12 @@ class Surface extends Object
     public var terminal(default, null):hase.term.Interface;
 
     private var sprites:Array<Sprite>;
-    private var renderer:hase.term.renderer.Interface;
 
     public function new(terminal:hase.term.Interface)
     {
         super();
         this.is_surface = true;
         this.terminal = terminal;
-        this.renderer = new hase.term.renderer.CharRenderer(terminal);
         this.width = terminal.width;
         this.height = terminal.height;
         this.autoresize = false;
@@ -71,6 +69,6 @@ class Surface extends Object
     {
         var render_rect:Rect = this.rect & rect;
         if (render_rect != null)
-            this.renderer.render(render_rect, this.sprites);
+            this.terminal.renderer.render(render_rect, this.sprites);
     }
 }

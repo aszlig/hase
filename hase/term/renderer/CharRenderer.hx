@@ -24,19 +24,19 @@ import hase.display.Image;
 import hase.display.Sprite;
 import hase.geom.Rect;
 
-@:allow(hase.display.Surface)
 class CharRenderer implements Interface
 {
     private var terminal:hase.term.Interface;
     private var buffer:Image;
 
-    public function new(term:hase.term.Interface)
+    @:allow(hase.term.Interface)
+    private function new(term:hase.term.Interface)
     {
         this.terminal = term;
         this.buffer = Image.create(0, 0, " ".code, " ".code);
     }
 
-    public function render(rect:Rect, sprites:Array<Sprite>):Void
+    private function render(rect:Rect, sprites:Array<Sprite>):Void
     {
         this.buffer.clear();
         this.buffer.width = rect.width;
@@ -72,8 +72,6 @@ class CharRenderer implements Interface
             }
         }
 
-        this.terminal.draw_area(
-            rect.x, rect.y, rect.width - 1, rect.height - 1, this.buffer
-        );
+        this.terminal.draw_area(rect, this.buffer);
     }
 }

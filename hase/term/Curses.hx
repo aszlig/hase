@@ -24,6 +24,8 @@ package hase.term;
 import hase.term.internal.RawTerm;
 #end
 
+import hase.geom.Rect;
+
 import hase.input.Key;
 
 typedef TermSize = {
@@ -35,6 +37,8 @@ typedef TermSize = {
 {
     public var width:Int;
     public var height:Int;
+
+    private var renderer:hase.term.renderer.Interface;
 
     private var output:haxe.io.Output;
     private var buffer:StringBuf;
@@ -52,6 +56,8 @@ typedef TermSize = {
 
         this.width = ts.width;
         this.height = ts.height;
+
+        this.renderer = new hase.term.renderer.CharRenderer(this);
 
         this.init_term();
 
@@ -207,12 +213,11 @@ typedef TermSize = {
             this.write_csi(mods.join(";") + "m");
     }
 
-    public function
-        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
+    private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
-        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
-            var abs_x:Int = x + lx;
-            var abs_y:Int = y + ly;
+        area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
+            var abs_x:Int = rect.x + x;
+            var abs_y:Int = rect.y + y;
 
             this.begin_op();
 

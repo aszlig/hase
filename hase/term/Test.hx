@@ -20,11 +20,14 @@
  */
 package hase.term;
 
+import hase.geom.Rect;
+
 class Test implements Interface
 {
     public var width:Int;
     public var height:Int;
 
+    private var renderer:hase.term.renderer.Interface;
     private var area:Array<hase.display.Symbol>;
 
     public function new()
@@ -32,6 +35,7 @@ class Test implements Interface
         this.width = 40;
         this.height = 25;
 
+        this.renderer = new hase.term.renderer.CharRenderer(this);
         this.area = new Array();
 
         for (i in 0...(this.width * this.height))
@@ -41,11 +45,10 @@ class Test implements Interface
     public inline function exit(code:Int):Void {}
     public inline function get_key():hase.input.Key return None;
 
-    public function
-        draw_area(x:Int, y:Int, mx:Int, my:Int, area:hase.display.Image):Void
+    private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
-        area.map_(function(lx:Int, ly:Int, sym:hase.display.Symbol):Void {
-            this.area[(y + ly) * this.width + (x + lx)] = sym;
+        area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
+            this.area[(rect.y + y) * this.width + (rect.x + x)] = sym;
         });
     }
 

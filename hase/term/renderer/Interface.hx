@@ -23,7 +23,8 @@ package hase.term.renderer;
 import hase.geom.Rect;
 import hase.display.Sprite;
 
+@:allow(hase.display.Surface)
 interface Interface
 {
-    public function render(rect:Rect, sprites:Array<Sprite>):Void;
+    private function render(rect:Rect, sprites:Array<Sprite>):Void;
 }

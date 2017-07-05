@@ -23,9 +23,16 @@ package hase.term;
 import hase.display.Symbol;
 import hase.display.Image;
 
+import hase.geom.Rect;
+
 interface Interface
 {
-    public function draw_area(x:Int, y:Int, mx:Int, my:Int, area:Image):Void;
+    @:allow(hase.display.Surface)
+    private var renderer:hase.term.renderer.Interface;
+
+    @:allow(hase.term.renderer.Interface)
+    private function draw_area(rect:Rect, area:Image):Void;
+
     // XXX: These should be handled by events (such as resize).
     public var width:Int;
     public var height:Int;
