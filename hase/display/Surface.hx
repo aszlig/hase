@@ -27,6 +27,8 @@ class Surface extends Object
     public var terminal(default, null):hase.term.Interface;
     private var sprites:Array<Sprite>;
 
+    private var redraw_image:Image;
+
     public function new(terminal:hase.term.Interface)
     {
         super();
@@ -36,6 +38,8 @@ class Surface extends Object
         this.height = terminal.height;
         this.autoresize = false;
         this.sprites = new Array();
+
+        this.redraw_image = Image.create(0, 0, " ".code, " ".code);
     }
 
     @:allow(hase.display.Object.set_z)
@@ -66,8 +70,9 @@ class Surface extends Object
     @:allow(hase.display.Sprite.blit)
     private function redraw_rect(rect:Rect):Void
     {
-        var base:Image = Image.create(rect.width, rect.height,
-                                      " ".code, " ".code);
+        this.redraw_image.clear();
+        this.redraw_image.width = rect.width;
+        this.redraw_image.height = rect.height;
 
         for (sprite in this.sprites) {
             if (sprite.dirty_rect == null || sprite.ascii == null)
@@ -94,13 +99,13 @@ class Surface extends Object
                     );
 
                     if (!sym.is_alpha())
-                        base.set(x, y, sym);
+                        this.redraw_image.set(x, y, sym);
                 }
             }
         }
 
         this.terminal.draw_area(
-            rect.x, rect.y, this.width - 1, this.height - 1, base
+            rect.x, rect.y, this.width - 1, this.height - 1, this.redraw_image
         );
     }
 }
