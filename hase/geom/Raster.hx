@@ -138,11 +138,11 @@ class Raster<T>
         else if (this._height < m._height)
             this.height = m._height;
 
-        return this.map(
-            function(x:Int, y:Int, sym:T)
-                return f(sym, m.unsafe_get(x, y)),
-            def
-        );
+        var result:Array<R> = [
+            for (i in 0...this.data.length) f(this.data[i], m.data[i])
+        ];
+
+        return new Raster(this._width, this._height, result, def);
     }
 
     public function add_row(row:Array<T>):Array<T>
