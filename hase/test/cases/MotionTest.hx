@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 aszlig
+/* Copyright (C) 2015-2017 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
