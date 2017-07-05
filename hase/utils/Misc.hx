@@ -48,7 +48,7 @@ private class RangeIter
 
 class Misc
 {
-    public static inline function binomial(n:Int, k:Int):Int
+    public static function binomial(n:Int, k:Int):Int
     {
         var result:Float = 1;
         if (k < 0 || n < k) return 0;
@@ -68,7 +68,7 @@ class Misc
     public static inline function sigcmp(start:Int, end:Int):Int
         return start < end ? 1 : start > end ? -1 : 0;
 
-    public static inline function
+    public static function
         range( start:Int, end:Int
              , increment:Int = null
              , inclusive:Bool = true

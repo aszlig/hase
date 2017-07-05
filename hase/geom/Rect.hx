@@ -59,7 +59,7 @@ abstract Rect (Array<Int>)
     private inline function get_bottom():Int
         return Rect.y + Rect.height;
 
-    public inline function union(other:Rect):Rect
+    public function union(other:Rect):Rect
     {
         var x:Int = other.x > Rect.x ? Rect.x : other.x;
         var y:Int = other.y > Rect.y ? Rect.y : other.y;
@@ -107,7 +107,7 @@ abstract Rect (Array<Int>)
     }
 
     @:op(A & B)
-    public static inline function intersection(r1:Rect, r2:Rect):Null<Rect>
+    public static function intersection(r1:Rect, r2:Rect):Null<Rect>
     {
         var x:Int = r1.x > r2.x ? r1.x : r2.x;
         var y:Int = r1.y > r2.y ? r1.y : r2.y;

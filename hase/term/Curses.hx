@@ -174,17 +174,17 @@ typedef TermSize = {
         #end
     }
 
-    private function begin_op():Void
+    private inline function begin_op():Void
     {
         this.buffer = new StringBuf();
     }
 
-    private function flush_op():Void
+    private inline function flush_op():Void
     {
         this.output.writeString(this.buffer.toString());
     }
 
-    private function write_csi(sequence:String):Void
+    private inline function write_csi(sequence:String):Void
     {
         this.buffer.add("\x1b[" + sequence);
     }

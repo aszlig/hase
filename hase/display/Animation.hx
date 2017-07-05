@@ -67,7 +67,7 @@ class Animation extends Sprite
         return this.fps = fps;
     }
 
-    private inline function grow_sprite():Void
+    private function grow_sprite():Void
     {
         var width:Int = 0;
         var height:Int = 0;
@@ -99,7 +99,7 @@ class Animation extends Sprite
         }
     }
 
-    private inline function find_next_keyframe():Int
+    private function find_next_keyframe():Int
     {
         var frame_id:Int = this.current + 1;
         if (frame_id >= this.frames.length) frame_id = 0;

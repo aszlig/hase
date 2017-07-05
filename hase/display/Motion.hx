@@ -42,7 +42,7 @@ class Motion extends Object
         this.reset();
     }
 
-    public inline function reset():Void
+    public function reset():Void
     {
         this.velocity = new PVector(0.0, 0.0);
         this.force    = new PVector(0.0, 0.0);
@@ -52,7 +52,7 @@ class Motion extends Object
         this.forces.clear();
     }
 
-    private inline function move():Void
+    private function move():Void
     {
         while (Math.abs(this.delta.x) >= 1.0) {
             var diff:Int = this.delta.x < 0 ? -1 : 1;
@@ -72,7 +72,7 @@ class Motion extends Object
                                  ):Void
         this.forces.add(Following(target, eagerness, stop_radius, into));
 
-    public inline function unfollow(target:Object):Void
+    public function unfollow(target:Object):Void
     {
         for (f in this.forces) {
             switch (f) {
@@ -82,7 +82,7 @@ class Motion extends Object
         }
     }
 
-    public inline function unfollow_all():Void
+    public function unfollow_all():Void
     {
         for (f in this.forces) {
             switch (f) {

@@ -68,8 +68,7 @@ abstract Path (Array<PVector>)
         }
     }
 
-    public inline function
-        rasterize<T>(m:Raster<T>, f:Int -> Int -> T -> T):Raster<T>
+    public function rasterize<T>(m:Raster<T>, f:Int -> Int -> T -> T):Raster<T>
     {
         if (this.length == 1) {
             var x:Int = Std.int(this[0].x);
@@ -85,7 +84,7 @@ abstract Path (Array<PVector>)
         return m;
     }
 
-    public inline function pos_at<T>(offset:Float):PVector
+    public function pos_at<T>(offset:Float):PVector
     {
         var current:Float = 0.0;
         var result:PVector = this[this.length - 1];
@@ -121,7 +120,7 @@ abstract Path (Array<PVector>)
     private inline function to_array():Array<PVector>
         return this;
 
-    public inline function get_length():Float
+    public function get_length():Float
     {
         var result:Float = 0;
 

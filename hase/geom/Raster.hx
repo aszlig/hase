@@ -108,7 +108,7 @@ class Raster<T>
         return this.unsafe_set(x, y, val);
     }
 
-    public function map_(f:Int -> Int -> T -> Void):Void
+    public inline function map_(f:Int -> Int -> T -> Void):Void
     {
         for (y in 0...this._height)
             for (x in 0...this._width)

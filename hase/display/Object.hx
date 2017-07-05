@@ -78,7 +78,7 @@ class Object
         this.autoresize = true;
     }
 
-    public inline function add_child(child:Object):Object
+    public function add_child(child:Object):Object
     {
         child.parent = this;
         child.autogrow();
@@ -96,7 +96,7 @@ class Object
         return child;
     }
 
-    public inline function remove_child(child:Object):Object
+    public function remove_child(child:Object):Object
     {
         child.parent = null;
         child.surface = null;
@@ -104,7 +104,7 @@ class Object
         return child;
     }
 
-    private inline function set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
+    private function set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
     {
         if ((from == null && to == null) || from != to) {
             this.is_dirty = true;
@@ -151,7 +151,7 @@ class Object
     private inline function set_y(val:Int):Int
         return this.y = this.set_dirty(this.y, val);
 
-    private inline function set_z(val:Int):Int
+    private function set_z(val:Int):Int
     {
         this.z = this.set_dirty(this.z, val);
         if (this.surface != null) this.surface.z_reorder();

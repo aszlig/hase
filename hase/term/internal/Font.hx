@@ -32,7 +32,7 @@ class Font
         this.data = Font.get_font();
     }
 
-    private inline function iter_char(ordinal:Int):Iterator<Iterator<Bool>>
+    private function iter_char(ordinal:Int):Iterator<Iterator<Bool>>
     {
         var char:Array<Int> = this.data[ordinal - (" ".code)];
 
