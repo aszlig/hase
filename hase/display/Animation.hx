@@ -46,10 +46,11 @@ class Animation extends Sprite
     {
         super();
 
-        if (frames == null)
-            frames = new Array();
+        if (data == null)
+            this.frames = new Array();
+        else
+            this.frames = data;
 
-        this.frames = data;
         this.current = 0;
 
         this.td = null;
