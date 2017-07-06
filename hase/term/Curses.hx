@@ -215,11 +215,11 @@ typedef TermSize = {
 
     private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
+        this.begin_op();
+
         area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
             var abs_x:Int = rect.x + x;
             var abs_y:Int = rect.y + y;
-
-            this.begin_op();
 
             if (this.last_y != abs_y || this.last_x != abs_x)
                 this.write_csi('${abs_y + 1};${abs_x + 1}f');
@@ -229,8 +229,8 @@ typedef TermSize = {
 
             this.last_x = abs_x >= this.width ? abs_x : abs_x + 1;
             this.last_y = abs_y;
-
-            this.flush_op();
         });
+
+        this.flush_op();
     }
 }
