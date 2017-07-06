@@ -66,7 +66,7 @@ class Surface extends Object
     {
         this.sprites.remove(sprite);
         if (sprite.dirty_rect != null)
-            this.redraw_rect(sprite.dirty_rect);
+            this.register_redraw(sprite.dirty_rect);
         return sprite;
     }
 
@@ -91,17 +91,11 @@ class Surface extends Object
     {
         super.update(td);
 
-        for (i in 0...this.dirty_idx)
-            this.redraw_rect(this.dirties[i]);
+        for (i in 0...this.dirty_idx) {
+            if (this.dirties[i].impure_intersect_(this.rect))
+                this.terminal.renderer.render(this.dirties[i], this.sprites);
+        }
 
         this.dirty_idx = 0;
-    }
-
-    @:allow(hase.display.Sprite.blit)
-    private function redraw_rect(rect:Rect):Void
-    {
-        var render_rect:Rect = this.rect & rect;
-        if (render_rect != null)
-            this.terminal.renderer.render(render_rect, this.sprites);
     }
 }
