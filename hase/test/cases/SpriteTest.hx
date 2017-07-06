@@ -382,6 +382,172 @@ class SpriteTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_update_too_large():Void
+    {
+        var circle:hase.display.Sprite = this.create_sprite(
+            [ "         "
+            , "   _._   "
+            , " .'   `. "
+            , " :     ; "
+            , "  `-.-'  "
+            , "         "
+            ]
+        );
+
+        circle.x = 16;
+        circle.y = 1;
+
+        var rect:hase.display.Sprite = this.create_sprite(
+            [ ",-------."
+            , "|       |"
+            , "|       |"
+            , "|       |"
+            , "`-------'"
+            ]
+        );
+
+        rect.x = 1;
+        rect.y = 1;
+
+        var tri:hase.display.Sprite = this.create_sprite(
+            [ "     .     "
+            , "   ,' `.   "
+            , " ,'     `. "
+            , "`---------'"
+            ]
+        );
+
+        tri.x = 8;
+        tri.y = 10;
+
+        this.root.add_child(circle);
+        this.root.add_child(rect);
+        this.root.add_child(tri);
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , " ,-------.               "
+            , " |       |         _._   "
+            , " |       |       .'   `. "
+            , " |       |       :     ; "
+            , " `-------'        `-.-'  "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "             .           "
+            , "           ,' `.         "
+            , "         ,'     `.       "
+            , "        `---------'      "
+            , "                         "
+            ]
+        );
+
+        this.clear_surface();
+
+        tri.x += 4;
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                 .       "
+            , "               ,' `.     "
+            , "             ,'     `.   "
+            , "            `---------'  "
+            , "                         "
+            ]
+        );
+
+        this.clear_surface();
+
+        rect.x -= 1;
+        circle.x += 1;
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , ",-------.                "
+            , "|       |           _._  "
+            , "|       |         .'   `."
+            , "|       |         :     ;"
+            , "`-------'          `-.-' "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            ]
+        );
+
+        this.clear_surface();
+
+        tri.x = 16;
+        tri.y = 5;
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                   `-.-' "
+            , "                   ,' `. "
+            , "                 ,'     `"
+            , "                `--------"
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            ]
+        );
+
+        this.clear_surface();
+
+        circle.y += 1;
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , "                         "
+            , "                         "
+            , "                    _._  "
+            , "                  .'   `."
+            , "                  :  .  ;"
+            , "                   ,'.`. "
+            , "                 ,'     `"
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            , "                         "
+            ]
+        );
+    }
+
     public function test_destroy():Void
     {
         var circle:hase.display.Sprite = this.create_sprite(
