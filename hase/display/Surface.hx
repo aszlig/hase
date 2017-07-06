@@ -28,6 +28,9 @@ class Surface extends Object
 
     private var sprites:Array<Sprite>;
 
+    private var dirties:Array<Rect>;
+    private var dirty_idx:Int;
+
     public function new(terminal:hase.term.Interface)
     {
         super();
@@ -37,6 +40,9 @@ class Surface extends Object
         this.height = terminal.height;
         this.autoresize = false;
         this.sprites = new Array();
+
+        this.dirties = new Array();
+        this.dirty_idx = 0;
     }
 
     @:allow(hase.display.Object.set_z)
@@ -62,6 +68,33 @@ class Surface extends Object
         if (sprite.dirty_rect != null)
             this.redraw_rect(sprite.dirty_rect);
         return sprite;
+    }
+
+    @:allow(hase.display.Sprite.update)
+    private function register_redraw(rect:Rect):Void
+    {
+        for (i in 0...this.dirty_idx) {
+            if (this.dirties[i].intersects(rect)) {
+                this.dirties[i] = this.dirties[i].union(rect);
+                return;
+            }
+        }
+
+        if (this.dirties.length <= this.dirty_idx)
+            this.dirties.push(rect);
+        else
+            this.dirties[this.dirty_idx] = rect;
+        this.dirty_idx++;
+    }
+
+    public override function update(td:Float):Void
+    {
+        super.update(td);
+
+        for (i in 0...this.dirty_idx)
+            this.redraw_rect(this.dirties[i]);
+
+        this.dirty_idx = 0;
     }
 
     @:allow(hase.display.Sprite.blit)

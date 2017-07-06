@@ -50,32 +50,28 @@ class Sprite extends Object
         return super.set_surface(val);
     }
 
-    public function blit():Void
+    public override function update(td:Float):Void
     {
-        if (!this.is_dirty || this.ascii == null)
+        super.update(td);
+
+        if (!this.is_dirty || this.ascii == null || this.surface == null)
             return;
 
         var width:Int = this.ascii.width;
         var height:Int = this.ascii.height;
 
-        var old_rect:Rect = this.dirty_rect;
+        var redraw_rect:Rect = this.dirty_rect;
         this.dirty_rect = new Rect(
             this.absolute_x - this.center_x,
             this.absolute_y - this.center_y,
             width, height
         );
 
-        old_rect = old_rect == null
-                 ? this.dirty_rect
-                 : old_rect.union(this.dirty_rect);
-        this.surface.redraw_rect(old_rect);
+        this.surface.register_redraw(
+            redraw_rect == null ? this.dirty_rect
+                                : redraw_rect.union(this.dirty_rect)
+        );
 
         this.is_dirty = false;
-    }
-
-    public override function update(td:Float):Void
-    {
-        super.update(td);
-        this.blit();
     }
 }
