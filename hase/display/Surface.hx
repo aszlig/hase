@@ -48,8 +48,8 @@ class Surface extends Object
     @:allow(hase.display.Object.set_z)
     private function z_reorder():Void
     {
-        this.sprites.sort(function(a:Sprite, b:Sprite) {
-            return (a.z < b.z) ? -1 : (a.z > b.z) ? 1 : 0;
+        haxe.ds.ArraySort.sort(this.sprites, function(a:Sprite, b:Sprite) {
+            return hase.utils.Misc.sigcmp(b.z, a.z);
         });
     }
 
