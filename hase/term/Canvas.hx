@@ -72,7 +72,7 @@ import hase.geom.Rect;
         if (key == null)
             return None;
 
-        return Char(key.keyCode);
+        return Char(key.charCode);
     }
 
     private inline function cursor2x(x:Int):Int
