@@ -22,10 +22,10 @@ package hase.geom;
 
 abstract Rect (Array<Int>)
 {
-    public var x(get, never):Int;
-    public var y(get, never):Int;
-    public var width(get, never):Int;
-    public var height(get, never):Int;
+    public var x(get, set):Int;
+    public var y(get, set):Int;
+    public var width(get, set):Int;
+    public var height(get, set):Int;
 
     public var left(get, never):Int;
     public var right(get, never):Int;
@@ -38,14 +38,26 @@ abstract Rect (Array<Int>)
     private inline function get_x():Int
         return this[0];
 
+    private inline function set_x(val:Int):Int
+        return this[0] = val;
+
     private inline function get_y():Int
         return this[1];
+
+    private inline function set_y(val:Int):Int
+        return this[1] = val;
 
     private inline function get_width():Int
         return this[2];
 
+    private inline function set_width(val:Int):Int
+        return this[2] = val;
+
     private inline function get_height():Int
         return this[3];
+
+    private inline function set_height(val:Int):Int
+        return this[3] = val;
 
     private inline function get_left():Int
         return Rect.x;
@@ -59,16 +71,23 @@ abstract Rect (Array<Int>)
     private inline function get_bottom():Int
         return Rect.y + Rect.height;
 
-    public function union(other:Rect):Rect
-    {
-        var x:Int = other.x > Rect.x ? Rect.x : other.x;
-        var y:Int = other.y > Rect.y ? Rect.y : other.y;
-        var width:Int = other.right > Rect.right
-                      ? other.right : Rect.right;
-        var height:Int = other.bottom > Rect.bottom
-                       ? other.bottom : Rect.bottom;
+    public inline function copy():Rect
+        return new Rect(Rect.x, Rect.y, Rect.width, Rect.height);
 
-        return new Rect(x, y, width - x, height - y);
+    public inline function union(other:Rect):Rect
+        return Rect.copy().union_(other);
+
+    public function union_(other:Rect):Rect
+    {
+        Rect.width = other.right > Rect.right
+                   ? other.right : Rect.right;
+        Rect.height = other.bottom > Rect.bottom
+                    ? other.bottom : Rect.bottom;
+
+        Rect.width -= Rect.x = other.x > Rect.x ? Rect.x : other.x;
+        Rect.height -= Rect.y = other.y > Rect.y ? Rect.y : other.y;
+
+        return cast this;
     }
 
     public inline function intersects(other:Rect):Bool
@@ -129,18 +148,35 @@ abstract Rect (Array<Int>)
     public inline static function includes_match_neg(r1:Rect, r2:Rect):Bool
         return r2 >= r1;
 
-    @:op(A & B)
-    public static function intersection(r1:Rect, r2:Rect):Null<Rect>
+    public function impure_intersect_(other:Rect):Bool
     {
-        var x:Int = r1.x > r2.x ? r1.x : r2.x;
-        var y:Int = r1.y > r2.y ? r1.y : r2.y;
+        var x:Int = Rect.x > other.x ? Rect.x : other.x;
+        var y:Int = Rect.y > other.y ? Rect.y : other.y;
 
-        var right:Int = r1.right < r2.right
-                      ? r1.right : r2.right;
-        var bottom:Int = r1.bottom < r2.bottom
-                       ? r1.bottom : r2.bottom;
+        var right:Int = Rect.right < other.right
+                      ? Rect.right : other.right;
+        var bottom:Int = Rect.bottom < other.bottom
+                       ? Rect.bottom : other.bottom;
 
-        return (right - x < 1 || bottom - y < 1) ? null :
-           new Rect(x, y, right - x, bottom - y);
+        if (right - x < 1 || bottom - y < 1)
+            return false;
+
+        Rect.width = right - (Rect.x = x);
+        Rect.height = bottom - (Rect.y = y);
+        return true;
+    }
+
+    @:op(A &= B)
+    public inline static function intersection_(r1:Rect, r2:Rect):Rect
+    {
+        r1.impure_intersect_(r2);
+        return r1;
+    }
+
+    @:op(A & B)
+    public inline static function intersection(r1:Rect, r2:Rect):Null<Rect>
+    {
+        var r1_copy:Rect = r1.copy();
+        return r1_copy.impure_intersect_(r2) ? r1_copy : null;
     }
 }
