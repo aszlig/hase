@@ -30,70 +30,59 @@ class JS
     private var last_time:Null<Float>;
     private var running:Bool;
 
-    private var req_anim_frame:FrameHandler;
-
     public function new(root:hase.display.Surface, fps:Int = 60)
     {
         this.interval = Std.int(1000 / fps);
         this.root = root;
-
-        var raf:Null<FrameHandler> = null;
-
-        if (js.Browser.window != null)
-            raf = this.get_frame_handler();
-
-        this.req_anim_frame = raf != null ? raf : this.legacy_timer;
-    }
-
-    private inline function get_frame_handler():Null<FrameHandler>
-    {
-        // What a mess! Cross-browser fuckery at its best!
-        if (untyped window.requestAnimationFrame)
-            return js.Browser.window.requestAnimationFrame;
-        else if (untyped js.Browser.window.webkitRequestAnimationFrame)
-            return untyped js.Browser.window.webkitRequestAnimationFrame
-                .bind(js.Browser.window);
-        else if (untyped js.Browser.window.mozRequestAnimationFrame)
-            return untyped js.Browser.window.mozRequestAnimationFrame
-                .bind(js.Browser.window);
-        else if (untyped js.Browser.window.msRequestAnimationFrame)
-            return untyped js.Browser.window.msRequestAnimationFrame
-                .bind(js.Browser.window);
-        else if (untyped js.Browser.window.oRequestAnimationFrame)
-            return untyped js.Browser.window.oRequestAnimationFrame
-                .bind(js.Browser.window);
-        else
-            return null;
     }
 
     private inline function legacy_timer(cb:FrameCallback):Void
         haxe.Timer.delay(cb.bind(haxe.Timer.stamp() * 1000), this.interval);
 
-    private function loop(time:Float):Bool
+    private function loop():Void
     {
-        if (!this.running)
-            return true;
+        var me = this;
 
-        if (this.last_time == null) {
-            this.tick(0);
-        } else {
-            var delta:Float = time - this.last_time;
-            if (delta < this.interval * 10)
-                this.tick(delta);
+        // What a mess! Cross-browser fuckery at its best!
+        var frame_handler = untyped
+            window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            me.legacy_timer;
+
+        untyped {
+            __js__("function real_loop(time) {");
+
+            if (!me.running)
+                __js__("return true");
+
+            if (me.last_time == null) {
+                me.tick(0);
+            } else {
+                var delta:Float = time - me.last_time;
+                if (delta < me.interval * 10)
+                    me.tick(delta);
+            }
+
+            me.last_time = time;
+
+            frame_handler(real_loop);
+
+            __js__("return !{0}", me.running);
+
+            __js__("}");
         }
 
-        this.last_time = time;
-
-        this.req_anim_frame(this.loop);
-
-        return !this.running;
+        untyped frame_handler(untyped real_loop);
     }
 
     public inline function start():Void
     {
         this.running = true;
         this.last_time = null;
-        this.req_anim_frame(this.loop);
+        this.loop();
     }
 
     public inline function stop():Void
