@@ -79,15 +79,6 @@ abstract Rect (Array<Int>)
             && Rect.bottom > other.y;
     }
 
-    public inline function matches(other:Null<Rect>):Bool
-    {
-        return other != null
-            && Rect.x == other.x
-            && Rect.y == other.y
-            && Rect.width == other.width
-            && Rect.height == other.height;
-    }
-
     public inline function contains(x:Int, y:Int):Bool
     {
         return Rect.x <= x && Rect.right > x
@@ -105,6 +96,18 @@ abstract Rect (Array<Int>)
             : 0.0
         );
     }
+
+    @:op(A == B)
+    public inline static function equals(r1:Rect, r2:Rect):Bool
+        return r1.x == r2.x
+            && r1.y == r2.y
+            && r1.width == r2.width
+            && r1.height == r2.height;
+
+    @:op(A != B)
+    public inline static function not_equal(r1:Rect, r2:Rect):Bool
+        return !(r1 == r2);
+
 
     @:op(A > B)
     public inline static function includes(r1:Rect, r2:Rect):Bool

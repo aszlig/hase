@@ -159,7 +159,7 @@ private class BorderGroup
                 continue;
 
             var intersections:Int = Lambda.count(rects, function(r:Rect) {
-                return !area.matches(r) && area.intersects(r) && area.y > r.y;
+                return area != r && area.intersects(r) && area.y > r.y;
             });
 
             if (intersections == 0)

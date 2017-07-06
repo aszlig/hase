@@ -86,17 +86,22 @@ class RectTest extends haxe.unit.TestCase
     {
         var r:Rect = new Rect(5, 5, 5, 5);
 
-        for (x in 3...7) for (y in 3...7) for (w in 3...7) for (h in 3...7)
-            if (x == 5 && y == 5 && w == 5 && h == 5)
-                this.assertTrue(r.matches(new Rect(x, y, w, h)));
-            else
-                this.assertFalse(r.matches(new Rect(x, y, w, h)));
+        for (x in 3...7) for (y in 3...7) for (w in 3...7) for (h in 3...7) {
+            if (x == 5 && y == 5 && w == 5 && h == 5) {
+                this.assertFalse(r != new Rect(x, y, w, h));
+                this.assertTrue(r == new Rect(x, y, w, h));
+            } else {
+                this.assertFalse(r == new Rect(x, y, w, h));
+                this.assertTrue(r != new Rect(x, y, w, h));
+            }
+        }
     }
 
     public function test_matches_null():Void
     {
         var r:Rect = new Rect(5, 5, 5, 5);
-        this.assertFalse(r.matches(null));
+        this.assertFalse(r == null);
+        this.assertTrue(r != null);
     }
 
     public function test_intersection_area_diagonal():Void
