@@ -33,13 +33,14 @@ class Main
         #end
         runner.add(new hase.test.cases.AnimationParserTest());
         runner.add(new hase.test.cases.AnimationTest());
+        runner.add(new hase.test.cases.BitmapTest());
         runner.add(new hase.test.cases.ColorTableTest());
         runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.RasterTest());
         runner.add(new hase.test.cases.MiscTest());
         runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PathTest());
         runner.add(new hase.test.cases.PVectorTest());
+        runner.add(new hase.test.cases.PathTest());
+        runner.add(new hase.test.cases.RasterTest());
         runner.add(new hase.test.cases.RectTest());
         runner.add(new hase.test.cases.SpriteTest());
         runner.add(new hase.test.cases.SurfaceTest());

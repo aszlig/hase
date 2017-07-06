@@ -24,8 +24,12 @@ class Raster<T>
 {
     private var _width:Int;
     private var _height:Int;
-    private var data:Array<T>;
     private var default_value:T;
+
+    @:allow(hase.geom.Bitmap.set)
+    @:allow(hase.geom.Bitmap.unset)
+    @:allow(hase.geom.Bitmap.set_rect)
+    private var data:Array<T>;
 
     public var width(get, set):Int;
     public var height(get, set):Int;
