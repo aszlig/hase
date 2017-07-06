@@ -106,6 +106,26 @@ abstract Rect (Array<Int>)
         );
     }
 
+    @:op(A > B)
+    public inline static function includes(r1:Rect, r2:Rect):Bool
+        return r2.x > r1.x && r2.y > r1.y
+            && r2.right < r1.right
+            && r2.bottom < r1.bottom;
+
+    @:op(A >= B)
+    public inline static function includes_match(r1:Rect, r2:Rect):Bool
+        return r2.x >= r1.x && r2.y >= r1.y
+            && r2.right <= r1.right
+            && r2.bottom <= r1.bottom;
+
+    @:op(A < B)
+    public inline static function includes_neg(r1:Rect, r2:Rect):Bool
+        return r2 > r1;
+
+    @:op(A <= B)
+    public inline static function includes_match_neg(r1:Rect, r2:Rect):Bool
+        return r2 >= r1;
+
     @:op(A & B)
     public static function intersection(r1:Rect, r2:Rect):Null<Rect>
     {

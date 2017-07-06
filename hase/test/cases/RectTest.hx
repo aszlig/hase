@@ -196,7 +196,6 @@ class RectTest extends haxe.unit.TestCase
         }
     }
 
-
     public function test_distance():Void
     {
         var r:Rect = new Rect(5, 5, 5, 5);
@@ -211,5 +210,43 @@ class RectTest extends haxe.unit.TestCase
         this.assert_vec(  0, -15, r, new Rect(  5, -15,  5,  5));
         this.assert_vec(  5,   0, r, new Rect( 15,   5,  5,  5));
         this.assert_vec(-15,   0, r, new Rect(-15,   5,  5,  5));
+    }
+
+    public function test_includes():Void
+    {
+        var r:Rect = new Rect(5, 5, 5, 5);
+
+        this.assertFalse(r > new Rect(5, 5, 5, 5));
+        this.assertTrue(r > new Rect(6, 6, 3, 3));
+        this.assertFalse(r > new Rect(6, 5, 3, 4));
+        this.assertFalse(r > new Rect(5, 6, 4, 3));
+        this.assertFalse(r > new Rect(6, 6, 3, 4));
+        this.assertFalse(r > new Rect(6, 6, 4, 3));
+
+        this.assertFalse(new Rect(5, 5, 5, 5) < r);
+        this.assertTrue(new Rect(6, 6, 3, 3) < r);
+        this.assertFalse(new Rect(6, 5, 3, 4) < r);
+        this.assertFalse(new Rect(5, 6, 4, 3) < r);
+        this.assertFalse(new Rect(6, 6, 3, 4) < r);
+        this.assertFalse(new Rect(6, 6, 4, 3) < r);
+    }
+
+    public function test_includes_match():Void
+    {
+        var r:Rect = new Rect(5, 5, 5, 5);
+
+        this.assertTrue(r >= new Rect(5, 5, 5, 5));
+        this.assertTrue(r >= new Rect(6, 6, 4, 4));
+        this.assertFalse(r >= new Rect(6, 4, 4, 6));
+        this.assertFalse(r >= new Rect(4, 6, 6, 4));
+        this.assertFalse(r >= new Rect(6, 6, 5, 4));
+        this.assertFalse(r >= new Rect(6, 6, 4, 5));
+
+        this.assertTrue(new Rect(5, 5, 5, 5) <= r);
+        this.assertTrue(new Rect(6, 6, 4, 4) <= r);
+        this.assertFalse(new Rect(6, 4, 4, 6) <= r);
+        this.assertFalse(new Rect(4, 6, 6, 4) <= r);
+        this.assertFalse(new Rect(6, 6, 5, 4) <= r);
+        this.assertFalse(new Rect(6, 6, 4, 5) <= r);
     }
 }
