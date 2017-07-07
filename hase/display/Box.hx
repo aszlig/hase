@@ -64,14 +64,14 @@ class BoxBase extends Sprite
     private inline function set_edge_bottom(sym:Symbol):Symbol
         return this.edge_bottom = this.trigger_rebuild(this.edge_bottom, sym);
 
-    private function trigger_rebuild(from:Symbol, to:Symbol):Symbol
+    private function trigger_rebuild<T>(from:T, to:T):T
     {
         if (from != to)
             this.needs_rebuild = true;
         return to;
     }
 
-    private inline function rebuild():Void
+    private function rebuild():Void
     {
         if (this.ascii == null) {
             this.ascii = Image.create(
@@ -93,6 +93,9 @@ class BoxBase extends Sprite
             this.ascii.set(0, y, this.edge_left);
             this.ascii.set(this.width - 1, y, this.edge_right);
         }
+
+        this.needs_rebuild = false;
+        this.is_dirty = true;
     }
 
     public function add_content(obj:Object):Object
@@ -157,5 +160,46 @@ class UnderscoreBox extends BoxBase
         this.edge_right  = new Symbol("|".code);
         this.edge_top    = new Symbol("_".code);
         this.edge_bottom = new Symbol("_".code);
+    }
+}
+
+class ProgressBar extends Box
+{
+    public var finished(default, set):Symbol;
+    public var unfinished(default, set):Symbol;
+
+    public var progress(default, set):Float;
+
+    public function new()
+    {
+        super();
+        this.finished = new Symbol(" ".code, 0, 10);
+        this.unfinished = new Symbol(" ".code, 0, 0);
+        this.progress = 0.0;
+    }
+
+    private inline function set_finished(sym:Symbol):Symbol
+        return this.finished = this.trigger_rebuild(this.finished, sym);
+
+    private inline function set_unfinished(sym:Symbol):Symbol
+        return this.unfinished = this.trigger_rebuild(this.unfinished, sym);
+
+    private inline function set_progress(percent:Float):Float
+        return this.progress = this.trigger_rebuild(this.progress, percent);
+
+    private override function rebuild():Void
+    {
+        super.rebuild();
+
+        var divider:Int = Std.int(this.progress / 100.0 * (this.width - 2));
+
+        for (x in 1...this.width - 1) {
+            for (y in 1...this.height - 1) {
+                if (x - 1 < divider)
+                    this.ascii.set(x, y, this.finished);
+                else
+                    this.ascii.set(x, y, this.unfinished);
+            }
+        }
     }
 }
