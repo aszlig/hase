@@ -186,7 +186,7 @@ class Object
     private inline function set_center_y(val:Int):Int
         return this.center_y = this.set_dirty(this.center_y, val);
 
-    private inline function set_width(val:Int):Int
+    private function set_width(val:Int):Int
     {
         this.width = val;
         this.autogrow_width();
@@ -194,7 +194,7 @@ class Object
         return this.set_dirty(null, this.width);
     }
 
-    private inline function set_height(val:Int):Int
+    private function set_height(val:Int):Int
     {
         this.height = val;
         this.autogrow_height();
