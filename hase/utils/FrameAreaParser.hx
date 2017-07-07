@@ -140,9 +140,9 @@ private class BorderGroup
 
     private function get_box_rect(box:Box):Rect
     {
-        var area:Rect = box.body;
+        var area:Rect = box.body.copy();
         for (hdr in box.headers)
-            area &= hdr;
+            area.union_(hdr);
         return area;
     }
 
