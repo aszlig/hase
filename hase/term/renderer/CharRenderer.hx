@@ -47,7 +47,7 @@ class CharRenderer implements Interface
                 continue;
 
             // intersection between redraw rectangle and current sprite
-            var common:Null<Rect> = sprite.dirty_rect & rect;
+            var common:Null<Rect> = sprite.dirty_rect | rect;
             if (common == null)
                 continue;
 

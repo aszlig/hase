@@ -166,14 +166,14 @@ abstract Rect (Array<Int>)
         return true;
     }
 
-    @:op(A &= B)
+    @:op(A |= B)
     public inline static function intersection_(r1:Rect, r2:Rect):Rect
     {
         r1.impure_intersect_(r2);
         return r1;
     }
 
-    @:op(A & B)
+    @:op(A | B)
     public inline static function intersection(r1:Rect, r2:Rect):Null<Rect>
     {
         var r1_copy:Rect = r1.copy();

@@ -109,7 +109,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(8, 8, 4, 4);
         var r2:Rect = new Rect(10, 10, 8, 8);
 
-        var result:Null<Rect> = r1 & r2;
+        var result:Null<Rect> = r1 | r2;
 
         this.assertEquals(10, result.x);
         this.assertEquals(10, result.y);
@@ -122,7 +122,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(4, 4, 4, 4);
         var r2:Rect = new Rect(4, 7, 4, 4);
 
-        var result:Null<Rect> = r1 & r2;
+        var result:Null<Rect> = r1 | r2;
 
         this.assertEquals(4, result.x);
         this.assertEquals(7, result.y);
@@ -135,7 +135,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(4, 4, 4, 4);
         var r2:Rect = new Rect(7, 4, 4, 4);
 
-        var result:Null<Rect> = r1 & r2;
+        var result:Null<Rect> = r1 | r2;
 
         this.assertEquals(7, result.x);
         this.assertEquals(4, result.y);
@@ -148,7 +148,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(4, 4, 4, 4);
         var r2:Rect = new Rect(4, 4, 4, 4);
 
-        var result:Null<Rect> = r1 & r2;
+        var result:Null<Rect> = r1 | r2;
 
         this.assertEquals(4, result.x);
         this.assertEquals(4, result.y);
@@ -160,7 +160,7 @@ class RectTest extends haxe.unit.TestCase
     {
         var r1:Rect = new Rect(0, 0, 2, 2);
         var r2:Rect = new Rect(5, 5, 2, 2);
-        this.assertEquals(null, r1 & r2);
+        this.assertEquals(null, r1 | r2);
     }
 
     public function test_contains():Void

@@ -94,7 +94,7 @@ class Bitmap
         if (!bounds.intersects(rect))
             return this;
 
-        var real_rect:Rect = bounds > rect ? rect : bounds & rect;
+        var real_rect:Rect = bounds > rect ? rect : bounds | rect;
 
         var mask_first:Int = Bitmap.MASK_FULL & ~(calc_x_bit(real_rect.x) - 1);
         var mask_last:Int = calc_x_bit(real_rect.right) - 1;
