@@ -75,7 +75,7 @@ class Surface extends Object
     {
         for (i in 0...this.dirty_idx) {
             if (this.dirties[i].intersects(rect)) {
-                this.dirties[i] = this.dirties[i].union(rect);
+                this.dirties[i] &= rect;
                 return;
             }
         }

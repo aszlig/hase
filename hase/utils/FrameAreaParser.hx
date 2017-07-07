@@ -142,7 +142,7 @@ private class BorderGroup
     {
         var area:Rect = box.body;
         for (hdr in box.headers)
-            area = area.union(hdr);
+            area &= hdr;
         return area;
     }
 

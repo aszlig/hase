@@ -30,7 +30,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(10, 10, 20, 20);
         var r2:Rect = new Rect(5, 3, 3, 30);
 
-        var result:Rect = r1.union(r2);
+        var result:Rect = r1 & r2;
 
         this.assertEquals(5, result.x);
         this.assertEquals(3, result.y);
@@ -43,7 +43,7 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(1, 11, 20, 20);
         var r2:Rect = new Rect(5, 3, 30, 1);
 
-        var result:Rect = r1.union(r2);
+        var result:Rect = r1 & r2;
 
         this.assertEquals(1, result.x);
         this.assertEquals(3, result.y);

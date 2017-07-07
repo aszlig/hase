@@ -69,7 +69,7 @@ class Sprite extends Object
 
         this.surface.register_redraw(
             redraw_rect == null ? this.dirty_rect
-                                : redraw_rect.union(this.dirty_rect)
+                                : redraw_rect & this.dirty_rect
         );
 
         this.is_dirty = false;
