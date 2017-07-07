@@ -150,13 +150,6 @@ abstract Rect (Array<Int>)
         return true;
     }
 
-    @:op(A |= B)
-    public inline static function intersection_(r1:Rect, r2:Rect):Rect
-    {
-        r1.impure_intersect_(r2);
-        return r1;
-    }
-
     @:op(A | B)
     public inline static function intersection(r1:Rect, r2:Rect):Null<Rect>
     {
@@ -164,17 +157,22 @@ abstract Rect (Array<Int>)
         return r1_copy.impure_intersect_(r2) ? r1_copy : null;
     }
 
+    public inline function intersection_(other:Rect):Rect
+    {
+        Rect.impure_intersect_(other);
+        return cast this;
+    }
+
     @:op(A & B)
     public inline static function union(r1:Rect, r2:Rect):Rect
-        return Rect.union_(r1.copy(), r2);
+        return r1.copy().union_(r2);
 
-    @:op(A &= B)
-    public static function union_(r1:Rect, r2:Rect):Rect
+    public function union_(other:Rect):Rect
     {
-        r1.width = r2.right > r1.right ? r2.right : r1.right;
-        r1.height = r2.bottom > r1.bottom ? r2.bottom : r1.bottom;
-        r1.width -= r1.x = r2.x > r1.x ? r1.x : r2.x;
-        r1.height -= r1.y = r2.y > r1.y ? r1.y : r2.y;
-        return r1;
+        Rect.width = other.right > Rect.right ? other.right : Rect.right;
+        Rect.height = other.bottom > Rect.bottom ? other.bottom : Rect.bottom;
+        Rect.width -= Rect.x = other.x > Rect.x ? Rect.x : other.x;
+        Rect.height -= Rect.y = other.y > Rect.y ? Rect.y : other.y;
+        return cast this;
     }
 }

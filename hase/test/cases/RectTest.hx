@@ -51,6 +51,19 @@ class RectTest extends haxe.unit.TestCase
         this.assertEquals(28, result.height);
     }
 
+    public function test_impure_union():Void
+    {
+        var result = new Rect(1, 1, 1, 1);
+
+        for (i in 1...11)
+            result.union_(new Rect(i, i, 1, 1));
+
+        this.assertEquals(1, result.x);
+        this.assertEquals(1, result.y);
+        this.assertEquals(10, result.width);
+        this.assertEquals(10, result.height);
+    }
+
     public function test_intersects_horizontal():Void
     {
         var r:Rect = new Rect(5, 0, 10, 10);
@@ -161,6 +174,19 @@ class RectTest extends haxe.unit.TestCase
         var r1:Rect = new Rect(0, 0, 2, 2);
         var r2:Rect = new Rect(5, 5, 2, 2);
         this.assertEquals(null, r1 | r2);
+    }
+
+    public function test_impure_intersection():Void
+    {
+        var result = new Rect(5, 5, 10, 10);
+
+        for (i in 1...10)
+            result.intersection_(new Rect(0, 0, i, i));
+
+        this.assertEquals(5, result.x);
+        this.assertEquals(5, result.y);
+        this.assertEquals(1, result.width);
+        this.assertEquals(1, result.height);
     }
 
     public function test_contains():Void
