@@ -10,6 +10,25 @@ let
     allowed = comp1 == "example" || comp1 == "hase" || comp1 == "test.hxml";
   in splitted != [] && allowed;
 
+  forEachTest = fun: let
+    preloaders = map toString (lib.range 1 3);
+
+    mkPreloadMain = p: "hase.test.preloader.PreloaderTest${p}";
+    preloadMains = map mkPreloadMain preloaders;
+    mains = lib.singleton "hase.test.Main" ++ preloadMains;
+
+    preloadTargets = map (p: "preload_test_${p}") preloaders;
+    targets = lib.singleton "main_tests" ++ preloadTargets;
+
+  in lib.concatStringsSep "\n" (lib.zipListsWith fun mains targets);
+
+  compileWith = targetLang: main: target: let
+    file = if targetLang == "cpp" then target
+           else if targetLang == "neko" then "${target}.n"
+           else "${target}.${targetLang}";
+    args = [ "haxe" "-main" main "-${targetLang}" file "-dce" "full" ];
+  in lib.concatMapStringsSep " " lib.escapeShellArg args;
+
 in pkgs.stdenv.mkDerivation rec {
   name = "hase";
   version = "0.1.0";
@@ -20,24 +39,27 @@ in pkgs.stdenv.mkDerivation rec {
 
   outputs = lib.singleton "out" ++ lib.optional buildExample "example";
 
-  buildPhase = lib.optionalString buildExample ''
+  buildPhase = lib.optionalString runTests ''
+    ${forEachTest (compileWith "neko")}
+    ${forEachTest (compileWith "js")}
+    ${forEachTest (compileWith "cpp")}
+  '' + lib.optionalString buildExample ''
     (cd example && haxe example.hxml)
-  '' + lib.optionalString runTests ''
-    haxe -main hase.test.Main -cpp test -D HXCPP_M64 -dce full
-    haxe -main hase.test.Main -js test.js -dce full
   '';
 
   doCheck = runTests;
 
   checkPhase = ''
     header "running C++ tests"
-    ./test/Main
+    ${forEachTest (main: target: let
+      mainCls = lib.head (builtins.match ".*\\.(.+)" main);
+    in "./${target}/${mainCls}")}
     stopNest
     header "running Neko tests"
-    haxe --macro 'hase.test.Main.main()'
+    ${forEachTest (main: target: "neko ${target}.n")}
     stopNest
     header "running JS tests"
-    phantomjs test.js
+    ${forEachTest (main: target: "phantomjs ${target}.js")}
     stopNest
   '';
 
