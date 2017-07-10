@@ -15,6 +15,7 @@ in pkgs.stdenv.mkDerivation rec {
   version = "0.1.0";
   src = builtins.filterSource isAllowed ./.;
 
+  nativeBuildInputs = [ pkgs.phantomjs ];
   buildInputs = [ pkgs.haxe pkgs.hxcpp pkgs.neko ];
 
   outputs = lib.singleton "out" ++ lib.optional buildExample "example";
@@ -36,7 +37,7 @@ in pkgs.stdenv.mkDerivation rec {
     haxe --macro 'hase.test.Main.main()'
     stopNest
     header "running JS tests"
-    ${pkgs.phantomjs}/bin/phantomjs test.js
+    phantomjs test.js
     stopNest
   '';
 
