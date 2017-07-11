@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2017 aszlig
+/* Copyright (C) 2017 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,28 @@
  */
 package hase.test;
 
-class Main
+class Runner extends haxe.unit.TestRunner
 {
-    public static function main():Void
+    public function new()
     {
-        var runner = new Runner();
-        runner.add(new hase.test.cases.AnimationParserTest());
-        runner.add(new hase.test.cases.AnimationTest());
-        runner.add(new hase.test.cases.BitmapTest());
-        runner.add(new hase.test.cases.BoxTest());
-        runner.add(new hase.test.cases.ColorTableTest());
-        runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MiscTest());
-        runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PVectorTest());
-        runner.add(new hase.test.cases.PathTest());
-        runner.add(new hase.test.cases.RasterTest());
-        runner.add(new hase.test.cases.RectTest());
-        runner.add(new hase.test.cases.SpriteTest());
-        runner.add(new hase.test.cases.SurfaceTest());
-        runner.run_and_exit();
+        #if js
+        if (untyped __js__("typeof phantom") != "undefined") {
+            var system = untyped __js__("require")("system");
+            haxe.unit.TestRunner.print = system.stdout.write;
+        }
+        #end
+
+        super();
+    }
+
+    public function run_and_exit():Void
+    {
+        var result:Bool = this.run();
+        #if js
+        if (untyped __js__("typeof phantom") != "undefined")
+            untyped __js__("phantom.exit")(result ? 0 : 1);
+        #elseif (cpp || neko)
+        Sys.exit(result ? 0 : 1);
+        #end
     }
 }
