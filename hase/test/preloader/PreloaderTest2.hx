@@ -20,7 +20,6 @@
  */
 package hase.test.preloader;
 
-import hase.utils.Preloader;
 import hase.display.Symbol;
 
 @:build(hase.test.Runner.build_single())
@@ -28,7 +27,7 @@ class PreloaderTest2 extends hase.test.SurfaceTestCase
 {
     public function test_preload():Void
     {
-        var preloader:Preloader = new Preloader();
+        var preloader = new hase.utils.Preloader();
 
         preloader.width = 40;
         preloader.height = 10;
@@ -46,7 +45,7 @@ class PreloaderTest2 extends hase.test.SurfaceTestCase
             [ "                                        "
             , "                                        "
             , "                                        "
-            , "  Loading one thing to load...          "
+            , "  Loading thing to load...              "
             , "  .----------------------------------.  "
             , "  |##################################|  "
             , "  `----------------------------------'  "
@@ -60,5 +59,5 @@ class PreloaderTest2 extends hase.test.SurfaceTestCase
     }
 
     private function load_a_thing():String
-        return Preloader.preload("one thing to load", "foo" + "bar");
+        return hase.utils.Preloader.preload("thing to load", "foo" + "bar");
 }

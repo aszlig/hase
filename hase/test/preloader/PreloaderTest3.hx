@@ -20,14 +20,12 @@
  */
 package hase.test.preloader;
 
-import hase.utils.Preloader;
-
 @:build(hase.test.Runner.build_single())
 class PreloaderTest3 extends hase.test.SurfaceTestCase
 {
     public function test_preload():Void
     {
-        var preloader:Preloader = new Preloader();
+        var preloader = new hase.utils.Preloader();
         this.assertTrue(preloader.done);
     }
 }

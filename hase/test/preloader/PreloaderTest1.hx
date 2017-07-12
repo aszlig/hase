@@ -20,7 +20,6 @@
  */
 package hase.test.preloader;
 
-import hase.utils.Preloader;
 import hase.display.Symbol;
 
 class Canary {
@@ -32,7 +31,7 @@ class PreloaderTest1 extends hase.test.SurfaceTestCase
 {
     public function test_preload():Void
     {
-        var preloader:Preloader = new Preloader();
+        var preloader = new hase.utils.Preloader();
         preloader.width = 40;
         preloader.height = 6;
         preloader.progress_bar.finished = new Symbol("#".code);
@@ -74,7 +73,7 @@ class PreloaderTest1 extends hase.test.SurfaceTestCase
 
     private function load_something():Int
     {
-        return Preloader.preload("something to load", {
+        return hase.utils.Preloader.preload("something to load", {
             Canary.canary++;
             return 123;
         });
@@ -82,7 +81,7 @@ class PreloaderTest1 extends hase.test.SurfaceTestCase
 
     private function load_something_else():Int
     {
-        return Preloader.preload("something else to load", {
+        return hase.utils.Preloader.preload("something else to load", {
             Canary.canary++;
             return 321;
         });
