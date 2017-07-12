@@ -108,6 +108,20 @@ class AppBuilder
             {
                 this.root = new hase.display.Surface(term);
                 this.__timer = null;
+
+                var preloader = new hase.utils.Preloader();
+                if (!preloader.done) {
+                    this.root.add_child(preloader);
+
+                    while (!preloader.done) {
+                        preloader.width = this.root.width;
+                        preloader.height = this.root.height;
+                        this.root.update(0.0);
+                    }
+
+                    this.root.remove_child(preloader);
+                }
+
                 this.init();
             }
 
