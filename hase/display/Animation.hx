@@ -31,7 +31,9 @@ typedef FrameData = {
 
 class Animation extends Sprite
 {
+    @:allow(hase.test.cases.AnimationTest)
     private var frames:Array<FrameData>;
+
     public var current:Int; // XXX: make this private and refactor
 
     private var td:Null<Float>;

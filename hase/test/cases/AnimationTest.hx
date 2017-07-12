@@ -549,6 +549,95 @@ class AnimationTest extends hase.test.SurfaceTestCase
             ]
         );
     }
+    public function test_unnecessary_single_frame_update():Void
+    {
+        var stickfig:hase.display.Animation = this.create_animation([
+            [ "       "
+            , " . o . "
+            , "  `|'  "
+            , "   |   "
+            , "  ' `  "
+            , "       "
+            ]
+        ]);
+
+        this.root.add_child(stickfig);
+        this.update(2000);
+
+        this.assert_area(
+            [ "       "
+            , " . o . "
+            , "  `|'  "
+            , "   |   "
+            , "  ' `  "
+            , "       "
+            ]
+        );
+
+        this.clear_surface();
+        this.update(5000);
+
+        this.assert_area(
+            [ "       "
+            , "       "
+            , "       "
+            , "       "
+            , "       "
+            , "       "
+            ]
+        );
+    }
+
+    public function test_unnecessary_single_frame_key_update():Void
+    {
+        var stickfig:hase.display.Animation = this.create_animation([
+            [ "       "
+            , "   o   "
+            , " .-|-. "
+            , "   |   "
+            , "  ' `  "
+            , "       "
+            ],
+            [ "       "
+            , " . o . "
+            , "  `|'  "
+            , "   |   "
+            , "  ' `  "
+            , "       "
+            ]
+        ]);
+
+        stickfig.frames[0].key = "low";
+        stickfig.frames[1].key = "high";
+
+        stickfig.key = "high";
+
+        this.root.add_child(stickfig);
+        this.update(2000);
+
+        this.assert_area(
+            [ "       "
+            , " . o . "
+            , "  `|'  "
+            , "   |   "
+            , "  ' `  "
+            , "       "
+            ]
+        );
+
+        this.clear_surface();
+        this.update(5000);
+
+        this.assert_area(
+            [ "       "
+            , "       "
+            , "       "
+            , "       "
+            , "       "
+            , "       "
+            ]
+        );
+    }
 
     public function test_different_overlapping_frame_sizes():Void
     {
