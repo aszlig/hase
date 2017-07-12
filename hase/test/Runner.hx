@@ -20,6 +20,11 @@
  */
 package hase.test;
 
+#if macro
+import haxe.macro.Context;
+import haxe.macro.Expr;
+#end
+
 class Runner extends haxe.unit.TestRunner
 {
     public function new()
@@ -43,5 +48,33 @@ class Runner extends haxe.unit.TestRunner
         #elseif (cpp || neko)
         Sys.exit(result ? 0 : 1);
         #end
+    }
+
+    macro public static function build_single():Array<Field>
+    {
+        var type = Context.getLocalType();
+        var fields:Array<Field> = Context.getBuildFields();
+
+        var ctype:ComplexType = Context.toComplexType(type);
+        var typepath:TypePath = switch (ctype) {
+            case TPath(p): p;
+            default: throw "Cannot find type path to base class!";
+        };
+
+        var main:ComplexType = macro : {
+            public static function main():Void
+            {
+                var runner = new Runner();
+                runner.add(new $typepath());
+                runner.run_and_exit();
+            }
+        };
+
+        var statics:Array<Field> = switch (main) {
+            case TAnonymous(s): s;
+            default: throw "Unable to create static function main().";
+        };
+
+        return fields.concat(statics);
     }
 }
