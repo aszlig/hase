@@ -101,6 +101,10 @@ class Preloader extends hase.display.Sprite
         if (!this.done) {
             Reflect.field(this.step_cls, "loaders")[this.preload_idx]();
 
+            hase.utils.PreloaderProxy.results.push(
+                Reflect.field(this.step_cls, "results")[this.preload_idx]
+            );
+
             var desc:String = Reflect.field(
                 this.step_cls, "descriptions"
             )[this.preload_idx];
@@ -208,12 +212,6 @@ class Preloader extends hase.display.Sprite
 
         Preloader.replace_cls();
 
-        var field_expr:Expr = MacroStringTools.toFieldExpr([
-            "hase", "utils", Preloader.current
-        ]);
-
-        return macro Reflect.field(
-            Type.resolveClass("hase.utils.PreloaderSteps"), "results"
-        )[$v{idx}];
+        return macro hase.utils.PreloaderProxy.results[$v{idx}];
     }
 }
