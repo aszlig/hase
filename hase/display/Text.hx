@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2017 aszlig
+/* Copyright (C) 2017 aszlig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,28 +18,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.test;
+package hase.display;
 
-class Main
+class Text extends Sprite
 {
-    public static function main():Void
+    private var _text:String;
+    public var text(get, set):String;
+
+    public function new(text:String)
     {
-        var runner = new Runner();
-        runner.add(new hase.test.cases.AnimationParserTest());
-        runner.add(new hase.test.cases.AnimationTest());
-        runner.add(new hase.test.cases.BitmapTest());
-        runner.add(new hase.test.cases.BoxTest());
-        runner.add(new hase.test.cases.ColorTableTest());
-        runner.add(new hase.test.cases.FrameAreaParserTest());
-        runner.add(new hase.test.cases.MiscTest());
-        runner.add(new hase.test.cases.MotionTest());
-        runner.add(new hase.test.cases.PVectorTest());
-        runner.add(new hase.test.cases.PathTest());
-        runner.add(new hase.test.cases.RasterTest());
-        runner.add(new hase.test.cases.RectTest());
-        runner.add(new hase.test.cases.SpriteTest());
-        runner.add(new hase.test.cases.SurfaceTest());
-        runner.add(new hase.test.cases.TextTest());
-        runner.run_and_exit();
+        super();
+        this.ascii =
+            Image.create(text.length, 1, new Symbol(0), new Symbol(0));
+        this.set_text(text);
+    };
+
+    private inline function get_text():String
+        return this._text;
+
+    private function set_text(text:String):String
+    {
+        if (text != this._text) {
+            for (c in 0...Std.int(Math.max(text.length, this.ascii.width)))
+                this.ascii.set(c, 0, c < text.length ? text.charCodeAt(c)
+                                                     : new Symbol(0));
+            this.is_dirty = true;
+        }
+        return this._text = text;
     }
 }
