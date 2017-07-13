@@ -13,4 +13,3 @@
 -main Example
 -cpp build
 -dce full
--D HXCPP_M64

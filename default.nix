@@ -7,8 +7,7 @@ let
     relative = removePrefix "/" (removePrefix (toString ./.) (toString path));
     splitted = splitString "/" relative;
     comp1 = head splitted;
-    allowed = comp1 == "example" || comp1 == "hase" || comp1 == "test.hxml";
-  in splitted != [] && allowed;
+  in splitted != [] && comp1 == "hase";
 
   forEachTest = fun: let
     preloaders = map toString (lib.range 1 3);
@@ -63,17 +62,5 @@ in pkgs.stdenv.mkDerivation rec {
     libname = "hase";
     inherit version;
     files = "hase";
-  };
-
-  passthru.example = pkgs.stdenv.mkDerivation {
-    name = "hase-example-${version}";
-    inherit src version buildInputs;
-    buildPhase = "cd example && haxe example.hxml";
-    installPhase = ''
-      install -vD build/Example "$out/bin/example"
-      install -vD example.n "$out/libexec/hase/example.n"
-      install -m 0644 -vD example.js "$out/share/hase/example.js"
-      install -m 0644 -vD example.html "$out/share/hase/example.html"
-    '';
   };
 }
