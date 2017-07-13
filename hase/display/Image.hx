@@ -25,18 +25,20 @@ import hase.geom.Rect;
 
 class Image implements hase.iface.Raster<Symbol>
 {
-    public var dirty_rect(default, null):Rect;
     private var raster:Raster<Symbol>;
+
+    public var dirty_rect(default, null):Rect;
+    public var is_dirty(default, null):Bool;
 
     public var width(get, set):Int;
     public var height(get, set):Int;
-    public var is_dirty(get, never):Bool;
 
     private function new(raster:Raster<Symbol>)
     {
         this.raster = raster;
         this.dirty_rect =
             new hase.geom.Rect(0, 0, raster.width, raster.height);
+        this.is_dirty = true;
     }
 
     private inline function get_width():Int
@@ -94,6 +96,7 @@ class Image implements hase.iface.Raster<Symbol>
             this.dirty_rect.y = y;
             this.dirty_rect.width = width;
             this.dirty_rect.height = height;
+            this.is_dirty = true;
         }
     }
 
@@ -101,15 +104,10 @@ class Image implements hase.iface.Raster<Symbol>
     {
         this.dirty_rect.x = 0;
         this.dirty_rect.y = 0;
-        this.dirty_rect.width = 0;
-        this.dirty_rect.height = 0;
+        this.dirty_rect.width = this.raster.width;
+        this.dirty_rect.height = this.raster.height;
+        this.is_dirty = false;
     }
-
-    public inline function get_is_dirty():Bool
-        return this.dirty_rect.x != 0
-            || this.dirty_rect.y != 0
-            || this.dirty_rect.width != 0
-            || this.dirty_rect.height != 0;
 
     public function clear(?val:Symbol):Void
     {
@@ -117,6 +115,7 @@ class Image implements hase.iface.Raster<Symbol>
         this.dirty_rect.y = 0;
         this.dirty_rect.width = this.raster.width;
         this.dirty_rect.height = this.raster.height;
+        this.is_dirty = true;
         return this.raster.clear(val);
     }
 

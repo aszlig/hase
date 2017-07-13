@@ -749,6 +749,66 @@ class SpriteTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_unnecessary_fullsprite_render():Void
+    {
+        var bottle:hase.display.Sprite = this.create_sprite(
+            [ "           "
+            , "    ___    "
+            , "  .'   `.  "
+            , "  |`---'|  "
+            , "  |     |  "
+            , "  `.___.'  "
+            , "           "
+            ]
+        );
+
+        this.root.add_child(bottle);
+
+        this.update();
+
+        this.assert_area(
+            [ "           "
+            , "    ___    "
+            , "  .'   `.  "
+            , "  |`---'|  "
+            , "  |     |  "
+            , "  `.___.'  "
+            , "           "
+            ]
+        );
+
+        this.clear_surface();
+
+        bottle.ascii.set(3, 0, new hase.display.Symbol("~".code));
+        bottle.ascii.set(4, 0, new hase.display.Symbol("}".code));
+        bottle.ascii.set(5, 0, new hase.display.Symbol("~".code));
+        bottle.ascii.set(6, 0, new hase.display.Symbol("{".code));
+        bottle.ascii.set(7, 0, new hase.display.Symbol("~".code));
+
+        bottle.ascii.set(4, 1, new hase.display.Symbol("~".code));
+        bottle.ascii.set(5, 1, new hase.display.Symbol("{".code));
+        bottle.ascii.set(6, 1, new hase.display.Symbol("~".code));
+
+        bottle.ascii.set(4, 2, new hase.display.Symbol("{".code));
+        bottle.ascii.set(5, 2, new hase.display.Symbol("~".code));
+        bottle.ascii.set(6, 2, new hase.display.Symbol("}".code));
+
+        this.assertFalse(bottle.is_dirty);
+
+        this.update();
+
+        this.assert_area(
+            [ "   ~}~{~   "
+            , "    ~{~    "
+            , "   '{~}`   "
+            , "           "
+            , "           "
+            , "           "
+            , "           "
+            ]
+        );
+    }
+
     public function test_destroy():Void
     {
         var circle:hase.display.Sprite = this.create_sprite(

@@ -26,9 +26,8 @@ class Sprite extends Object
 {
     public var ascii(default, set):Image;
 
-    @:allow(hase.display.Surface)
-    @:allow(hase.term.renderer.Interface)
-    private var dirty_rect(default, null):Rect;
+    public var dirty_rect(default, null):Rect;
+    public var render_rect(get, null):Rect;
 
     public function new()
     {
@@ -39,6 +38,15 @@ class Sprite extends Object
 
     private inline function set_ascii(val:Image):Image
         return this.ascii = this.set_dirty(this.ascii, val);
+
+    private inline function get_render_rect():Rect
+    {
+        return new Rect(
+            this.absolute_x - this.center_x,
+            this.absolute_y - this.center_y,
+            this.ascii.width, this.ascii.height
+        );
+    }
 
     private override function set_surface(val:Surface):Surface
     {
@@ -54,24 +62,29 @@ class Sprite extends Object
     {
         super.update(td);
 
-        if (!this.is_dirty || this.ascii == null || this.surface == null)
+        if (this.ascii == null || this.surface == null)
             return;
 
-        var width:Int = this.ascii.width;
-        var height:Int = this.ascii.height;
+        if (!this.is_dirty && !this.ascii.is_dirty)
+            return;
 
-        var redraw_rect:Rect = this.dirty_rect;
-        this.dirty_rect = new Rect(
-            this.absolute_x - this.center_x,
-            this.absolute_y - this.center_y,
-            width, height
-        );
+        var new_rect:Rect = this.render_rect;
 
-        this.surface.register_redraw(
-            redraw_rect == null ? this.dirty_rect
-                                : redraw_rect & this.dirty_rect
-        );
+        if (this.dirty_rect != null) {
+            if (this.is_dirty) {
+                new_rect.union_(this.dirty_rect);
+            } else {
+                new_rect.x += this.ascii.dirty_rect.x;
+                new_rect.y += this.ascii.dirty_rect.y;
+                new_rect.width = this.ascii.dirty_rect.width;
+                new_rect.height = this.ascii.dirty_rect.height;
+            }
+        }
+
+        this.surface.register_redraw(new_rect);
+        this.dirty_rect = this.render_rect;
 
         this.is_dirty = false;
+        this.ascii.reset_dirty();
     }
 }

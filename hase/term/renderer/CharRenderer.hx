@@ -46,8 +46,10 @@ class CharRenderer implements Interface
             if (sprite.dirty_rect == null || sprite.ascii == null)
                 continue;
 
+            var render_rect:Rect = sprite.render_rect;
+
             // intersection between redraw rectangle and current sprite
-            var common:Null<Rect> = sprite.dirty_rect | rect;
+            var common:Null<Rect> = render_rect | rect;
             if (common == null)
                 continue;
 
@@ -56,8 +58,8 @@ class CharRenderer implements Interface
             var rel_redraw_y:Int = common.y - rect.y;
 
             // relative within current sprite
-            var rel_sprite_x:Int = common.x - sprite.dirty_rect.x;
-            var rel_sprite_y:Int = common.y - sprite.dirty_rect.y;
+            var rel_sprite_x:Int = common.x - render_rect.x;
+            var rel_sprite_y:Int = common.y - render_rect.y;
 
             #if debug
             if (sprite.is_dirty) {

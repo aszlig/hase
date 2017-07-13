@@ -134,13 +134,6 @@ class Animation extends Sprite
             this.ascii = Image.from_raster(this.frames[frame_id].image);
         else
             this.ascii.merge_raster(this.frames[frame_id].image);
-
-        // XXX: Remove this as soon we have implemented dirty rectangles based
-        //      on Image.
-        if (this.ascii.is_dirty)
-            this.set_dirty();
-
-        this.ascii.reset_dirty();
     }
 
     public function stop():Void
