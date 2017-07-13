@@ -104,7 +104,8 @@ class Object
         return child;
     }
 
-    private function set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
+    #if debug public #else private #end function
+        set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
     {
         if ((from == null && to == null) || from != to) {
             this.is_dirty = true;

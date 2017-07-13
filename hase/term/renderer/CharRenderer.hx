@@ -62,7 +62,7 @@ class CharRenderer implements Interface
             var rel_sprite_y:Int = common.y - render_rect.y;
 
             #if debug
-            if (sprite.is_dirty) {
+            if (hase.utils.Debug.show_dirty_rects && sprite.is_dirty) {
                 var name:String = Type.getClassName(Type.getClass(sprite));
                 if (hase.utils.Debug.current_sprites.exists(name))
                     hase.utils.Debug.current_sprites[name]++;

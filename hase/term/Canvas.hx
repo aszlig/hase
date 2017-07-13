@@ -197,30 +197,32 @@ import hase.geom.Rect;
         });
 
         #if debug
-        var color:Int = Std.random(Canvas.DISTINCT_COLORS.length);
-        this.ctx.strokeStyle = this.ctx.fillStyle =
-            Canvas.DISTINCT_COLORS[color];
+        if (hase.utils.Debug.show_dirty_rects) {
+            var color:Int = Std.random(Canvas.DISTINCT_COLORS.length);
+            this.ctx.strokeStyle = this.ctx.fillStyle =
+                Canvas.DISTINCT_COLORS[color];
 
-        this.ctx.strokeRect(
-            this.cursor2x(rect.x),
-            this.cursor2y(rect.y),
-            area.width * Font.WIDTH,
-            area.height * Font.HEIGHT
-        );
+            this.ctx.strokeRect(
+                this.cursor2x(rect.x),
+                this.cursor2y(rect.y),
+                area.width * Font.WIDTH,
+                area.height * Font.HEIGHT
+            );
 
-        var desc:String = [
-            for (name in hase.utils.Debug.current_sprites.keys())
-                '${name} (${hase.utils.Debug.current_sprites[name]})'
-        ].join(", ");
+            var desc:String = [
+                for (name in hase.utils.Debug.current_sprites.keys())
+                    '${name} (${hase.utils.Debug.current_sprites[name]})'
+            ].join(", ");
 
-        this.ctx.font = "12pt Helvetica";
-        this.ctx.fillText(
-            desc,
-            this.cursor2x(rect.x) + 5,
-            this.cursor2y(rect.y) + area.height * Font.HEIGHT - 5
-        );
+            this.ctx.font = "12pt Helvetica";
+            this.ctx.fillText(
+                desc,
+                this.cursor2x(rect.x) + 5,
+                this.cursor2y(rect.y) + area.height * Font.HEIGHT - 5
+            );
 
-        hase.utils.Debug.current_sprites = new Map();
+            hase.utils.Debug.current_sprites = new Map();
+        }
         #end
     }
 }

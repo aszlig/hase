@@ -129,7 +129,24 @@ class AppBuilder
             {
                 this.__timer = new hase.Timer(this.root);
                 this.__timer.on_tick = function(td:Float) {
+                    #if debug
+                    var key:Key = this.root.terminal.get_key();
+                    switch (key) {
+                        case Char("d".code):
+                            if (hase.utils.Debug.show_dirty_rects) {
+                                hase.utils.Debug.show_dirty_rects = false;
+                                this.root.set_dirty();
+                                this.root.terminal.clear();
+                            } else {
+                                hase.utils.Debug.show_dirty_rects = true;
+                            };
+                        case _:
+                    }
+                    this.on_keypress(key);
+                    #else
                     this.on_keypress(this.root.terminal.get_key());
+                    #end
+
                     return this.update(td);
                 };
                 this.__timer.start();
