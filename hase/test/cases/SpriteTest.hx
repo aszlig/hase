@@ -548,6 +548,207 @@ class SpriteTest extends hase.test.SurfaceTestCase
         );
     }
 
+    public function test_no_overlap_update():Void
+    {
+        var container = new hase.display.Sprite();
+
+        container.x = 5;
+        container.y = 2;
+
+        var face:hase.display.Sprite = this.create_sprite(
+            [ "           "
+            , " ,-.. ..-. "
+            , " ``-'.`-'' "
+            , " |  ` '  | "
+            , " ||vvvvv|| "
+            , "  `^^^^^'  "
+            ]
+        );
+
+        face.x = 2;
+        face.y = 2;
+
+        container.add_child(face);
+
+        var head:hase.display.Sprite = this.create_sprite(
+            [ "   .-----.   "
+            , " .'       `. "
+            , " :         : "
+            , " :         : "
+            , " :         : "
+            , " :         : "
+            ]
+        );
+
+        head.x = 1;
+        head.y = 0;
+
+        container.add_child(head);
+
+        this.root.add_child(container);
+
+        var hat:hase.display.Sprite = this.create_sprite(
+            [ "               "
+            , "    ..:::..    "
+            , " .:;;;;;;;;;:. "
+            , " :           : "
+            , "               "
+            ]
+        );
+
+        hat.y = 1;
+        hat.x = 5;
+
+        this.root.add_child(hat);
+
+        this.update();
+
+        this.assert_area(
+            [ "                         "
+            , "                         "
+            , "         ..:::..         "
+            , "      .:;;;;;;;;;:.      "
+            , "      ::         ::      "
+            , "       :,-.. ..-.:       "
+            , "       :``-'.`-'':       "
+            , "       :|  ` '  |:       "
+            , "        ||vvvvv||        "
+            , "         `^^^^^'         "
+            , "                         "
+            ]
+        );
+
+        this.clear_surface(new hase.display.Symbol(".".code));
+
+        this.update();
+
+        this.assert_area(
+            [ "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            , "........................."
+            ]
+        );
+
+        face.y -= 1;
+
+        this.update();
+
+        this.assert_area(
+            [ "........................."
+            , "........................."
+            , "........................."
+            , ".......:;;;;;;;;;:......."
+            , ".......:,-.. ..-.:......."
+            , ".......:``-'.`-'':......."
+            , ".......:|  ` '  |:......."
+            , ".......:||vvvvv||:......."
+            , ".......  `^^^^^'  ......."
+            , ".......           ......."
+            , "........................."
+            ]
+        );
+
+        container.y += 2;
+
+        this.clear_surface(new hase.display.Symbol(":".code));
+
+        this.update();
+
+        this.assert_area(
+            [ ":::::::::::::::::::::::::"
+            , ":::::::::::::::::::::::::"
+            , "::::::   ..:::..   ::::::"
+            , "::::::.:;;;;;;;;;:.::::::"
+            , ":::::::  .-----.  :::::::"
+            , ":::::: .'       `. ::::::"
+            , ":::::: :,-.. ..-.: ::::::"
+            , ":::::: :``-'.`-'': ::::::"
+            , ":::::: :|  ` '  |: ::::::"
+            , ":::::: :||vvvvv||: ::::::"
+            , "::::::   `^^^^^'   ::::::"
+            , ":::::::::::::::::::::::::"
+            , ":::::::::::::::::::::::::"
+            ]
+        );
+
+        face.y += 1;
+
+        this.clear_surface(new hase.display.Symbol("x".code));
+
+        this.update();
+
+        this.assert_area(
+            [ "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            , "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            , "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            , "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            , "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            , "xxxxxxx.'       `.xxxxxxx"
+            , "xxxxxxx:         :xxxxxxx"
+            , "xxxxxxx:,-.. ..-.:xxxxxxx"
+            , "xxxxxxx:``-'.`-'':xxxxxxx"
+            , "xxxxxxx:|  ` '  |:xxxxxxx"
+            , "xxxxxxx ||vvvvv|| xxxxxxx"
+            , "xxxxxxx  `^^^^^'  xxxxxxx"
+            , "xxxxxxxxxxxxxxxxxxxxxxxxx"
+            ]
+        );
+
+        hat.y -= 1;
+
+        this.clear_surface(new hase.display.Symbol("%".code));
+
+        this.update();
+
+        this.assert_area(
+            [ "%%%%%               %%%%%"
+            , "%%%%%    ..:::..    %%%%%"
+            , "%%%%% .:;;;;;;;;;:. %%%%%"
+            , "%%%%% :           : %%%%%"
+            , "%%%%%    .-----.    %%%%%"
+            , "%%%%%  .'       `.  %%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            , "%%%%%%%%%%%%%%%%%%%%%%%%%"
+            ]
+        );
+
+        container.y -= 1;
+
+        this.clear_surface(new hase.display.Symbol("*".code));
+
+        this.update();
+
+        this.assert_area(
+            [ "*************************"
+            , "*************************"
+            , "*************************"
+            , "******:  .-----.  :******"
+            , "****** .'       `. ******"
+            , "****** :         : ******"
+            , "****** :,-.. ..-.: ******"
+            , "****** :``-'.`-'': ******"
+            , "****** :|  ` '  |: ******"
+            , "******  ||vvvvv||  ******"
+            , "******   `^^^^^'   ******"
+            , "******             ******"
+            , "*************************"
+            ]
+        );
+    }
+
     public function test_destroy():Void
     {
         var circle:hase.display.Sprite = this.create_sprite(

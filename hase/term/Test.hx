@@ -52,10 +52,13 @@ class Test implements Interface
         });
     }
 
-    public function clear():Void
+    public function clear(?sym:hase.display.Symbol):Void
     {
+        if (sym == null)
+            sym = new hase.display.Symbol(" ".code);
+
         for (c in 0...this.area.length)
-            this.area[c] = new hase.display.Symbol(" ".code);
+            this.area[c] = sym;
     }
 
     public function extract(x:Int, y:Int, width:Int, height:Int):Array<String>

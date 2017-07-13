@@ -48,8 +48,8 @@ class SurfaceTestCase extends haxe.unit.TestCase
         return hase.geom.Raster.from_2d_array(img, 0);
     }
 
-    public function clear_surface():Void
-        this.terminal.clear();
+    public function clear_surface(?sym:hase.display.Symbol):Void
+        this.terminal.clear(sym);
 
     public function update(?td:Float = 1000):Void
         return this.root.update(td);
