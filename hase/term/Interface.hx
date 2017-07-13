@@ -38,4 +38,6 @@ interface Interface
     public var height:Int;
     public function exit(code:Int):Void;
     public function get_key():hase.input.Key;
+
+    public function clear(?sym:hase.display.Symbol):Void;
 }

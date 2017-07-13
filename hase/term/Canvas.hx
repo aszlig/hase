@@ -98,6 +98,16 @@ import hase.geom.Rect;
         return Char(key.charCode);
     }
 
+    public function clear(?sym:hase.display.Symbol):Void
+    {
+        this.ctx.fillStyle = "black";
+        this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        if (sym != null) {
+            // TODO!
+        }
+    }
+
     private inline function cursor2x(x:Int):Int
     {
         #if debug

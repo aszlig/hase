@@ -180,20 +180,25 @@ typedef TermSize = {
         #end
     }
 
-    private inline function begin_op():Void
+    public function clear(?sym:hase.display.Symbol):Void
     {
-        this.buffer = new StringBuf();
+        this.begin_op();
+        if (sym == null) {
+            this.write_csi("2J");
+        } else {
+            // TODO!
+        }
+        this.flush_op();
     }
+
+    private inline function begin_op():Void
+        this.buffer = new StringBuf();
 
     private inline function flush_op():Void
-    {
         this.output.writeString(this.buffer.toString());
-    }
 
     private inline function write_csi(sequence:String):Void
-    {
         this.buffer.add("\x1b[" + sequence);
-    }
 
     private inline function set_color(?fg:Int, ?bg:Int):Void
     {
