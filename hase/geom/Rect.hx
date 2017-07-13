@@ -167,12 +167,15 @@ abstract Rect (Array<Int>)
     public inline static function union(r1:Rect, r2:Rect):Rect
         return r1.copy().union_(r2);
 
-    public function union_(other:Rect):Rect
+    public inline function union_(other:Rect):Rect
+        return Rect.union_values_(other.x, other.y, other.width, other.height);
+
+    public function union_values_(x, y, width, height):Rect
     {
-        Rect.width = other.right > Rect.right ? other.right : Rect.right;
-        Rect.height = other.bottom > Rect.bottom ? other.bottom : Rect.bottom;
-        Rect.width -= Rect.x = other.x > Rect.x ? Rect.x : other.x;
-        Rect.height -= Rect.y = other.y > Rect.y ? Rect.y : other.y;
+        Rect.width = x + width > Rect.right ? x + width : Rect.right;
+        Rect.height = y + height > Rect.bottom ? y + height : Rect.bottom;
+        Rect.width -= Rect.x = x > Rect.x ? Rect.x : x;
+        Rect.height -= Rect.y = y > Rect.y ? Rect.y : y;
         return cast this;
     }
 }
