@@ -64,6 +64,58 @@ class RectTest extends haxe.unit.TestCase
         this.assertEquals(10, result.height);
     }
 
+    public function test_union_disconnected():Void
+    {
+        var r1:Rect = new Rect(1, 1, 2, 2);
+        var r2:Rect = new Rect(5, 5, 1, 1);
+
+        var result:Rect = r1 & r2;
+
+        this.assertEquals(1, result.x);
+        this.assertEquals(1, result.y);
+        this.assertEquals(5, result.width);
+        this.assertEquals(5, result.height);
+    }
+
+    public function test_union_disconnected_single_cells():Void
+    {
+        var r1:Rect = new Rect(4, 4, 1, 1);
+        var r2:Rect = new Rect(6, 4, 1, 1);
+
+        var result:Rect = r1 & r2;
+
+        this.assertEquals(4, result.x);
+        this.assertEquals(4, result.y);
+        this.assertEquals(3, result.width);
+        this.assertEquals(1, result.height);
+    }
+
+    public function test_union_disconnected_single_cells_swapped():Void
+    {
+        var r1:Rect = new Rect(6, 4, 1, 1);
+        var r2:Rect = new Rect(4, 4, 1, 1);
+
+        var result:Rect = r1 & r2;
+
+        this.assertEquals(4, result.x);
+        this.assertEquals(4, result.y);
+        this.assertEquals(3, result.width);
+        this.assertEquals(1, result.height);
+    }
+
+    public function test_union_disconnected_single_cells_diagonal():Void
+    {
+        var r1:Rect = new Rect(4, 4, 1, 1);
+        var r2:Rect = new Rect(6, 6, 1, 1);
+
+        var result:Rect = r1 & r2;
+
+        this.assertEquals(4, result.x);
+        this.assertEquals(4, result.y);
+        this.assertEquals(3, result.width);
+        this.assertEquals(3, result.height);
+    }
+
     public function test_intersects_horizontal():Void
     {
         var r:Rect = new Rect(5, 0, 10, 10);
