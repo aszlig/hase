@@ -38,6 +38,9 @@ class ImageTest extends haxe.unit.TestCase
         this.assertFalse(img.is_dirty);
 
         img.width = 11;
+        this.assertFalse(img.is_dirty);
+
+        img.unsafe_set(10, 9, new Symbol("F".code));
         this.assertTrue(img.is_dirty);
 
         this.assertEquals(10, img.dirty_rect.x);
@@ -61,6 +64,9 @@ class ImageTest extends haxe.unit.TestCase
         this.assertFalse(img.is_dirty);
 
         img.height = 11;
+        this.assertFalse(img.is_dirty);
+
+        img.unsafe_set(9, 10, new Symbol("F".code));
         this.assertTrue(img.is_dirty);
 
         this.assertEquals(10, img.dirty_rect.y);
