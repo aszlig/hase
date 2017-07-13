@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, buildExample ? true, runTests ? true }:
+{ pkgs ? import <nixpkgs> {}, runTests ? true }:
 
 let
   inherit (pkgs) lib;
@@ -37,14 +37,10 @@ in pkgs.stdenv.mkDerivation rec {
   nativeBuildInputs = [ pkgs.phantomjs ];
   buildInputs = [ pkgs.haxe pkgs.hxcpp pkgs.neko ];
 
-  outputs = lib.singleton "out" ++ lib.optional buildExample "example";
-
   buildPhase = lib.optionalString runTests ''
     ${forEachTest (compileWith "neko")}
     ${forEachTest (compileWith "js")}
     ${forEachTest (compileWith "cpp")}
-  '' + lib.optionalString buildExample ''
-    (cd example && haxe example.hxml)
   '';
 
   doCheck = runTests;
@@ -67,10 +63,17 @@ in pkgs.stdenv.mkDerivation rec {
     libname = "hase";
     inherit version;
     files = "hase";
-  } + lib.optionalString buildExample ''
-    install -vD example/build/Example "$example/bin/example"
-    install -vD example/example.n "$example/libexec/hase/example.n"
-    install -m 0644 -vD example/example.js "$example/share/hase/example.js"
-    install -m 0644 -vD example/example.html "$example/share/hase/example.html"
-  '';
+  };
+
+  passthru.example = pkgs.stdenv.mkDerivation {
+    name = "hase-example-${version}";
+    inherit src version buildInputs;
+    buildPhase = "cd example && haxe example.hxml";
+    installPhase = ''
+      install -vD build/Example "$out/bin/example"
+      install -vD example.n "$out/libexec/hase/example.n"
+      install -m 0644 -vD example.js "$out/share/hase/example.js"
+      install -m 0644 -vD example.html "$out/share/hase/example.html"
+    '';
+  };
 }
