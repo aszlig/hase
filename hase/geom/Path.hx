@@ -68,7 +68,9 @@ abstract Path (Array<PVector>)
         }
     }
 
-    public function rasterize<T>(m:Raster<T>, f:Int -> Int -> T -> T):Raster<T>
+    public function
+        rasterize<T>(m:hase.iface.Raster<T>,
+                     f:Int -> Int -> T -> T):hase.iface.Raster<T>
     {
         if (this.length == 1) {
             var x:Int = Std.int(this[0].x);

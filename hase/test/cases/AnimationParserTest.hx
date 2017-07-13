@@ -21,8 +21,9 @@
 package hase.test.cases;
 
 import hase.display.Animation;
-import hase.display.Image;
 import hase.display.Symbol;
+
+import hase.geom.Raster;
 
 class AnimationParserTest extends hase.test.SurfaceTestCase
 {
@@ -31,7 +32,8 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
         return (new hase.utils.AnimationParser(data.join("\n"))).parse();
     }
 
-    private inline function assert_row(row:String, actual:Image, pos:Int):Void
+    private inline function
+        assert_row(row:String, actual:Raster<Symbol>, pos:Int):Void
     {
         this.assertEquals(row.length, actual.width);
         actual.map_(function(x:Int, y:Int, sym:Symbol) {

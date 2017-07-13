@@ -31,7 +31,8 @@ class SurfaceTestCase extends haxe.unit.TestCase
         this.root = new hase.display.Surface(this.terminal);
     }
 
-    public function create_image(data:Array<String>):hase.display.Image
+    public function
+        create_image(data:Array<String>):hase.geom.Raster<hase.display.Symbol>
     {
         var img:Array<Array<hase.display.Symbol>> = new Array();
 
@@ -68,7 +69,9 @@ class SurfaceTestCase extends haxe.unit.TestCase
     public function create_sprite(image:Array<String>):hase.display.Sprite
     {
         var sprite:hase.display.Sprite = new hase.display.Sprite();
-        sprite.ascii = this.create_image(image);
+        sprite.ascii = hase.display.Image.from_raster(
+            this.create_image(image)
+        );
         return sprite;
     }
 

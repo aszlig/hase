@@ -20,7 +20,6 @@
  */
 package hase.utils;
 
-import hase.display.Image;
 import hase.display.Symbol;
 import hase.geom.Rect;
 
@@ -235,9 +234,9 @@ private class BorderGroup
 
 class FrameAreaParser
 {
-    private var area:Image;
+    private var area:hase.geom.Raster<Symbol>;
 
-    public function new(area:Image)
+    public function new(area:hase.geom.Raster<Symbol>)
         this.area = area;
 
     private function parse_boxes():Array<Box>

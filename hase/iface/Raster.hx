@@ -18,27 +18,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package hase.utils;
+package hase.iface;
 
-import hase.display.Symbol;
+interface Raster<T>
+{
+    public var width(get, set):Int;
+    public var height(get, set):Int;
 
-enum Variant {
-    Plain;
-    Color16;
-    ColorRed;
-    ColorGreen;
-    ColorBlue;
-    ColorGrey;
+    public function clear(?val:T):Void;
+
+    public function unsafe_get(x:Int, y:Int):T;
+    public function unsafe_set(x:Int, y:Int, val:T):T;
+
+    public function get(x:Int, y:Int):T;
+    public function set(x:Int, y:Int, val:T):T;
+
+    public function map_(f:Int -> Int -> T -> Void):Void;
 }
-
-enum Header {
-    ChrAttr(key:String, val:Symbol);
-    StrAttr(key:String, val:String);
-    IntAttr(key:String, val:Int);
-    Variant(variant:Variant);
-}
-
-typedef Container = {
-    var headers:Array<Header>;
-    var body:hase.geom.Raster<Symbol>;
-};

@@ -20,8 +20,8 @@
  */
 package hase.test.cases;
 
-import hase.display.Image;
 import hase.display.Symbol;
+import hase.geom.Raster;
 
 import hase.utils.ParserTypes;
 
@@ -29,13 +29,14 @@ class FrameAreaParserTest extends haxe.unit.TestCase
 {
     private function parse(data:Array<String>):Array<Container>
     {
-        var img:Image = hase.geom.Raster.from_2d_array([
+        var img:Raster<Symbol> = Raster.from_2d_array([
             for (row in data) [for (c in 0...row.length) row.charCodeAt(c)]
         ], 0);
         return (new hase.utils.FrameAreaParser(img)).parse();
     }
 
-    private inline function assert_row(row:String, actual:Image, pos:Int):Void
+    private inline function
+        assert_row(row:String, actual:Raster<Symbol>, pos:Int):Void
     {
         this.assertEquals(row.length, actual.width);
         this.assertFalse(pos >= actual.height);

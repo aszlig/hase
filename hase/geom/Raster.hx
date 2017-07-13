@@ -20,20 +20,24 @@
  */
 package hase.geom;
 
-class Raster<T>
+class Raster<T> implements hase.iface.Raster<T>
 {
     private var _width:Int;
     private var _height:Int;
+
+    @:allow(hase.display.Image)
     private var default_value:T;
 
     @:allow(hase.geom.Bitmap.set)
     @:allow(hase.geom.Bitmap.unset)
     @:allow(hase.geom.Bitmap.set_rect)
+    @:allow(hase.display.Image)
     private var data:Array<T>;
 
     public var width(get, set):Int;
     public var height(get, set):Int;
 
+    @:allow(hase.display.Image)
     private function new(width:Int, height:Int, data:Array<T>, defval:T)
     {
         this._width = width;

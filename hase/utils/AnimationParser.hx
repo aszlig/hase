@@ -54,7 +54,8 @@ class AnimationParser
         return frame;
     }
 
-    private function flood_fill(x:Int, y:Int, img:Image):Image
+    private function
+        flood_fill(x:Int, y:Int, img:Raster<Symbol>):Raster<Symbol>
     {
         var queue:Array<{ x:Int, y:Int }> = new Array();
 
@@ -82,7 +83,7 @@ class AnimationParser
         return img;
     }
 
-    private function apply_alpha(image:Image):Image
+    private function apply_alpha(image:Raster<Symbol>):Raster<Symbol>
     {
         // start from one of the corners
         for (x in [0, image.width - 1])
@@ -135,7 +136,7 @@ class AnimationParser
                 container_data.push(line);
         }
 
-        var container_area:Image = Raster.from_2d_array([
+        var container_area:Raster<Symbol> = Raster.from_2d_array([
             for (line in container_data)
                 [for (c in 0...line.length) line.charCodeAt(c)]
         ], 0);
@@ -188,7 +189,9 @@ class AnimationParser
 
         return {
             headers: headers,
-            body: merged.map(function(x, y, cm:ColorMixer) return cm.merge(), 0)
+            body: merged.map(
+                function(x, y, cm:ColorMixer) return cm.merge(), 0
+            )
         }
     }
 

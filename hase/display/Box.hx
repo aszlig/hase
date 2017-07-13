@@ -74,9 +74,7 @@ class BoxBase extends Sprite
     private function rebuild():Void
     {
         if (this.ascii == null) {
-            this.ascii = Image.create(
-                this.width, this.height, new Symbol(0), new Symbol(0)
-            );
+            this.ascii = Image.create(this.width, this.height);
         }
 
         this.ascii.set(0, 0, this.corner_tl);

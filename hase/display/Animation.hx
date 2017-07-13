@@ -23,7 +23,7 @@ package hase.display;
 import haxe.macro.Expr;
 
 typedef FrameData = {
-    image:Image,
+    image:hase.geom.Raster<Symbol>,
     ?refpoint_x:Int,
     ?refpoint_y:Int,
     ?key:String,
@@ -129,7 +129,16 @@ class Animation extends Sprite
     {
         var frame_id:Int = this.current < 0 ? -this.current : this.current;
         this.set_frame_options(this.frames[frame_id]);
-        this.ascii = this.frames[frame_id].image;
+        if (this.ascii == null)
+            this.ascii = Image.from_raster(this.frames[frame_id].image);
+        else
+            this.ascii.merge_raster(this.frames[frame_id].image);
+        // XXX: Remove this as soon we have implemented dirty rectangles based
+        //      on Image.
+        if (this.ascii.is_dirty) {
+            this.ascii.is_dirty = false;
+            this.set_dirty();
+        }
     }
 
     public function stop():Void

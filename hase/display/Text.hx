@@ -28,8 +28,7 @@ class Text extends Sprite
     public function new(text:String)
     {
         super();
-        this.ascii =
-            Image.create(text.length, 1, new Symbol(0), new Symbol(0));
+        this.ascii = Image.create(text.length, 1);
         this.set_text(text);
     };
 
