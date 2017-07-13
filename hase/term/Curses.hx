@@ -43,6 +43,7 @@ typedef TermSize = {
     private var output:haxe.io.Output;
     private var buffer:StringBuf;
 
+    private var x_jut:Bool;
     private var last_x:Int;
     private var last_y:Int;
     private var last_fg:Null<Int>;
@@ -61,6 +62,7 @@ typedef TermSize = {
 
         this.init_term();
 
+        this.x_jut = false;
         this.last_x = this.last_y = 0;
         this.last_fg = this.last_bg = null;
     }
@@ -84,12 +86,13 @@ typedef TermSize = {
         this.flush_op();
     }
 
-    public inline function exit(code:Int):Void
+    private function exit_(code:Int, clear:Bool = false):Void
     {
         this.begin_op();
 
         this.write_csi("?25h");
-        this.write_csi("2J");
+        if (clear)
+            this.write_csi("2J");
         this.buffer.add("\x1b8");
 
         this.flush_op();
@@ -100,6 +103,9 @@ typedef TermSize = {
         RawTerm.exit_now(code);
         #end
     }
+
+    public inline function exit(code:Int):Void
+        return this.exit_(code, true);
 
     public inline function get_key():Key
     {
@@ -186,7 +192,11 @@ typedef TermSize = {
         if (sym == null) {
             this.write_csi("2J");
         } else {
-            // TODO!
+            this.set_color(sym.fgcolor, sym.bgcolor);
+            this.move_to(0, 0);
+            for (pos in 0...this.width * this.height)
+                this.write_char(sym);
+            this.write_csi("m");
         }
         this.flush_op();
     }
@@ -200,7 +210,7 @@ typedef TermSize = {
     private inline function write_csi(sequence:String):Void
         this.buffer.add("\x1b[" + sequence);
 
-    private inline function set_color(?fg:Int, ?bg:Int):Void
+    private function set_color(?fg:Int, ?bg:Int):Void
     {
         var mods:Array<String> = [];
 
@@ -218,22 +228,52 @@ typedef TermSize = {
             this.write_csi(mods.join(";") + "m");
     }
 
+    private function write_char(sym:hase.display.Symbol):Void
+    {
+        if (this.last_x + 1 == this.width && !this.x_jut) {
+            this.x_jut = true;
+        } else {
+            this.last_x++;
+            this.x_jut = false;
+        }
+
+        while (this.last_x >= this.width) {
+            this.last_y++;
+            this.last_x -= this.width - 1;
+        }
+
+        if (this.last_y < this.height)
+            this.buffer.addChar(sym.ordinal);
+        else {
+            this.begin_op();
+            this.write_csi("1;31m");
+            this.write_csi('${this.height};0f');
+            this.buffer.add('Terminal size overflow at position ' +
+                            '(${this.last_x}, ${this.last_y})!');
+            this.buffer.addChar("\n".code);
+            this.flush_op();
+            this.exit_(74);
+        }
+    }
+
+    private function move_to(x:Int, y:Int):Void
+    {
+        if (this.last_y != y || this.last_x != x) {
+            this.write_csi('${y + 1};${x + 1}f');
+            this.last_x = x;
+            this.last_y = y;
+            this.x_jut = false;
+        }
+    }
+
     private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
         this.begin_op();
 
         area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
-            var abs_x:Int = rect.x + x;
-            var abs_y:Int = rect.y + y;
-
-            if (this.last_y != abs_y || this.last_x != abs_x)
-                this.write_csi('${abs_y + 1};${abs_x + 1}f');
-
+            this.move_to(rect.x + x, rect.y + y);
             this.set_color(sym.fgcolor, sym.bgcolor);
             this.buffer.addChar(sym.ordinal);
-
-            this.last_x = abs_x >= this.width ? abs_x : abs_x + 1;
-            this.last_y = abs_y;
         });
 
         this.flush_op();
