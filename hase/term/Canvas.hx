@@ -104,7 +104,9 @@ import hase.geom.Rect;
         this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         if (sym != null) {
-            // TODO!
+            for (y in 0...this.height)
+                for (x in 0...this.width)
+                    this.draw_symbol(x, y, sym);
         }
     }
 
@@ -173,18 +175,25 @@ import hase.geom.Rect;
         return cached;
     }
 
+    private function draw_symbol(x:Int, y:Int, sym:hase.display.Symbol):Void
+    {
+        var cached:Int = this.font_cache.get(sym.get_hash());
+
+        if (cached == null)
+            cached = this.add_to_font_cache(sym);
+
+        this.ctx.drawImage(
+            this.font_canvas, cached, 0,
+            Font.WIDTH, Font.HEIGHT,
+            this.cursor2x(x), this.cursor2y(y),
+            Font.WIDTH, Font.HEIGHT
+        );
+    }
+
     private function draw_area(rect:Rect, area:hase.display.Image):Void
     {
         area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
-            var cached:Int = this.font_cache.get(sym.get_hash());
-
-            if (cached == null)
-                cached = this.add_to_font_cache(sym);
-
-            this.ctx.drawImage(this.font_canvas,
-                cached, 0, Font.WIDTH, Font.HEIGHT,
-                this.cursor2x(rect.x + x), this.cursor2y(rect.y + y),
-                Font.WIDTH, Font.HEIGHT);
+            this.draw_symbol(rect.x + x, rect.y + y, sym);
         });
 
         #if debug
