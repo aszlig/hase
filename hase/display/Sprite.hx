@@ -67,14 +67,12 @@ class Sprite extends Object
         var new_rect:Rect = this.render_rect;
 
         if (this.dirty_rect != null) {
-            if (this.is_dirty) {
+            new_rect.x += this.ascii.dirty_rect.x;
+            new_rect.y += this.ascii.dirty_rect.y;
+            new_rect.width = this.ascii.dirty_rect.width;
+            new_rect.height = this.ascii.dirty_rect.height;
+            if (this.is_dirty)
                 new_rect.union_(this.dirty_rect);
-            } else {
-                new_rect.x += this.ascii.dirty_rect.x;
-                new_rect.y += this.ascii.dirty_rect.y;
-                new_rect.width = this.ascii.dirty_rect.width;
-                new_rect.height = this.ascii.dirty_rect.height;
-            }
         }
 
         this.surface.register_redraw(new_rect);
