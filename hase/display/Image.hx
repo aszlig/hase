@@ -44,14 +44,14 @@ class Image implements hase.iface.Raster<Symbol>
     {
         if (width > this.raster.width) {
             this.union_rect(
-                this.raster.width - 1,
+                this.raster.width,
                 0,
                 width - this.raster.width,
                 this.raster.height
             );
         } else if (width < this.raster.width) {
             this.union_rect(
-                width - 1,
+                width,
                 0,
                 this.raster.width - width,
                 this.raster.height
@@ -68,14 +68,14 @@ class Image implements hase.iface.Raster<Symbol>
         if (height > this.raster.height) {
             this.union_rect(
                 0,
-                this.raster.height - 1,
+                this.raster.height,
                 this.raster.width,
                 height - this.raster.height
             );
         } else if (height < this.raster.height) {
             this.union_rect(
                 0,
-                height - 1,
+                height,
                 this.raster.width,
                 this.raster.height - height
             );

@@ -880,6 +880,452 @@ class AnimationTest extends hase.test.SurfaceTestCase
         }
     }
 
+    public function test_complex_character_changes():Void
+    {
+        var weed:hase.display.Animation = this.create_animation([
+            [ "           "
+            , " `. `, .'  "
+            , "   `.' ,`  "
+            , "   .','    "
+            , "           "
+            ],
+            [ "      . .  "
+            , "   :  ; ;  "
+            , "   `.' ,`  "
+            , "   .','    "
+            , "           "
+            ],
+            [ "     `. .  "
+            , "   :' ; ;  "
+            , "   `.' ,`  "
+            , "     ''    "
+            , "           "
+            ],
+            [ "    .`..   "
+            , "    : ;:   "
+            , "    :' :   "
+            , "     ''    "
+            , "           "
+            ],
+            [ "     `..   "
+            , "  : : ; .' "
+            , "   `:' :   "
+            , "     ''    "
+            , "           "
+            ],
+            [ "  .   . :  "
+            , "  `. `. ;  "
+            , "   `.' ,`  "
+            , "    `,'    "
+            , "           "
+            ],
+            [ "  . .   .  "
+            , "  `. : `.  "
+            , "   `.' ,`  "
+            , "   .'.'    "
+            , "           "
+            ]
+        ]);
+
+        weed.loopback = true;
+        weed.x = 8;
+        weed.y = 3;
+        weed.z = 3;
+
+        this.root.add_child(weed);
+
+        var branch:hase.display.Animation = this.create_animation([
+            [ "                                 "
+            , "        _                        "
+            , "   __ .' )                       "
+            , "  `. `.`-`.        _____.-----.  "
+            , "    `~~~- _`------'          ,`  "
+            , "   .--'`-' `------.__________,`  "
+            , "   `---'                         "
+            , "                                 "
+            ],
+            [ "                                 "
+            , "         .-.                     "
+            , "     .'. :,'                     "
+            , "     : `-`.        ___________   "
+            , "      `--._`------'          ,`  "
+            , "     .'`-' `------._____     ,`  "
+            , "     `--'               `-----'  "
+            , "                                 "
+            ]
+        ]);
+
+        branch.loopback = true;
+        branch.z = 1;
+
+        this.root.add_child(branch);
+
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "        _                        "
+            , "   __ .' )                       "
+            , "  `. `.`-`.        _____.-----.  "
+            , "    `~~~-`.``,-.'-'          ,`  "
+            , "   .--'`-' `.'-,`-.__________,`  "
+            , "   `---'   .','                  "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.x -= 1;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "         .-.                     "
+            , "     .'. :,'                     "
+            , "     : `-`.  . .   ___________   "
+            , "      `--.:`-;-;--'          ,`  "
+            , "     .'`-'`.'-,`--._____     ,`  "
+            , "     `--' .','          `-----'  "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.x -= 3;
+        weed.y += 2;
+        branch.x += 3;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "           _                     "
+            , "      __ .' )                    "
+            , "     `. `.`-`.        _____.-----"
+            , "       `~~~- _`------'          ,"
+            , "      .--`.-. `------.__________,"
+            , "      `:'-; ;                    "
+            , "       `.' ,`                    "
+            , "         ''                      "
+            , "                                 "
+            ]
+        );
+
+        weed.x -= 3;
+        weed.y += 2;
+        weed.fps = 20;
+        branch.y -= 1;
+        this.update();
+
+        this.assert_area(
+            [ "            .-.                  "
+            , "        .'. :,'                  "
+            , "        : `-`.        ___________"
+            , "         `--._`------'          ,"
+            , "        .'`-' `------._____     ,"
+            , "        `--'               `-----"
+            , "                                 "
+            , "   .   . :                       "
+            , "   `. `. ;                       "
+            , "    `.' ,`                       "
+            , "     `,'                         "
+            ]
+        );
+
+        weed.y -= 2;
+        weed.x += 4;
+        this.update();
+
+        this.assert_area(
+            [ "           _                     "
+            , "      __ .' )                    "
+            , "     `. `.`-`.        _____.-----"
+            , "       `~~~- _`------'          ,"
+            , "      .--'`-' `------.__________,"
+            , "      `---'. .                   "
+            , "        :  ; ;                   "
+            , "        `.' ,`                   "
+            , "        .','                     "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.y -= 2;
+        weed.x += 4;
+        branch.x -= 1;
+        this.update();
+
+        this.assert_area(
+            [ "           .-.                   "
+            , "       .'. :,'                   "
+            , "       : `-`.        ___________ "
+            , "        `--._.`..---'          ,`"
+            , "       .'`-' :-;:---._____     ,`"
+            , "       `--'  :' :         `-----'"
+            , "              ''                 "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.y -= 1;
+        weed.x += 4;
+        branch.x -= 1;
+        branch.y += 1;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "         _                       "
+            , "    __ .' )    .   . :           "
+            , "   `. `.`-`.   `. `._;___.-----. "
+            , "     `~~~- _`---`.'',`        ,` "
+            , "    .--'`-' `----`,'__________,` "
+            , "    `---'                        "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.x += 4;
+        branch.x -= 2;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "        .-.                      "
+            , "    .'. :,'            . .       "
+            , "    : `-`.        __:__;_;___    "
+            , "     `--._`------'  `.' ,`  ,`   "
+            , "    .'`-' `------.__.','    ,`   "
+            , "    `--'               `-----'   "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.y += 3;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "       _                         "
+            , "  __ .' )                        "
+            , " `. `.`-`.        _____.-----.   "
+            , "   `~~~- _`------'          ,`   "
+            , "  .--'`-' `------.___.`..___,`   "
+            , "  `---'              : ;:        "
+            , "                     :' :        "
+            , "                      ''         "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+
+        weed.y += 3;
+        weed.x -= 10;
+        branch.y += 3;
+        this.update();
+
+        this.assert_area(
+            [ "                                 "
+            , "                                 "
+            , "                                 "
+            , "                                 "
+            , "        .-.                      "
+            , "    .'. :,'                      "
+            , "    : `-`.        ___________    "
+            , "     `--._`------'          ,`   "
+            , "    .'`-'.`--.-:-._____     ,`   "
+            , "    `--' `. `. ;       `-----'   "
+            , "          `.' ,`                 "
+            , "           `,'                   "
+            , "                                 "
+            , "                                 "
+            ]
+        );
+    }
+
+    public function test_character_grow_shrink():Void
+    {
+        var dashes:hase.display.Animation = this.create_animation([
+            [ "|   |   |"
+            ],
+            [ "| | |"
+            ],
+            [ "-"
+            , "-"
+            , "-"
+            , " "
+            ],
+            [ "-"
+            , " "
+            , "-"
+            , " "
+            , "-"
+            ]
+        ]);
+
+        dashes.x = dashes.y = 1;
+        dashes.loopback = true;
+
+        this.root.add_child(dashes);
+
+        var stars:hase.display.Animation = this.create_animation([
+            [ "*      "
+            , "   *   "
+            , "      *"
+            ],
+            [ "      *"
+            , "   *   "
+            , "*      "
+            , "       "
+            ],
+            [ "*"
+            , " "
+            , "*"
+            , " "
+            , "*"
+            ],
+            [ " * "
+            , " * "
+            , " * "
+            , " * "
+            , " * "
+            ],
+        ]);
+
+        stars.x = stars.y = 1;
+        stars.loopback = true;
+
+        this.root.add_child(stars);
+
+        this.update(3000);
+
+        this.assert_area(
+            [ "                        "
+            , " *                      "
+            , " -                      "
+            , " *                      "
+            , "                        "
+            , " *                      "
+            , "                        "
+            , "                        "
+            , "                        "
+            ]
+        );
+
+        dashes.x = 5;
+        dashes.y = 2;
+
+        stars.x = 8;
+        stars.y = 2;
+
+        this.update();
+
+        this.assert_area(
+            [ "                        "
+            , "                        "
+            , "     -   *              "
+            , "         *              "
+            , "     -   *              "
+            , "         *              "
+            , "     -   *              "
+            , "                        "
+            , "                        "
+            ]
+        );
+
+        stars.fps = 2;
+        stars.x = 6;
+
+        this.update();
+
+        this.assert_area(
+            [ "                        "
+            , "                        "
+            , "     -*                 "
+            , "     -   *              "
+            , "     -      *           "
+            , "                        "
+            , "                        "
+            , "                        "
+            , "                        "
+            ]
+        );
+
+        stars.y -= 1;
+        stars.x += 1;
+        stars.fps = 1;
+
+        dashes.x -= 3;
+        dashes.y += 3;
+
+        this.update();
+
+        this.assert_area(
+            [ "                        "
+            , "             *          "
+            , "          *             "
+            , "       *                "
+            , "                        "
+            , "  | | |                 "
+            , "                        "
+            , "                        "
+            , "                        "
+            ]
+        );
+
+        stars.x -= 2;
+        dashes.fps = 2;
+        dashes.y -= 2;
+        dashes.x += 2;
+        this.update();
+        dashes.x += 4;
+        this.update();
+
+        this.assert_area(
+            [ "                        "
+            , "      *                 "
+            , "      *                 "
+            , "      * -               "
+            , "      * -               "
+            , "      * -               "
+            , "                        "
+            , "                        "
+            , "                        "
+            ]
+        );
+
+        this.update(2000);
+        dashes.fps = 0;
+        dashes.y -= 1;
+        stars.x += 1;
+        stars.y += 2;
+        this.update();
+
+        this.assert_area(
+            [ "                        "
+            , "                        "
+            , "        -               "
+            , "      * -               "
+            , "        -*              "
+            , "            *           "
+            , "                        "
+            , "                        "
+            , "                        "
+            ]
+        );
+    }
+
     public function test_loopback():Void
     {
         var anim:hase.display.Animation = this.create_animation([

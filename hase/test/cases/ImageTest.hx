@@ -40,7 +40,7 @@ class ImageTest extends haxe.unit.TestCase
         img.width = 11;
         this.assertTrue(img.is_dirty);
 
-        this.assertEquals(9, img.dirty_rect.x);
+        this.assertEquals(10, img.dirty_rect.x);
         this.assertEquals(1, img.dirty_rect.width);
 
         img.reset_dirty();
@@ -48,7 +48,7 @@ class ImageTest extends haxe.unit.TestCase
         img.width = 9;
         this.assertTrue(img.is_dirty);
 
-        this.assertEquals(8, img.dirty_rect.x);
+        this.assertEquals(9, img.dirty_rect.x);
         this.assertEquals(2, img.dirty_rect.width);
     }
 
@@ -63,7 +63,7 @@ class ImageTest extends haxe.unit.TestCase
         img.height = 11;
         this.assertTrue(img.is_dirty);
 
-        this.assertEquals(9, img.dirty_rect.y);
+        this.assertEquals(10, img.dirty_rect.y);
         this.assertEquals(1, img.dirty_rect.height);
 
         img.reset_dirty();
@@ -71,7 +71,7 @@ class ImageTest extends haxe.unit.TestCase
         img.height = 9;
         this.assertTrue(img.is_dirty);
 
-        this.assertEquals(8, img.dirty_rect.y);
+        this.assertEquals(9, img.dirty_rect.y);
         this.assertEquals(2, img.dirty_rect.height);
     }
 
