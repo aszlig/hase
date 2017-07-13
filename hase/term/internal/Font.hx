@@ -30,7 +30,8 @@ class Font
 
     private function iter_char(ordinal:Int):Iterator<Iterator<Bool>>
     {
-        var char:Array<Int> = this.data[ordinal - (" ".code)];
+        var char:Array<Int> = ordinal == 0 ? this.data[0]
+                            : this.data[ordinal - " ".code];
 
         var y:Int = 0;
         return {

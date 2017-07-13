@@ -29,7 +29,7 @@ class CharRenderer implements Interface
     private function new(term:hase.term.Interface)
     {
         this.terminal = term;
-        this.buffer = Image.create(0, 0, " ".code, " ".code);
+        this.buffer = Image.create(0, 0);
     }
 
     private function render(rect:Rect, sprites:Array<Sprite>):Void

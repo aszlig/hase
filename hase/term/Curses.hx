@@ -239,7 +239,7 @@ typedef TermSize = {
         }
 
         if (this.last_y < this.height)
-            this.buffer.addChar(sym.ordinal);
+            this.buffer.addChar(sym.ordinal == 0 ? " ".code : sym.ordinal);
         else {
             this.begin_op();
             this.write_csi("1;31m");
@@ -269,7 +269,7 @@ typedef TermSize = {
         area.map_(function(x:Int, y:Int, sym:hase.display.Symbol):Void {
             this.move_to(rect.x + x, rect.y + y);
             this.set_color(sym.fgcolor, sym.bgcolor);
-            this.buffer.addChar(sym.ordinal);
+            this.write_char(sym);
         });
 
         this.flush_op();

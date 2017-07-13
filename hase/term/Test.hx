@@ -77,7 +77,8 @@ class Test implements Interface
             if (cur_y < y || cur_y >= y + height)
                 continue;
 
-            buf += String.fromCharCode(this.area[c].ordinal);
+            buf += this.area[c].ordinal == 0 ? " "
+                 : String.fromCharCode(this.area[c].ordinal);
         }
 
         return out;

@@ -139,12 +139,12 @@ class Image implements hase.iface.Raster<Symbol>
         return new Image(raster.copy());
 
     public inline static function
-        create(width:Int, height:Int, ?val:Symbol, ?def:Symbol):Image
+        create(width:Int, height:Int, ?val:Symbol):Image
     {
         return new Image(Raster.create(
             width, height,
             val == null ? new Symbol(0) : val,
-            def == null ? new Symbol(0) : def
+            new Symbol(0)
         ));
     }
 
