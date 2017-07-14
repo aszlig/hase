@@ -20,6 +20,34 @@ import hase.geom.PVector;
 
 class SpriteTest extends hase.test.SurfaceTestCase
 {
+    public function test_empty():Void
+    {
+        var empty:hase.display.Sprite = this.create_sprite(
+            [ "         "
+            , "         "
+            , "         "
+            , "         "
+            , "         "
+            ]
+        );
+
+        this.root.add_child(empty);
+        this.update();
+
+        empty.x += 1;
+        this.clear_surface(new hase.display.Symbol(".".code));
+        this.update();
+
+        this.assert_area(
+            [ "........."
+            , "........."
+            , "........."
+            , "........."
+            , "........."
+            ]
+        );
+    }
+
     public function test_simple():Void
     {
         var circle:hase.display.Sprite = this.create_sprite(
@@ -532,7 +560,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             , "                  .'   `."
             , "                  :  .  ;"
             , "                   ,'.`. "
-            , "                 ,'     `"
+            , "                         "
             , "                         "
             , "                         "
             , "                         "
@@ -641,7 +669,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             [ "........................."
             , "........................."
             , "........................."
-            , ".......:;;;;;;;;;:......."
+            , "........................."
             , ".......:,-.. ..-.:......."
             , ".......:``-'.`-'':......."
             , ".......:|  ` '  |:......."
@@ -705,7 +733,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
         this.update();
 
         this.assert_area(
-            [ "%%%%%               %%%%%"
+            [ "%%%%%%%%%%%%%%%%%%%%%%%%%"
             , "%%%%%    ..:::..    %%%%%"
             , "%%%%% .:;;;;;;;;;:. %%%%%"
             , "%%%%% :           : %%%%%"

@@ -61,6 +61,10 @@ class Sprite extends Object
         if (this.ascii == null || this.surface == null)
             return;
 
+        if (this.ascii.dirty_rect.width == 0 ||
+            this.ascii.dirty_rect.height == 0)
+            return;
+
         if (!this.is_dirty && !this.ascii.is_dirty)
             return;
 
