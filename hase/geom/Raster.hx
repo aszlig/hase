@@ -92,10 +92,10 @@ class Raster<T> implements hase.iface.Raster<T>
         return new Raster(this._width, this._height, this.data.copy(),
                           this.default_value);
 
-    public inline function unsafe_get(x:Int, y:Int):T
+    public function unsafe_get(x:Int, y:Int):T
         return this.data[y * this._width + x];
 
-    public inline function unsafe_set(x:Int, y:Int, val:T):T
+    public function unsafe_set(x:Int, y:Int, val:T):T
         return this.data[y * this._width + x] = val;
 
     public function get(x:Int, y:Int):T
