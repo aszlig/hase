@@ -84,14 +84,14 @@ abstract Rect (Array<Int>)
             && Rect.y <= y && Rect.bottom > y;
     }
 
-    public static inline function distance_to(r1:Rect, r2:Rect):PVector
+    public inline function distance_to(other:Rect):PVector
     {
         return new PVector(
-              r1.right < r2.x ? r2.x - r1.right
-            : r1.x > r2.right ? r2.right - r1.x
+              Rect.right < other.x ? other.x - Rect.right
+            : Rect.x > other.right ? other.right - Rect.x
             : 0.0,
-              r1.bottom < r2.y ? r2.y - r1.bottom
-            : r1.y > r2.bottom ? r2.bottom - r1.y
+              Rect.bottom < other.y ? other.y - Rect.bottom
+            : Rect.y > other.bottom ? other.bottom - Rect.y
             : 0.0
         );
     }
