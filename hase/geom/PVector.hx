@@ -46,8 +46,10 @@ abstract PVector (Array<Float>)
     public inline function cross_product(other:PVector):Float
         return PVector.x * other.y - PVector.y * other.x;
 
-    public inline static function normalize(v:PVector):PVector
-        return (v.length == 0.0 || v.length == 1.0) ? v : v / v.length;
+    public function normalize():PVector
+        return (PVector.length == 0.0 || PVector.length == 1.0)
+             ? new PVector(PVector.x, PVector.y)
+             : PVector.divf(cast this, PVector.length);
 
     @:op(A + B)
     public static inline function add(a:PVector, b:PVector):PVector

@@ -126,7 +126,7 @@ class PVectorTest extends haxe.unit.TestCase
     public inline function
         assert_normalized(x:Float, y:Float, vx:Float, vy:Float):Void
     {
-        var v:PVector = PVector.normalize(new PVector(vx, vy));
+        var v:PVector = new PVector(vx, vy).normalize();
         this.assertEquals(Math.round(x * 10000)   / 10000,
                           Math.round(v.x * 10000) / 10000);
         this.assertEquals(Math.round(y * 10000)   / 10000,
@@ -151,7 +151,14 @@ class PVectorTest extends haxe.unit.TestCase
 
     public function test_normalize_div_zero():Void
     {
-        this.assert_vector(0, 0, PVector.normalize(new PVector(0, 0)));
+        this.assert_vector(0, 0, new PVector(0, 0).normalize());
+    }
+
+    public function test_normalize_no_mutate():Void
+    {
+        var orig = new PVector(1, 0);
+        orig.normalize().y = 10;
+        this.assert_vector(1, 0, orig);
     }
 
     public function test_length():Void

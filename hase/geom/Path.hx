@@ -92,8 +92,7 @@ abstract Path (Array<PVector>)
             var inner:PVector = this[i + 1] - this[i];
             var newlen:Float = inner.length;
             if (newlen + current >= len_offset) {
-                result = this[i] + PVector.normalize(inner)
-                       * (len_offset - current);
+                result = this[i] + inner.normalize() * (len_offset - current);
                 break;
             }
             current += newlen;
