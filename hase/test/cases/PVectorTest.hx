@@ -171,4 +171,21 @@ class PVectorTest extends haxe.unit.TestCase
         this.assertEquals(5.0,  new PVector(3, 4).length);
         this.assertEquals(5.0,  new PVector(4, 3).length);
     }
+
+    private function
+        assert_dist(expect:Int, x1:Float, y1:Float, x2:Float, y2:Float):Void
+    {
+        var v1 = new PVector(x1, y1);
+        var v2 = new PVector(x2, y2);
+        return this.assertEquals(expect, Math.floor(v1.distance_to(v2)));
+    }
+
+    public function test_distance():Void
+    {
+        this.assert_dist(1,   9,  2, 10,  3);
+        this.assert_dist(15, 11,  0,  0, 11);
+        this.assert_dist(10,  1,  0, 11,  0);
+        this.assert_dist(5,   6,  1,  6,  6);
+        this.assert_dist(5,  -5, -5, -5,  0);
+    }
 }

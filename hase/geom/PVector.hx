@@ -51,6 +51,9 @@ abstract PVector (Array<Float>)
              ? new PVector(PVector.x, PVector.y)
              : PVector.divf(cast this, PVector.length);
 
+    public inline function distance_to(other:PVector):Float
+        return PVector.sub(cast this, other).length;
+
     @:op(A + B)
     public static inline function add(a:PVector, b:PVector):PVector
         return new PVector(a.x + b.x, a.y + b.y);
