@@ -111,4 +111,34 @@ class MiscTest extends haxe.unit.TestCase
         this.assert_range([], 5.range(0, 2, false));
         this.assert_range([], 0.range(5, 0, false));
     }
+
+    public function test_rad2deg():Void
+    {
+        this.assertEquals(0.0,   0.rad2deg());
+        this.assertEquals(3000,  Std.int(0.5235987756.rad2deg() * 100.0));
+        this.assertEquals(4500,  Std.int(0.7853981634.rad2deg() * 100.0));
+        this.assertEquals(6000,  Std.int(1.0471975512.rad2deg() * 100.0));
+        this.assertEquals(9000,  Std.int(1.5707963268.rad2deg() * 100.0));
+        this.assertEquals(12000, Std.int(2.0943951024.rad2deg() * 100.0));
+        this.assertEquals(13500, Std.int(2.3561944902.rad2deg() * 100.0));
+        this.assertEquals(15000, Std.int(2.6179938780.rad2deg() * 100.0));
+        this.assertEquals(18000, Std.int(3.1415926536.rad2deg() * 100.0));
+        this.assertEquals(27000, Std.int(4.7123889804.rad2deg() * 100.0));
+        this.assertEquals(36000, Std.int(6.2831853072.rad2deg() * 100.0));
+    }
+
+    public function test_deg2rad():Void
+    {
+        this.assertEquals(0.0, 0.deg2rad());
+        this.assertEquals(52,  Std.int(30.deg2rad()  * 100.0));
+        this.assertEquals(78,  Std.int(45.deg2rad()  * 100.0));
+        this.assertEquals(104, Std.int(60.deg2rad()  * 100.0));
+        this.assertEquals(157, Std.int(90.deg2rad()  * 100.0));
+        this.assertEquals(209, Std.int(120.deg2rad() * 100.0));
+        this.assertEquals(235, Std.int(135.deg2rad() * 100.0));
+        this.assertEquals(261, Std.int(150.deg2rad() * 100.0));
+        this.assertEquals(314, Std.int(180.deg2rad() * 100.0));
+        this.assertEquals(471, Std.int(270.deg2rad() * 100.0));
+        this.assertEquals(628, Std.int(360.deg2rad() * 100.0));
+    }
 }
