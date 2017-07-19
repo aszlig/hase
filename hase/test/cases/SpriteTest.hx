@@ -1241,7 +1241,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             ]
         );
 
-        planet.rotate_around(sun, Math.PI / 2.0);
+        planet.rotate_around_vec(sun.vector, Math.PI / 2.0);
 
         this.update();
 
@@ -1299,7 +1299,7 @@ class SpriteTest extends hase.test.SurfaceTestCase
             ]
         );
 
-        planet.rotate_around_deg(sun, 245.0);
+        planet.rotate_around_vec_deg(sun.abs_vector, 245.0);
 
         this.update();
 

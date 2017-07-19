@@ -231,4 +231,14 @@ class PVectorTest extends haxe.unit.TestCase
         this.assert_vector(-14,   4, v.rotate_deg(120));
         this.assert_vector( 10, -10, v.rotate_deg(270));
     }
+
+    public function test_copy():Void
+    {
+        var orig:PVector = new PVector(10, 10);
+        var copy:PVector = orig.copy();
+        copy.x = 11;
+        copy.y = 12;
+        this.assert_vector(10, 10, orig);
+        this.assert_vector(11, 12, copy);
+    }
 }

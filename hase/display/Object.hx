@@ -278,26 +278,31 @@ class Object
         return this.surface = val;
     }
 
-    public function rotate_around(obj:Object, radians:Float):Void
+    public function rotate_around_vec(vec:PVector, radians:Float):Void
     {
-        var objpos:PVector = obj.abs_vector;
-        var thispos:PVector = this.abs_vector;
+        var vecpos:PVector = new PVector(vec.x, vec.y * 2.0);
+        var thispos:PVector = this.abs_vector.copy();
 
         // Compensate for character ratio of 1:2 in width and height
-        objpos.y *= 2.0;
         thispos.y *= 2.0;
 
-        var rotation:PVector = (thispos - objpos).rotate(radians);
+        var rotation:PVector = (thispos - vecpos).rotate(radians);
 
         // Restore the scaling of the Y axis
         rotation.y /= 2.0;
-        objpos.y /= 2.0;
+        vecpos.y /= 2.0;
 
-        this.abs_vector = objpos + rotation;
+        this.abs_vector = vecpos + rotation;
     }
 
-    public inline function rotate_around_deg(obj:Object, degrees:Float):Void
-        return this.rotate_around(obj, hase.utils.Misc.deg2rad(degrees));
+    public inline function rotate_around(obj:Object, radians:Float):Void
+        return this.rotate_around_vec(obj.abs_vector, radians);
+
+    public inline function rotate_around_deg(obj:Object, deg:Float):Void
+        return this.rotate_around(obj, hase.utils.Misc.deg2rad(deg));
+
+    public inline function rotate_around_vec_deg(vec:PVector, deg:Float):Void
+        return this.rotate_around_vec(vec, hase.utils.Misc.deg2rad(deg));
 
     public function autogrow():Void
     {

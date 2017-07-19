@@ -81,6 +81,9 @@ abstract PVector (Array<Float>)
     public inline function rotate_deg(degrees:Float):PVector
         return PVector.rotate(hase.utils.Misc.deg2rad(degrees));
 
+    public inline function copy():PVector
+        return new PVector(PVector.x, PVector.y);
+
     @:op(A + B)
     public static inline function add(a:PVector, b:PVector):PVector
         return new PVector(a.x + b.x, a.y + b.y);
