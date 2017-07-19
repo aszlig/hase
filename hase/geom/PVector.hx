@@ -54,6 +54,19 @@ abstract PVector (Array<Float>)
     public inline function distance_to(other:PVector):Float
         return PVector.sub(cast this, other).length;
 
+    public function rotate(radians:Float):PVector
+    {
+        var cv:Float = Math.cos(radians);
+        var sv:Float = Math.sin(radians);
+        return new PVector(
+            PVector.x * cv - PVector.y * sv,
+            PVector.x * sv + PVector.y * cv
+        );
+    }
+
+    public inline function rotate_deg(degrees:Float):PVector
+        return PVector.rotate(hase.utils.Misc.deg2rad(degrees));
+
     @:op(A + B)
     public static inline function add(a:PVector, b:PVector):PVector
         return new PVector(a.x + b.x, a.y + b.y);

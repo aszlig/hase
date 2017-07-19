@@ -20,10 +20,11 @@ import hase.geom.PVector;
 
 class PVectorTest extends haxe.unit.TestCase
 {
-    private inline function assert_vector(x:Float, y:Float, result:PVector):Void
+    private inline function
+        assert_vector(x:Float, y:Float, result:PVector):Void
     {
-        this.assertEquals(x, result.x);
-        this.assertEquals(y, result.y);
+        this.assertEquals(x, Math.round(result.x));
+        this.assertEquals(y, Math.round(result.y));
     }
 
     public function test_equality():Void
@@ -187,5 +188,25 @@ class PVectorTest extends haxe.unit.TestCase
         this.assert_dist(10,  1,  0, 11,  0);
         this.assert_dist(5,   6,  1,  6,  6);
         this.assert_dist(5,  -5, -5, -5,  0);
+    }
+
+    public function test_rotate():Void
+    {
+        var v:PVector = new PVector(10, 10);
+
+        this.assert_vector(-10, -10, v.rotate(Math.PI));
+        this.assert_vector( 10,  10, v.rotate(Math.PI * 2));
+        this.assert_vector(-10,  10, v.rotate(Math.PI / 2));
+        this.assert_vector(  0,  14, v.rotate(Math.PI / 4));
+
+        this.assert_vector(-10, -10, v.rotate(-Math.PI));
+        this.assert_vector( 10,  10, v.rotate(-Math.PI * 2));
+        this.assert_vector( 10, -10, v.rotate(-Math.PI / 2));
+        this.assert_vector( 14,   0, v.rotate(-Math.PI / 4));
+
+        this.assert_vector(-10, -10, v.rotate_deg(180));
+        this.assert_vector( -6,  13, v.rotate_deg(70));
+        this.assert_vector(-14,   4, v.rotate_deg(120));
+        this.assert_vector( 10, -10, v.rotate_deg(270));
     }
 }
