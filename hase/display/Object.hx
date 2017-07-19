@@ -34,12 +34,12 @@ class Object
     public var width(default, set):Int;
     public var height(default, set):Int;
 
-    public var absolute_x(get, null):Int;
-    public var absolute_y(get, null):Int;
+    public var absolute_x(get, set):Int;
+    public var absolute_y(get, set):Int;
 
     public var vector(get, set):PVector;
-    public var center_vector(get, null):PVector;
-    public var abs_vector(get, null):PVector;
+    public var center_vector(get, set):PVector;
+    public var abs_vector(get, set):PVector;
 
     public var rect(get, null):Rect;
     public var abs_rect(get, null):Rect;
@@ -117,16 +117,30 @@ class Object
 
     private inline function set_vector(vec:PVector):PVector
     {
-        this.x = Std.int(vec.x);
-        this.y = Std.int(vec.y);
+        this.x = Math.round(vec.x);
+        this.y = Math.round(vec.y);
         return vec;
     }
 
     private inline function get_center_vector():PVector
         return new PVector(this.center_x, this.center_y);
 
+    private function set_center_vector(vec:PVector):PVector
+    {
+        this.center_x = Math.round(vec.x);
+        this.center_y = Math.round(vec.y);
+        return vec;
+    }
+
     private inline function get_abs_vector():PVector
         return new PVector(this.absolute_x, this.absolute_y);
+
+    private function set_abs_vector(vec:PVector):PVector
+    {
+        this.absolute_x = Math.round(vec.x);
+        this.absolute_y = Math.round(vec.y);
+        return vec;
+    }
 
     private inline function get_rect():Rect
         return new Rect(this.x, this.y, this.width, this.height);
@@ -200,13 +214,23 @@ class Object
     }
 
     private function get_absolute_x():Int
-    {
         return this.x + (this.parent == null ? 0 : this.parent.absolute_x);
+
+    private function set_absolute_x(val:Int):Int
+    {
+        var offset:Int = this.parent == null ? 0 : this.parent.absolute_x;
+        this.x = val - offset;
+        return val;
     }
 
     private function get_absolute_y():Int
-    {
         return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
+
+    private function set_absolute_y(val:Int):Int
+    {
+        var offset:Int = this.parent == null ? 0 : this.parent.absolute_y;
+        this.y = val - offset;
+        return val;
     }
 
     private function set_surface(val:Null<Surface>):Null<Surface>

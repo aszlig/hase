@@ -30,6 +30,7 @@ class Main
         runner.add(new hase.test.cases.ImageTest());
         runner.add(new hase.test.cases.MiscTest());
         runner.add(new hase.test.cases.MotionTest());
+        runner.add(new hase.test.cases.ObjectTest());
         runner.add(new hase.test.cases.PVectorTest());
         runner.add(new hase.test.cases.PathTest());
         runner.add(new hase.test.cases.RasterTest());
