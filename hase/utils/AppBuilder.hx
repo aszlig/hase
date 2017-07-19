@@ -131,7 +131,7 @@ class AppBuilder
                         case Char("d".code):
                             if (hase.utils.Debug.show_dirty_rects) {
                                 hase.utils.Debug.show_dirty_rects = false;
-                                this.root.set_dirty();
+                                this.root.mark_dirty();
                                 this.root.terminal.clear();
                             } else {
                                 hase.utils.Debug.show_dirty_rects = true;

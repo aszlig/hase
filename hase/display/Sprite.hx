@@ -33,7 +33,7 @@ class Sprite extends Object
     }
 
     private inline function set_ascii(val:Image):Image
-        return this.ascii = this.set_dirty(this.ascii, val);
+        return this.ascii = this.mark_dirty(this.ascii, val);
 
     private inline function get_render_rect():Rect
     {

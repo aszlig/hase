@@ -175,7 +175,7 @@ class ObjectTest extends hase.test.SurfaceTestCase
         this.update();
 
         this.assertEquals(7, obj2.absolute_x);
-        this.assertEquals(13, obj2.absolute_y);
+        this.assertEquals(14, obj2.absolute_y);
 
         obj2.abs_vector = new PVector(1.75, 2.45);
 

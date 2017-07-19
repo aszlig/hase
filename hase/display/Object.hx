@@ -24,12 +24,12 @@ class Object
     public var parent:Object;
     public var children:Array<Object>;
 
-    public var x(default, set):Int;
-    public var y(default, set):Int;
+    public var x(get, set):Int;
+    public var y(get, set):Int;
     public var z(default, set):Int;
 
-    public var center_x(default, set):Int;
-    public var center_y(default, set):Int;
+    public var center_x(get, set):Int;
+    public var center_y(get, set):Int;
 
     public var width(default, set):Int;
     public var height(default, set):Int;
@@ -37,14 +37,17 @@ class Object
     public var absolute_x(get, set):Int;
     public var absolute_y(get, set):Int;
 
-    public var vector(get, set):PVector;
-    public var center_vector(get, set):PVector;
+    public var vector:PVector;
+    public var center_vector:PVector;
     public var abs_vector(get, set):PVector;
 
     public var rect(get, null):Rect;
     public var abs_rect(get, null):Rect;
 
-    public var is_dirty:Bool;
+    public var is_dirty(get, set):Bool;
+    private var _is_dirty:Bool;
+    private var _dirty_vector:PVector;
+    private var _dirty_center_vector:PVector;
 
     public var surface(default, set):Null<Surface>;
     public var is_surface:Bool;
@@ -56,17 +59,17 @@ class Object
         this.parent = null;
         this.children = new Array();
 
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        this.vector = new PVector(0.0, 0.0);
+        this.center_vector = new PVector(0.0, 0.0);
 
-        this.center_x = 0;
-        this.center_y = 0;
+        this.z = 0;
 
         this.width = 0;
         this.height = 0;
 
-        this.is_dirty = true;
+        this._is_dirty = true;
+        this._dirty_vector = new PVector(0.0, 0.0);
+        this._dirty_center_vector = new PVector(0.0, 0.0);
 
         this.is_surface = false;
         this.surface = null;
@@ -88,7 +91,7 @@ class Object
             child.surface = this.surface;
 
         this.children.push(child);
-        this.set_dirty();
+        this.mark_dirty();
         return child;
     }
 
@@ -101,44 +104,50 @@ class Object
     }
 
     #if debug public #else private #end function
-        set_dirty<T>(?from:Null<T>, ?to:Null<T>):T
+        mark_dirty<T>(?from:Null<T>, ?to:Null<T>):T
     {
         if ((from == null && to == null) || from != to) {
             this.is_dirty = true;
             for (child in this.children)
-                child.set_dirty();
+                child.mark_dirty();
         }
 
         return to;
     }
 
-    private inline function get_vector():PVector
-        return new PVector(this.x, this.y);
-
-    private inline function set_vector(vec:PVector):PVector
+    private inline function check_dirty():Void
     {
-        this.x = Math.round(vec.x);
-        this.y = Math.round(vec.y);
-        return vec;
+        if (this._dirty_vector != this.vector ||
+            this._dirty_center_vector != this.center_vector)
+            this.mark_dirty();
     }
 
-    private inline function get_center_vector():PVector
-        return new PVector(this.center_x, this.center_y);
+    private function get_is_dirty():Bool
+        return this._is_dirty
+            || this._dirty_vector != this.vector
+            || this._dirty_center_vector != this.center_vector;
 
-    private function set_center_vector(vec:PVector):PVector
+    private function set_is_dirty(val:Bool):Bool
     {
-        this.center_x = Math.round(vec.x);
-        this.center_y = Math.round(vec.y);
-        return vec;
+        if (!val) {
+            this._dirty_vector.set_from_vector(this.vector);
+            this._dirty_center_vector.set_from_vector(this.center_vector);
+        }
+        return this._is_dirty = val;
     }
 
-    private inline function get_abs_vector():PVector
-        return new PVector(this.absolute_x, this.absolute_y);
+    private function get_abs_vector():PVector
+    {
+        return this.parent == null
+             ? new PVector(this.vector.x, this.vector.y)
+             : this.vector + this.parent.abs_vector;
+    }
 
     private function set_abs_vector(vec:PVector):PVector
     {
-        this.absolute_x = Math.round(vec.x);
-        this.absolute_y = Math.round(vec.y);
+        this.vector.set_from_vector(
+            this.parent == null ? vec : vec - this.parent.abs_vector
+        );
         return vec;
     }
 
@@ -156,11 +165,25 @@ class Object
     public inline function distance_to(other:Object):PVector
         return this.abs_rect.distance_to(other.abs_rect);
 
-    private inline function set_x(val:Int):Int
-        return this.x = this.set_dirty(this.x, val);
+    private inline function get_x():Int
+        return Math.round(this.vector.x);
 
-    private inline function set_y(val:Int):Int
-        return this.y = this.set_dirty(this.y, val);
+    private function set_x(val:Int):Int
+    {
+        this.vector.x = val;
+        this.check_dirty();
+        return val;
+    }
+
+    private inline function get_y():Int
+        return Math.round(this.vector.y);
+
+    private function set_y(val:Int):Int
+    {
+        this.vector.y = val;
+        this.check_dirty();
+        return val;
+    }
 
     private function set_z(val:Int):Int
     {
@@ -191,18 +214,32 @@ class Object
             this.parent.height = this.y + this.height;
     }
 
-    private inline function set_center_x(val:Int):Int
-        return this.center_x = this.set_dirty(this.center_x, val);
+    private inline function get_center_x():Int
+        return Math.round(this.center_vector.x);
 
-    private inline function set_center_y(val:Int):Int
-        return this.center_y = this.set_dirty(this.center_y, val);
+    private function set_center_x(val:Int):Int
+    {
+        this.center_vector.x = val;
+        this.check_dirty();
+        return val;
+    }
+
+    private inline function get_center_y():Int
+        return Math.round(this.center_vector.y);
+
+    private function set_center_y(val:Int):Int
+    {
+        this.center_vector.y = val;
+        this.check_dirty();
+        return val;
+    }
 
     private function set_width(val:Int):Int
     {
         this.width = val;
         this.autogrow_width();
 
-        return this.set_dirty(null, this.width);
+        return this.mark_dirty(null, this.width);
     }
 
     private function set_height(val:Int):Int
@@ -210,11 +247,11 @@ class Object
         this.height = val;
         this.autogrow_height();
 
-        return this.set_dirty(null, this.height);
+        return this.mark_dirty(null, this.height);
     }
 
-    private function get_absolute_x():Int
-        return this.x + (this.parent == null ? 0 : this.parent.absolute_x);
+    private inline function get_absolute_x():Int
+        return Math.round(this.abs_vector.x);
 
     private function set_absolute_x(val:Int):Int
     {
@@ -223,8 +260,8 @@ class Object
         return val;
     }
 
-    private function get_absolute_y():Int
-        return this.y + (this.parent == null ? 0 : this.parent.absolute_y);
+    private inline function get_absolute_y():Int
+        return Math.round(this.abs_vector.y);
 
     private function set_absolute_y(val:Int):Int
     {

@@ -37,6 +37,20 @@ abstract PVector (Array<Float>)
     public inline function set_y(val:Float):Float
         return this[1] = val;
 
+    public function set(x:Float, y:Float):PVector
+    {
+        this[0] = x;
+        this[1] = y;
+        return cast this;
+    }
+
+    public function set_from_vector(vec:PVector):PVector
+    {
+        this[0] = vec.x;
+        this[1] = vec.y;
+        return cast this;
+    }
+
     public inline function get_length():Float
         return Math.sqrt(PVector.x * PVector.x + PVector.y * PVector.y);
 

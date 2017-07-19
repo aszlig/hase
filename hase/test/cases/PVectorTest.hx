@@ -124,6 +124,28 @@ class PVectorTest extends haxe.unit.TestCase
         this.assertEquals(-6.0, v1.cross_product(v2 * 3.0));
     }
 
+    public function test_set():Void
+    {
+        var v:PVector = new PVector(10, 20);
+
+        v.x = 12.0;
+        this.assertEquals(12.0, v.x);
+        this.assertEquals(14.0, v.x = 14.0);
+
+        v.y = 22.0;
+        this.assertEquals(22.0, v.y);
+        this.assertEquals(24.0, v.y = 24.0);
+
+        v.set(15.0, 25.0);
+        this.assert_vector(15.0, 25.0, v);
+        this.assert_vector(16.0, 26.0, v.set(16.0, 26.0));
+
+        v.set_from_vector(new PVector(17.0, 27.0));
+        this.assert_vector(17.0, 27.0, v);
+        this.assert_vector(18.0, 28.0,
+                           v.set_from_vector(new PVector(18.0, 28.0)));
+    }
+
     public inline function
         assert_normalized(x:Float, y:Float, vx:Float, vy:Float):Void
     {
