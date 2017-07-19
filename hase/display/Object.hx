@@ -278,6 +278,27 @@ class Object
         return this.surface = val;
     }
 
+    public function rotate_around(obj:Object, radians:Float):Void
+    {
+        var objpos:PVector = obj.abs_vector;
+        var thispos:PVector = this.abs_vector;
+
+        // Compensate for character ratio of 1:2 in width and height
+        objpos.y *= 2.0;
+        thispos.y *= 2.0;
+
+        var rotation:PVector = (thispos - objpos).rotate(radians);
+
+        // Restore the scaling of the Y axis
+        rotation.y /= 2.0;
+        objpos.y /= 2.0;
+
+        this.abs_vector = objpos + rotation;
+    }
+
+    public inline function rotate_around_deg(obj:Object, degrees:Float):Void
+        return this.rotate_around(obj, hase.utils.Misc.deg2rad(degrees));
+
     public function autogrow():Void
     {
         this.autogrow_width();

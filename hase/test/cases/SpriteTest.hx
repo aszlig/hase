@@ -1121,4 +1121,188 @@ class SpriteTest extends hase.test.SurfaceTestCase
         this.assertEquals(0.0, dist.x);
         this.assertEquals(-14.0, dist.y);
     }
+
+    public function test_rotate_around():Void
+    {
+        var sun:hase.display.Sprite = this.create_sprite(
+            [ "     .     "
+            , " `. _:_ ,' "
+            , "  .:::::.  "
+            , "~~:::::::~~"
+            , "  .`:::'.  "
+            , " '   :   ` "
+            ]
+        );
+
+        sun.center_x = 5;
+        sun.center_y = 3;
+        sun.x = 19;
+        sun.y = 10;
+
+        var planet:hase.display.Sprite = this.create_sprite(
+            [ "  _._  "
+            , ".'   `."
+            , ":     ;"
+            , " `-.-' "
+            ]
+        );
+
+        planet.center_x = 3;
+        planet.center_y = 2;
+        planet.x = 19;
+        planet.y = 3;
+
+        this.root.add_child(sun);
+        this.root.add_child(planet);
+
+        this.update();
+
+        var initial:Array<String> =
+            [ "                                       "
+            , "                  _._                  "
+            , "                .'   `.                "
+            , "                :     ;                "
+            , "                 `-.-'                 "
+            , "                                       "
+            , "                                       "
+            , "                   .                   "
+            , "               `. _:_ ,'               "
+            , "                .:::::.                "
+            , "              ~~:::::::~~              "
+            , "                .`:::'.                "
+            , "               '   :   `               "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            ];
+
+        this.assert_area(initial);
+
+        planet.rotate_around_deg(sun, 180.0);
+
+        this.update();
+
+        this.assert_area(
+            [ "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                   .                   "
+            , "               `. _:_ ,'               "
+            , "                .:::::.                "
+            , "              ~~:::::::~~              "
+            , "                .`:::'.                "
+            , "               '   :   `               "
+            , "                                       "
+            , "                                       "
+            , "                  _._                  "
+            , "                .'   `.                "
+            , "                :     ;                "
+            , "                 `-.-'                 "
+            , "                                       "
+            , "                                       "
+            ]
+        );
+
+        planet.rotate_around_deg(sun, 25.0);
+
+        this.update();
+
+        this.assert_area(
+            [ "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                   .                   "
+            , "               `. _:_ ,'               "
+            , "                .:::::.                "
+            , "              ~~:::::::~~              "
+            , "                .`:::'.                "
+            , "               '   :   `               "
+            , "                                       "
+            , "            _._                        "
+            , "          .'   `.                      "
+            , "          :     ;                      "
+            , "           `-.-'                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            ]
+        );
+
+        planet.rotate_around(sun, Math.PI / 2.0);
+
+        this.update();
+
+        this.assert_area(
+            [ "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "     _._                               "
+            , "   .'   `.                             "
+            , "   :     ;         .                   "
+            , "    `-.-'      `. _:_ ,'               "
+            , "                .:::::.                "
+            , "              ~~:::::::~~              "
+            , "                .`:::'.                "
+            , "               '   :   `               "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            ]
+        );
+
+        planet.rotate_around(sun, -Math.PI);
+
+        this.update();
+
+        this.assert_area(
+            [ "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                   .                   "
+            , "               `. _:_ ,'               "
+            , "                .:::::.                "
+            , "              ~~:::::::~~              "
+            , "                .`:::'.        _._     "
+            , "               '   :   `     .'   `.   "
+            , "                             :     ;   "
+            , "                              `-.-'    "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            , "                                       "
+            ]
+        );
+
+        planet.rotate_around_deg(sun, 245.0);
+
+        this.update();
+
+        this.assert_area(initial);
+    }
 }
