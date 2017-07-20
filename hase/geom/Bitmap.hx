@@ -16,7 +16,7 @@
  */
 package hase.geom;
 
-class Bitmap
+class Bitmap implements hase.iface.Raster<Bool>
 {
     // 31 bits because on some platforms we might get into signed territory.
     private inline static var BITSIZE:Int = 31;
@@ -63,20 +63,39 @@ class Bitmap
     private function set_height(height:Int):Int
         return this._height = this.data.height = height;
 
-    public function is_set(x:Int, y:Int):Bool
-        return this.data.get(this.calc_x(x), y) & this.calc_x_bit(x) > 0;
-
     private function get_raster_cell(x:Int, y:Int):Int
         return y * this.data.width + this.calc_x(x);
 
     private inline function is_oob(x:Int, y:Int):Bool
         return x < 0 || y < 0 || x >= this.width || y >= this.height;
 
-    public inline function set(x:Int, y:Int):Bitmap
+    public function unsafe_get(x:Int, y:Int):Bool
+        return this.data.unsafe_get(this.calc_x(x), y)
+             & this.calc_x_bit(x) > 0;
+
+    public inline function get(x:Int, y:Int):Bool
+        return is_oob(x, y) ? false : this.unsafe_get(x, y);
+
+    public function unsafe_set(x:Int, y:Int, val:Bool):Bool
     {
-        if (is_oob(x, y)) return this;
-        this.data.data[this.get_raster_cell(x, y)] |= this.calc_x_bit(x);
-        return this;
+        if (val)
+            this.data.data[this.get_raster_cell(x, y)] |= this.calc_x_bit(x);
+        else
+            this.data.data[this.get_raster_cell(x, y)] &= ~this.calc_x_bit(x);
+        return val;
+    }
+
+    public inline function set(x:Int, y:Int, val:Bool):Bool
+        return is_oob(x, y) ? val : this.unsafe_set(x, y, val);
+
+    public function map_(f:Int -> Int -> Bool -> Void):Void
+    {
+        for (y in 0...this._height) {
+            for (x in 0...this._width) {
+                var val:Int = this.data.unsafe_get(this.calc_x(x), y);
+                f(x, y, val & this.calc_x_bit(x) > 0);
+            }
+        }
     }
 
     public function set_rect(rect:Rect):Bitmap
@@ -116,13 +135,12 @@ class Bitmap
         return this;
     }
 
-    public inline function unset(x:Int, y:Int):Bitmap
-    {
-        if (is_oob(x, y)) return this;
-        this.data.data[this.get_raster_cell(x, y)] &= ~this.calc_x_bit(x);
-        return this;
-    }
+    public inline function set_bit(x:Int, y:Int):Void
+        this.set(x, y, true);
 
-    public inline function clear():Void
-        return this.data.clear();
+    public inline function unset_bit(x:Int, y:Int):Void
+        this.set(x, y, false);
+
+    public inline function clear(?val:Bool):Void
+        return this.data.clear(val == null ? 0 : val ? MASK_FULL : 0);
 }

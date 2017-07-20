@@ -23,8 +23,7 @@ class Raster<T> implements hase.iface.Raster<T>
 
     private var default_value:T;
 
-    @:allow(hase.geom.Bitmap.set)
-    @:allow(hase.geom.Bitmap.unset)
+    @:allow(hase.geom.Bitmap.unsafe_set)
     @:allow(hase.geom.Bitmap.set_rect)
     private var data:Array<T>;
 
