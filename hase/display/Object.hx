@@ -37,8 +37,10 @@ class Object
     public var absolute_x(get, set):Int;
     public var absolute_y(get, set):Int;
 
-    public var vector:PVector;
-    public var center_vector:PVector;
+    private var _vector:PVector;
+    public var vector(get, set):PVector;
+    private var _center_vector:PVector;
+    public var center_vector(get, set):PVector;
     public var abs_vector(get, set):PVector;
 
     public var rect(get, null):Rect;
@@ -59,8 +61,8 @@ class Object
         this.parent = null;
         this.children = new Array();
 
-        this.vector = new PVector(0.0, 0.0);
-        this.center_vector = new PVector(0.0, 0.0);
+        this._vector = new PVector(0.0, 0.0);
+        this._center_vector = new PVector(0.0, 0.0);
 
         this.z = 0;
 
@@ -135,6 +137,18 @@ class Object
         }
         return this._is_dirty = val;
     }
+
+    private inline function get_vector():PVector
+        return this._vector;
+
+    private inline function set_vector(vec:PVector):PVector
+        return this.vector.set_from_vector(vec);
+
+    private inline function get_center_vector():PVector
+        return this._center_vector;
+
+    private inline function set_center_vector(vec:PVector):PVector
+        return this.center_vector.set_from_vector(vec);
 
     private function get_abs_vector():PVector
     {
