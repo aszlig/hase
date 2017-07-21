@@ -1,2 +1,5 @@
 #!/usr/bin/env haxe
---macro hase.test.Main.main()
+-main hase.test.Main
+-neko test.n
+-cmd neko test.n
+-cmd rm -f test.n
