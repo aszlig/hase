@@ -169,7 +169,7 @@ class Animation extends Sprite
     macro public static function load_framedata(path:String):Expr
     {
         var data:Array<FrameData> =
-            hase.utils.AnimationParser.parse_file(path);
+            hase.macro.AnimationParser.parse_file(path);
 
         var raw_data:Dynamic = [for (fd in data) {
             raw_image: fd.image.to_2d_array(),

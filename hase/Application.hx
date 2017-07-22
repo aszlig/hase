@@ -16,7 +16,7 @@
  */
 package hase;
 
-@:autoBuild(hase.utils.AppBuilder.build(
+@:autoBuild(hase.macro.AppBuilder.build(
 #if js
 "js"
 #elseif cpp

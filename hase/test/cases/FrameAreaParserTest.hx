@@ -19,7 +19,7 @@ package hase.test.cases;
 import hase.display.Symbol;
 import hase.geom.Raster;
 
-import hase.utils.ParserTypes;
+import hase.macro.ParserTypes;
 
 class FrameAreaParserTest extends haxe.unit.TestCase
 {
@@ -28,7 +28,7 @@ class FrameAreaParserTest extends haxe.unit.TestCase
         var img:Raster<Symbol> = Raster.from_2d_array([
             for (row in data) [for (c in 0...row.length) row.charCodeAt(c)]
         ], 0);
-        return (new hase.utils.FrameAreaParser(img)).parse();
+        return (new hase.macro.FrameAreaParser(img)).parse();
     }
 
     private inline function

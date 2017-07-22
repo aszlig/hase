@@ -25,7 +25,7 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
 {
     private function parse_anim(data:Array<String>):Array<FrameData>
     {
-        return (new hase.utils.AnimationParser(data.join("\n"))).parse();
+        return (new hase.macro.AnimationParser(data.join("\n"))).parse();
     }
 
     private inline function

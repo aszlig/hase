@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package hase.utils;
+package hase.macro;
 
 import hase.display.Symbol;
 import hase.geom.Rect;
 
-import hase.utils.ParserTypes;
+import hase.macro.ParserTypes;
 
 private typedef Box = {
     var headers:Array<Rect>;

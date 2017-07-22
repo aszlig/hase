@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package hase.utils;
+package hase.macro;
 
+#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.ExprTools;
@@ -196,3 +197,4 @@ class RenewableBuilder
         ).build_renewable();
     }
 }
+#end

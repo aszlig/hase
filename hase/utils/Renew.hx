@@ -20,6 +20,8 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 
+import hase.macro.RenewableBuilder;
+
 class Renew
 {
     #if macro
