@@ -35,6 +35,7 @@ class Main
         runner.add(new hase.test.cases.PathTest());
         runner.add(new hase.test.cases.RasterTest());
         runner.add(new hase.test.cases.RectTest());
+        runner.add(new hase.test.cases.RenewableTest());
         runner.add(new hase.test.cases.SpriteTest());
         runner.add(new hase.test.cases.SurfaceTest());
         runner.add(new hase.test.cases.TextTest());
