@@ -33,6 +33,7 @@ class Main
         runner.add(new hase.test.cases.ObjectTest());
         runner.add(new hase.test.cases.PVectorTest());
         runner.add(new hase.test.cases.PathTest());
+        runner.add(new hase.test.cases.PoolTest());
         runner.add(new hase.test.cases.RasterTest());
         runner.add(new hase.test.cases.RectTest());
         runner.add(new hase.test.cases.RenewableTest());
