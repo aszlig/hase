@@ -45,7 +45,8 @@ class Renew
 
     macro public static function object(expr:Expr, params:Array<Expr>):Expr
     {
-        switch (Context.typeof(expr)) {
+        var type:Type = Context.typeof(expr);
+        switch (type) {
             case TInst(ct, _):
                 if (!Renew.has_renewable_iface(ct.get()))
                     throw 'Instance ${ct} does not implement Renewable!';
@@ -54,8 +55,12 @@ class Renew
                 var result:Expr = macro $e{expr}.$ident($a{params});
                 result.pos = expr.pos;
                 return result;
+            case TAbstract(_, _):
+                var result:Expr = macro $e{expr}.renew($a{params});
+                result.pos = expr.pos;
+                return result;
             default:
-                throw 'Unable to resolve renew() for ${expr}';
+                throw 'Unable to resolve renew() for ${type}';
         }
         return expr;
     }

@@ -79,6 +79,21 @@ class TestRenewF extends TestRenewA
     }
 }
 
+abstract TestRenewAbstract (Int)
+{
+    public inline function new(val:Int)
+        this = val;
+
+    public inline function renew(val:Int):TestRenewAbstract
+    {
+        this = val;
+        return cast this;
+    }
+
+    public inline function get_value():Int
+        return this;
+}
+
 class RenewableTest extends haxe.unit.TestCase
 {
     public function test_simple():Void
@@ -139,5 +154,12 @@ class RenewableTest extends haxe.unit.TestCase
         this.assertEquals(0, obj.state);
         this.assertEquals(0, hase.utils.Renew.object(obj, true).state);
         this.assertEquals(555, hase.utils.Renew.object(obj, false).state);
+    }
+
+    public function test_renew_abstract():Void
+    {
+        var obj = new TestRenewAbstract(567);
+        this.assertEquals(567, obj.get_value());
+        this.assertEquals(890, hase.utils.Renew.object(obj, 890).get_value());
     }
 }
