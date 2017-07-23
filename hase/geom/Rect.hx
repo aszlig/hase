@@ -16,7 +16,25 @@
  */
 package hase.geom;
 
-abstract Rect (Array<Int>)
+import hase.utils.Pool;
+
+class RectData implements hase.iface.Renewable
+{
+    public var x:Int;
+    public var y:Int;
+    public var w:Int;
+    public var h:Int;
+
+    public function new(x:Int, y:Int, w:Int, h:Int)
+    {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+}
+
+abstract Rect (RectData)
 {
     public var x(get, set):Int;
     public var y(get, set):Int;
@@ -29,31 +47,31 @@ abstract Rect (Array<Int>)
     public var bottom(get, never):Int;
 
     public inline function new(x:Int, y:Int, width:Int, height:Int)
-        this = [x, y, width, height];
+        this = new RectData(x, y, width, height);
 
     private inline function get_x():Int
-        return this[0];
+        return this.x;
 
     private inline function set_x(val:Int):Int
-        return this[0] = val;
+        return this.x = val;
 
     private inline function get_y():Int
-        return this[1];
+        return this.y;
 
     private inline function set_y(val:Int):Int
-        return this[1] = val;
+        return this.y = val;
 
     private inline function get_width():Int
-        return this[2];
+        return this.w;
 
     private inline function set_width(val:Int):Int
-        return this[2] = val;
+        return this.w = val;
 
     private inline function get_height():Int
-        return this[3];
+        return this.h;
 
     private inline function set_height(val:Int):Int
-        return this[3] = val;
+        return this.h = val;
 
     private inline function get_left():Int
         return Rect.x;

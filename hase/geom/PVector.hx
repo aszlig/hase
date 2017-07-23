@@ -16,38 +16,50 @@
  */
 package hase.geom;
 
-abstract PVector (Array<Float>)
+class PVectorData implements hase.iface.Renewable
+{
+    public var x:Float;
+    public var y:Float;
+
+    public function new(x:Float, y:Float)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+abstract PVector (PVectorData)
 {
     public var x(get, set):Float;
     public var y(get, set):Float;
     public var length(get, never):Float;
 
     public inline function new(x:Float, y:Float)
-        this = [x, y];
+        this = new PVectorData(x, y);
 
     public inline function get_x():Float
-        return this[0];
+        return this.x;
 
     public inline function set_x(val:Float):Float
-        return this[0] = val;
+        return this.x = val;
 
     public inline function get_y():Float
-        return this[1];
+        return this.y;
 
     public inline function set_y(val:Float):Float
-        return this[1] = val;
+        return this.y = val;
 
     public function set(x:Float, y:Float):PVector
     {
-        this[0] = x;
-        this[1] = y;
+        this.x = x;
+        this.y = y;
         return cast this;
     }
 
     public function set_from_vector(vec:PVector):PVector
     {
-        this[0] = vec.x;
-        this[1] = vec.y;
+        this.x = vec.x;
+        this.y = vec.y;
         return cast this;
     }
 
