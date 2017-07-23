@@ -16,6 +16,7 @@
  */
 package hase;
 
+#if !macro
 @:autoBuild(hase.macro.AppBuilder.build(
 #if js
 "js"
@@ -24,7 +25,9 @@ package hase;
 #elseif neko
 "neko"
 #end
-)) interface Application
+))
+#end
+interface Application
 {
     public function init():Void;
     public function update(td:Float):Void;

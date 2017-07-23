@@ -16,11 +16,13 @@
  */
 package hase.utils;
 
+#if macro
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
 
 import hase.macro.RenewableBuilder;
+#end
 
 class Renew
 {

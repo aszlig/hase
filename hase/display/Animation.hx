@@ -16,7 +16,9 @@
  */
 package hase.display;
 
+#if macro
 import haxe.macro.Expr;
+#end
 
 typedef FrameData = {
     image:hase.geom.Raster<Symbol>,

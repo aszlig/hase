@@ -16,5 +16,7 @@
  */
 package hase.iface;
 
+#if !macro
 @:autoBuild(hase.macro.RenewableBuilder.build())
+#end
 interface Renewable {}
