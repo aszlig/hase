@@ -121,7 +121,7 @@ class Pool
 
     private static function get_or_create_pool(type:Type):String
     {
-        var hashed:String = Context.signature(type);
+        var hashed:String = Context.signature(Context.toComplexType(type));
         return Pool.pools.exists(hashed)
              ? Pool.pools[hashed]
              : (Pool.pools[hashed] = Pool.build_pool(type));

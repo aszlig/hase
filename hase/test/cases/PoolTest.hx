@@ -30,6 +30,15 @@ class Pooled implements hase.iface.Renewable
     }
 }
 
+class OtherPooled implements hase.iface.Renewable
+{
+    public var val:Int;
+    public var canary:Int;
+
+    public function new(val:Int)
+        this.val = val;
+}
+
 class PooledWithParams<T> implements hase.iface.Renewable
 {
     public var val:Null<T>;
@@ -70,5 +79,17 @@ class PoolTest extends haxe.unit.TestCase
         obj = hase.utils.Pool.alloc(777.0);
         this.assertEquals(777.0, obj.val);
         this.assertEquals(1.23, obj.canary);
+    }
+
+    public function test_wrong_hashing():Void
+    {
+        var obj:OtherPooled = hase.utils.Pool.alloc(100);
+        this.assertEquals(100, obj.val);
+        obj.canary = 1000;
+        hase.utils.Pool.free(obj);
+
+        obj = hase.utils.Pool.alloc(200);
+        this.assertEquals(200, obj.val);
+        this.assertEquals(1000, obj.canary);
     }
 }
