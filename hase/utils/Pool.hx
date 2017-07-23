@@ -145,7 +145,7 @@ class Pool
         var type:Type = Pool.resolve_type(Context.getExpectedType());
         var pool:String = Pool.get_or_create_pool(type);
 
-        return macro $i{pool}.fetch($a{params});
+        return macro @:pos(Context.currentPos()) $i{pool}.fetch($a{params});
     }
 
     macro public static function free(expr:Expr):Expr
@@ -153,6 +153,6 @@ class Pool
         var type:Type = Pool.resolve_type(Context.typeof(expr));
         var pool:String = Pool.get_or_create_pool(type);
 
-        return macro $i{pool}.release($e{expr});
+        return macro @:pos(Context.currentPos()) $i{pool}.release($e{expr});
     }
 }
