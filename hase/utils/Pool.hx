@@ -61,7 +61,7 @@ class Pool
                 throw 'Unable to get constructor type for ${type}!';
         }
 
-        var ctor_args = switch (ctor_type) {
+        var ctor_args = switch (Context.follow(ctor_type)) {
             case TFun(args, _):
                 [for (a in args) {
                     name: a.name,
@@ -127,22 +127,83 @@ class Pool
              : (Pool.pools[hashed] = Pool.build_pool(type));
     }
 
+    private static function is_class_type(expr:Expr):Bool
+    {
+        return switch (Context.typeof(expr)) {
+            case TType(_.get().type
+                       => TAnonymous(_.get().status
+                       => AClassStatics(_)), _):
+                true;
+            default:
+                false;
+        }
+    }
+
     private static function resolve_type(type:Type):Type
     {
+        var msg:String = "Unable to resolve the type to use for the memory"
+                       + " pool. Please provide a type declaration.";
+        if (type == null)
+            Context.error(msg, Context.currentPos());
+
         return switch (Context.followWithAbstracts(type)) {
             case TMono(t):
-                var msg:String = "Unable to resolve the type to use for the"
-                               + " memory pool. Please provide a type"
-                               + " declaration.";
                 Context.error(msg, Context.currentPos());
             case t: t;
+        }
+    }
+
+    private static function resolve_param(param:Type):TypeParam
+    {
+        return TPType(switch (Context.followWithAbstracts(param)) {
+            case TAnonymous(_.get().status => AAbstractStatics(t)):
+                Context.toComplexType(t.get().type);
+            default:
+                throw 'Unable to resolve params for ${param}';
+        });
+    }
+
+    private static function unpack_params(orig_type:ComplexType, e:Expr):Type
+    {
+        return switch (Context.typeof(e)) {
+            case TInst(_.get() => {pack: [], name: "Array"}, prm):
+                Context.resolveType(switch (orig_type) {
+                    case TPath(args):
+                        for (p in prm)
+                            args.params.push(Pool.resolve_param(p));
+                        TPath(args);
+                    default:
+                        throw 'Unable to unpack params for ${orig_type}.';
+                }, e.pos);
+            default:
+                throw 'Unable to resolve class type params in ${e}.';
+        }
+    }
+
+    private static function resolve_class_type(params:Array<Expr>):Type
+    {
+        var e:Expr = params.shift();
+        var type:Type = Context.typeof(e);
+        var ct:ComplexType = Context.toComplexType(Context.follow(type));
+
+        return switch (ct) {
+            case TPath({name: "Class", params: [TPType(t)]}):
+                try {
+                    Context.resolveType(t, e.pos);
+                } catch (exception:Dynamic) {
+                    Pool.unpack_params(t, params.shift());
+                }
+            default:
+                throw 'Unable to resolve class type for ${ct}.';
         }
     }
     #end
 
     macro public static function alloc(params:Array<Expr>):Expr
     {
-        var type:Type = Pool.resolve_type(Context.getExpectedType());
+        var type:Type = params.length > 1 && Pool.is_class_type(params[0])
+                      ? Pool.resolve_class_type(params)
+                      : Pool.resolve_type(Context.getExpectedType());
         var pool:String = Pool.get_or_create_pool(type);
 
         return macro @:pos(Context.currentPos()) $i{pool}.fetch($a{params});

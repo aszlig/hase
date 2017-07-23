@@ -39,7 +39,7 @@ class OtherPooled implements hase.iface.Renewable
         this.val = val;
 }
 
-class PooledWithParams<T> implements hase.iface.Renewable
+class PooledWithParam<T> implements hase.iface.Renewable
 {
     public var val:Null<T>;
     public var canary:T;
@@ -71,7 +71,7 @@ class PoolTest extends haxe.unit.TestCase
 
     public function test_with_type_params():Void
     {
-        var obj:PooledWithParams<Float> = hase.utils.Pool.alloc(666.0);
+        var obj:PooledWithParam<Float> = hase.utils.Pool.alloc(666.0);
         this.assertEquals(666.0, obj.val);
         obj.canary = 1.23;
         hase.utils.Pool.free(obj);
@@ -91,5 +91,29 @@ class PoolTest extends haxe.unit.TestCase
         obj = hase.utils.Pool.alloc(200);
         this.assertEquals(200, obj.val);
         this.assertEquals(1000, obj.canary);
+    }
+
+    public function test_explicit_types():Void
+    {
+        var first = hase.utils.Pool.alloc(Pooled, 5, 6);
+        this.assertEquals(5, first.x);
+        this.assertEquals(6, first.y);
+        first.canary = 123456;
+        hase.utils.Pool.free(first);
+
+        var second = hase.utils.Pool.alloc(Pooled, 3, 4);
+        this.assertEquals(123456, second.canary);
+    }
+
+    public function test_explicit_types_with_type_param():Void
+    {
+        var obj = hase.utils.Pool.alloc(PooledWithParam, [Float], 9.1);
+        this.assertEquals(9.1, obj.val);
+        obj.canary = 1.9;
+        hase.utils.Pool.free(obj);
+
+        obj = hase.utils.Pool.alloc(PooledWithParam, [Float], 8.1);
+        this.assertEquals(8.1, obj.val);
+        this.assertEquals(1.9, obj.canary);
     }
 }
