@@ -1,5 +1,6 @@
 #!/usr/bin/env haxe
 -main hase.test.Main
 -neko test.n
+-dce full
 -cmd neko test.n
 -cmd rm -f test.n
