@@ -174,6 +174,8 @@ class RenewableBuilder
         switch (type) {
             case TInst(ct, _):
                 thisclass = ct.toString();
+                if (ct.get().isInterface)
+                    return null;
                 switch (ct.get().superClass) {
                     case null:
                     case sc:
