@@ -27,12 +27,24 @@ import hase.macro.RenewableBuilder;
 class Renew
 {
     #if macro
+    private static function has_interface(iface:String, ct:Ref<ClassType>):Bool
+    {
+        if (ct.toString() == iface)
+            return true;
+
+        for (ict in ct.get().interfaces) {
+            if (Renew.has_interface(iface, ict.t))
+                return true;
+        }
+        return false;
+    }
+
     private static function has_renewable_iface(ct:ClassType):Bool
     {
         switch (Context.getType("hase.iface.Renewable")) {
             case TInst(rct, _):
                 for (ict in ct.interfaces) {
-                    if (ict.t.toString() == rct.toString())
+                    if (Renew.has_interface(rct.toString(), ict.t))
                         return true;
                 }
             default:
