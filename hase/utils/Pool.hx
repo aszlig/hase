@@ -26,7 +26,7 @@ import haxe.macro.TypeTools;
 class Pool
 {
     #if macro
-    private static var pools:Map<String, String> = new Map();
+    private static var pools:Map<String, Expr> = new Map();
     private static var poolidx:Int = 0;
 
     private static function
@@ -40,7 +40,7 @@ class Pool
         }
     }
 
-    private static function build_pool(type:Type):String
+    private static function build_pool(type:Type):Expr
     {
         var clsname:String = 'PoolForType_${Pool.poolidx++}';
         var objtype:ComplexType = Context.toComplexType(type);
@@ -115,11 +115,10 @@ class Pool
             pos: Context.currentPos()
         });
 
-        Context.defineType(cls);
-        return clsname;
+        return hase.macro.Utils.type2module(cls, '__internal.pool.${clsname}');
     }
 
-    private static function get_or_create_pool(type:Type):String
+    private static function get_or_create_pool(type:Type):Expr
     {
         var hashed:String = Context.signature(Context.toComplexType(type));
         return Pool.pools.exists(hashed)
@@ -204,16 +203,16 @@ class Pool
         var type:Type = params.length > 1 && Pool.is_class_type(params[0])
                       ? Pool.resolve_class_type(params)
                       : Pool.resolve_type(Context.getExpectedType());
-        var pool:String = Pool.get_or_create_pool(type);
+        var pool:Expr = Pool.get_or_create_pool(type);
 
-        return macro @:pos(Context.currentPos()) $i{pool}.fetch($a{params});
+        return macro @:pos(Context.currentPos()) $e{pool}.fetch($a{params});
     }
 
     macro public static function free(expr:Expr):Expr
     {
         var type:Type = Pool.resolve_type(Context.typeof(expr));
-        var pool:String = Pool.get_or_create_pool(type);
+        var pool:Expr = Pool.get_or_create_pool(type);
 
-        return macro @:pos(Context.currentPos()) $i{pool}.release($e{expr});
+        return macro @:pos(Context.currentPos()) $e{pool}.release($e{expr});
     }
 }
