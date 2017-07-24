@@ -148,10 +148,6 @@ class Preloader extends hase.display.Sprite
 
     private static function wrap_expr(expr:Expr):Expr
     {
-        var module_str:String = Context.getLocalModule();
-        var module:Array<String> = module_str.split(".");
-        var pack:Array<String> = module.slice(0, module.length - 1);
-
         var clsname:String = 'WrappedStep${Preloader.results.length}';
 
         var wrapped:Expr = switch (expr.expr) {
@@ -163,20 +159,8 @@ class Preloader extends hase.display.Sprite
             public static function load() return $e{wrapped};
         };
 
-        var imports:Array<ImportExpr> = Context.getLocalImports();
-        imports.push({
-            path: [for (name in module) {
-                pos: Context.currentPos(),
-                name: name
-            }],
-            mode: INormal
-        });
-
         var modname:String = '__internal.wrapped_preloader.${clsname}';
-
-        Context.defineModule(modname, [cls], imports);
-
-        var field_expr:Expr = MacroStringTools.toFieldExpr(modname.split("."));
+        var field_expr:Expr = hase.macro.Utils.type2module(cls, modname);
 
         return macro $e{field_expr}.load();
     }
