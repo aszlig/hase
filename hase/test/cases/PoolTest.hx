@@ -48,6 +48,27 @@ class PooledWithParam<T> implements hase.iface.Renewable
         this.val = val;
 }
 
+class PooledWithInterface implements hase.iface.Pooling
+{
+    public var val:Float;
+    public var canary:Float;
+
+    public function new(val:Float)
+        this.val = val;
+}
+
+class PooledSubclassWithInterface
+    extends PooledWithInterface
+{
+    public var another:String;
+
+    public function new()
+    {
+        super(123.0);
+        this.another = "reset";
+    }
+}
+
 class PoolTest extends haxe.unit.TestCase
 {
     public function test_just_alloc():Void
@@ -115,5 +136,34 @@ class PoolTest extends haxe.unit.TestCase
         obj = hase.utils.Pool.alloc(PooledWithParam, [Float], 8.1);
         this.assertEquals(8.1, obj.val);
         this.assertEquals(1.9, obj.canary);
+    }
+
+    public function test_using_pooling_interface():Void
+    {
+        var obj:PooledWithInterface = PooledWithInterface.alloc(1.2);
+        this.assertEquals(1.2, obj.val);
+        obj.canary = 2.0;
+        obj.free();
+
+        obj = PooledWithInterface.alloc(2.1);
+        this.assertEquals(2.1, obj.val);
+        this.assertEquals(2.0, obj.canary);
+    }
+
+    public function test_using_pooling_interface_subclass():Void
+    {
+        var obj:PooledSubclassWithInterface =
+            PooledSubclassWithInterface.alloc();
+        this.assertEquals(123.0, obj.val);
+        this.assertEquals("reset", obj.another);
+
+        obj.canary = 9.0;
+        obj.another = "not reset";
+        obj.free();
+
+        obj = PooledSubclassWithInterface.alloc();
+        this.assertEquals(123.0, obj.val);
+        this.assertEquals("reset", obj.another);
+        this.assertEquals(9.0, obj.canary);
     }
 }

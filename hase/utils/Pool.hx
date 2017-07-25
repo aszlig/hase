@@ -46,7 +46,7 @@ class Pool
         var objtype:ComplexType = Context.toComplexType(type);
 
         var typepath:TypePath = switch (objtype) {
-            case TPath(tp): tp;
+            case TPath(tp): {name: tp.name, pack: tp.pack, sub: tp.sub};
             default: throw 'Cannot get type path for ${type}!';
         };
 
@@ -90,7 +90,8 @@ class Pool
                     return new $typepath($a{params});
                 else
                     return hase.utils.Renew.object($a{renew_params});
-            }
+            },
+            params: hase.macro.Utils.get_clstype_params(objtype)
         };
 
         var cls:TypeDefinition = macro class $clsname {

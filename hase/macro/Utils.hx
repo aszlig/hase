@@ -41,5 +41,27 @@ class Utils
 
         return haxe.macro.MacroStringTools.toFieldExpr(name.split("."));
     }
+
+    public static function param2param_decl(tp:TypeParam):TypeParamDecl
+    {
+        return switch (tp) {
+            case TPType(TPath({name: n, params: ps})):
+                {name: n, params: [for (p in ps) Utils.param2param_decl(p)]};
+            default:
+                throw 'Unable to decode TypeParam for ${tp}.';
+        }
+    }
+
+    public static function
+        get_clstype_params(ct:ComplexType):Array<TypeParamDecl>
+    {
+        return switch (ct) {
+            case TPath({params: ps}):
+                [for (p in ps) Utils.param2param_decl(p)];
+            default:
+                throw 'Unable to retrieve parameters for ${ct}.';
+        }
+    }
+
 }
 #end
