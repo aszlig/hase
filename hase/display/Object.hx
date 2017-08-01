@@ -22,7 +22,7 @@ import hase.geom.Rect;
 class Object
 {
     public var parent:Object;
-    public var children:Array<Object>;
+    public var children:List<Object>;
 
     public var x(get, set):Int;
     public var y(get, set):Int;
@@ -59,7 +59,7 @@ class Object
     public function new()
     {
         this.parent = null;
-        this.children = new Array();
+        this.children = new List();
 
         this._vector = new PVector(0.0, 0.0);
         this._center_vector = new PVector(0.0, 0.0);
@@ -92,7 +92,7 @@ class Object
         else if (this.surface != null)
             child.surface = this.surface;
 
-        this.children.push(child);
+        this.children.add(child);
         this.mark_dirty();
         return child;
     }
