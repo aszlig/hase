@@ -18,9 +18,10 @@ package hase.term.renderer;
 
 import hase.geom.Rect;
 import hase.display.Sprite;
+import hase.ds.LinkedList;
 
 @:allow(hase.display.Surface)
 interface Interface
 {
-    private function render(rect:Rect, sprites:Array<Sprite>):Void;
+    private function render(rect:Rect, sprites:LinkedList<Sprite>):Void;
 }

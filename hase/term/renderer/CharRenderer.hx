@@ -19,6 +19,7 @@ package hase.term.renderer;
 import hase.display.Image;
 import hase.display.Sprite;
 import hase.geom.Rect;
+import hase.ds.LinkedList;
 
 class CharRenderer implements Interface
 {
@@ -32,7 +33,7 @@ class CharRenderer implements Interface
         this.buffer = Image.create(0, 0);
     }
 
-    private function render(rect:Rect, sprites:Array<Sprite>):Void
+    private function render(rect:Rect, sprites:LinkedList<Sprite>):Void
     {
         this.buffer.clear();
         this.buffer.width = rect.width;

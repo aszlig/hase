@@ -22,7 +22,7 @@ class Surface extends Object
 {
     public var terminal(default, null):hase.term.Interface;
 
-    private var sprites:Array<Sprite>;
+    private var sprites:hase.ds.LinkedList<Sprite>;
 
     private var dirties:Array<Rect>;
     private var dirty_idx:Int;
@@ -35,7 +35,7 @@ class Surface extends Object
         this.width = terminal.width;
         this.height = terminal.height;
         this.autoresize = false;
-        this.sprites = new Array();
+        this.sprites = new hase.ds.LinkedList();
 
         this.dirties = new Array();
         this.dirty_idx = 0;
@@ -44,15 +44,16 @@ class Surface extends Object
     @:allow(hase.display.Object.set_z)
     private function z_reorder():Void
     {
-        haxe.ds.ArraySort.sort(this.sprites, function(a:Sprite, b:Sprite) {
-            return hase.utils.Misc.sigcmp(b.z, a.z);
-        });
+        this.sprites.sort(
+            function(a:Sprite, b:Sprite)
+                return hase.utils.Misc.sigcmp(b.z, a.z)
+        );
     }
 
     @:allow(hase.display.Sprite.set_surface)
     private inline function register_sprite(sprite:Sprite):Sprite
     {
-        this.sprites.push(sprite);
+        this.sprites.add(sprite);
         this.z_reorder();
         return sprite;
     }

@@ -28,6 +28,7 @@ class Main
         runner.add(new hase.test.cases.ColorTableTest());
         runner.add(new hase.test.cases.FrameAreaParserTest());
         runner.add(new hase.test.cases.ImageTest());
+        runner.add(new hase.test.cases.LinkedListTest());
         runner.add(new hase.test.cases.MiscTest());
         runner.add(new hase.test.cases.MotionTest());
         runner.add(new hase.test.cases.ObjectTest());
