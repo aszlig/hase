@@ -22,7 +22,7 @@ import hase.geom.Rect;
 class Object
 {
     public var parent:Object;
-    public var children:List<Object>;
+    public var children(default, null):List<Object>;
 
     public var x(get, set):Int;
     public var y(get, set):Int;
