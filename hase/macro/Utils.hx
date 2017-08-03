@@ -45,8 +45,10 @@ class Utils
     public static function param2param_decl(tp:TypeParam):TypeParamDecl
     {
         return switch (tp) {
-            case TPType(TPath({name: n, params: ps})):
-                {name: n, params: [for (p in ps) Utils.param2param_decl(p)]};
+            case TPType(TPath(x = {name: n, params: ps, sub: sub})):
+                { name: n + (sub != null ? "." + sub : "")
+                , params: [for (p in ps) Utils.param2param_decl(p)]
+                };
             default:
                 throw 'Unable to decode TypeParam for ${tp}.';
         }
