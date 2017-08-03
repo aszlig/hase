@@ -16,6 +16,8 @@
  */
 package hase.geom;
 
+import hase.utils.Pool;
+
 class PVectorData implements hase.iface.Renewable
 {
     public var x:Float;
@@ -35,7 +37,16 @@ abstract PVector (PVectorData)
     public var length(get, never):Float;
 
     public inline function new(x:Float, y:Float)
+    {
+        #if macro
         this = new PVectorData(x, y);
+        #else
+        this = Pool.alloc(PVectorData, x, y);
+        #end
+    }
+
+    public inline function free():PVector
+        return cast #if macro this #else Pool.free(this) #end;
 
     public inline function get_x():Float
         return this.x;

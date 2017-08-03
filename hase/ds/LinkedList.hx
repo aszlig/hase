@@ -16,7 +16,9 @@
  */
 package hase.ds;
 
-private class LinkedListNode<T>
+// XXX: This class should be private, but it's currently blocked by
+//      https://github.com/HaxeFoundation/haxe/issues/3589
+class LinkedListNode<T> implements hase.iface.Renewable
 {
     public var item:T;
     public var next:Null<LinkedListNode<T>>;
@@ -46,7 +48,7 @@ private class LinkedListIterator<T>
     }
 }
 
-class LinkedList<T>
+class LinkedList<T> implements hase.iface.Pooling
 {
     private var head:Null<LinkedListNode<T>>;
     private var last:Null<LinkedListNode<T>>;
@@ -56,7 +58,11 @@ class LinkedList<T>
 
     public function add(item:T):Void
     {
+        #if macro
         var node:LinkedListNode<T> = new LinkedListNode(item);
+        #else
+        var node:LinkedListNode<T> = hase.utils.Pool.alloc(item);
+        #end
 
         if (this.head == null)
             this.head = node;
@@ -73,6 +79,9 @@ class LinkedList<T>
         if (this.head.item == item) {
             if (this.head.next == null)
                 this.last = this.head;
+            #if !macro
+            hase.utils.Pool.free(this.head);
+            #end
             this.head = this.head.next;
             return;
         }
@@ -81,6 +90,9 @@ class LinkedList<T>
 
         while (node.next != null) {
             if (node.next.item == item) {
+                #if !macro
+                hase.utils.Pool.free(node.next);
+                #end
                 node.next = node.next.next;
                 if (node.next == null)
                     this.last = node;

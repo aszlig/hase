@@ -29,6 +29,10 @@ class Sprite extends Object
     {
         super();
         this.ascii = null;
+        @:renew_only {
+            if (this.dirty_rect != null)
+                this.dirty_rect.free();
+        }
         this.dirty_rect = null;
     }
 

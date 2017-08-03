@@ -55,7 +55,7 @@ class PoolBuilder
     {
         return FFun({
             args: [],
-            ret: macro : Void,
+            ret: this.clstype,
             expr: macro return hase.utils.Pool.free(this)
         });
     }

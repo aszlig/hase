@@ -18,11 +18,12 @@ package hase.display;
 
 import hase.geom.PVector;
 import hase.geom.Rect;
+import hase.ds.LinkedList;
 
-class Object
+class Object implements hase.iface.Pooling
 {
     public var parent:Object;
-    public var children(default, null):List<Object>;
+    public var children(default, null):LinkedList<Object>;
 
     public var x(get, set):Int;
     public var y(get, set):Int;
@@ -59,10 +60,18 @@ class Object
     public function new()
     {
         this.parent = null;
-        this.children = new List();
 
-        this._vector = new PVector(0.0, 0.0);
-        this._center_vector = new PVector(0.0, 0.0);
+        @:renew_only hase.utils.Pool.free(this.children);
+        this.children = hase.utils.Pool.alloc();
+
+        @:new_only {
+            this._vector = new PVector(0.0, 0.0);
+            this._center_vector = new PVector(0.0, 0.0);
+        }
+        @:renew_only {
+            this._vector.set(0.0, 0.0);
+            this._center_vector.set(0.0, 0.0);
+        }
 
         this.z = 0;
 
@@ -70,8 +79,15 @@ class Object
         this.height = 0;
 
         this._is_dirty = true;
-        this._dirty_vector = new PVector(0.0, 0.0);
-        this._dirty_center_vector = new PVector(0.0, 0.0);
+
+        @:new_only {
+            this._dirty_vector = new PVector(0.0, 0.0);
+            this._dirty_center_vector = new PVector(0.0, 0.0);
+        }
+        @:renew_only {
+            this._dirty_vector.set(0.0, 0.0);
+            this._dirty_center_vector.set(0.0, 0.0);
+        }
 
         this.is_surface = false;
         this.surface = null;
@@ -154,13 +170,13 @@ class Object
     {
         return this.parent == null
              ? new PVector(this.vector.x, this.vector.y)
-             : this.vector + this.parent.abs_vector;
+             : this.vector + this.parent.abs_vector.free();
     }
 
     private function set_abs_vector(vec:PVector):PVector
     {
         this.vector.set_from_vector(
-            this.parent == null ? vec : vec - this.parent.abs_vector
+            this.parent == null ? vec : vec - this.parent.abs_vector.free()
         );
         return vec;
     }
@@ -173,11 +189,25 @@ class Object
             this.absolute_x, this.absolute_y, this.width, this.height
         );
 
-    public inline function center_distance_to(other:Object):PVector
-        return other.abs_vector - this.abs_vector;
+    public function center_distance_to(other:Object):PVector
+    {
+        var ov:PVector = other.abs_vector;
+        var tv:PVector = this.abs_vector;
+        var result:PVector = ov - tv;
+        tv.free();
+        ov.free();
+        return result;
+    }
 
-    public inline function distance_to(other:Object):PVector
-        return this.abs_rect.distance_to(other.abs_rect);
+    public function distance_to(other:Object):PVector
+    {
+        var or:Rect = other.abs_rect;
+        var tr:Rect = this.abs_rect;
+        var result:PVector = tr.distance_to(or);
+        tr.free();
+        or.free();
+        return result;
+    }
 
     private inline function get_x():Int
         return Math.round(this.vector.x);
@@ -265,7 +295,7 @@ class Object
     }
 
     private inline function get_absolute_x():Int
-        return Math.round(this.abs_vector.x);
+        return Math.round(this.abs_vector.free().x);
 
     private function set_absolute_x(val:Int):Int
     {
@@ -275,7 +305,7 @@ class Object
     }
 
     private inline function get_absolute_y():Int
-        return Math.round(this.abs_vector.y);
+        return Math.round(this.abs_vector.free().y);
 
     private function set_absolute_y(val:Int):Int
     {
@@ -295,18 +325,26 @@ class Object
     public function rotate_around_vec(vec:PVector, radians:Float):Void
     {
         var vecpos:PVector = new PVector(vec.x, vec.y * 2.0);
-        var thispos:PVector = this.abs_vector.copy();
+        var thispos:PVector = this.abs_vector;
 
         // Compensate for character ratio of 1:2 in width and height
         thispos.y *= 2.0;
 
-        var rotation:PVector = (thispos - vecpos).rotate(radians);
+        var dist:PVector = thispos - vecpos;
+        var rotation:PVector = dist.rotate(radians);
+        dist.free();
 
         // Restore the scaling of the Y axis
         rotation.y /= 2.0;
         vecpos.y /= 2.0;
 
-        this.abs_vector = vecpos + rotation;
+        var result:PVector = vecpos + rotation;
+        this.abs_vector = result;
+
+        result.free();
+        rotation.free();
+        thispos.free();
+        vecpos.free();
     }
 
     public inline function rotate_around(obj:Object, radians:Float):Void

@@ -102,14 +102,15 @@ class Pool
             public static var objects = new Array();
             public static var offset:Int = 0;
 
-            public static function release(obj:$objtype):Void
+            public static function release(obj:$objtype):$objtype
             {
                 if (obj == null)
-                    return;
+                    return obj;
 
                 var idx:Int = $i{clsname}.objects.indexOf(cast obj);
                 if (idx == -1 || idx >= $i{clsname}.offset)
                     $i{clsname}.objects[$i{clsname}.offset++] = cast obj;
+                return obj;
             }
         };
 

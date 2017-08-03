@@ -47,8 +47,10 @@ class CharRenderer implements Interface
 
             // intersection between redraw rectangle and current sprite
             var common:Null<Rect> = render_rect | rect;
-            if (common == null)
+            if (common == null) {
+                render_rect.free();
                 continue;
+            }
 
             // relative within redraw rectangle
             var rel_redraw_x:Int = common.x - rect.x;
@@ -57,6 +59,8 @@ class CharRenderer implements Interface
             // relative within current sprite
             var rel_sprite_x:Int = common.x - render_rect.x;
             var rel_sprite_y:Int = common.y - render_rect.y;
+
+            render_rect.free();
 
             #if debug
             if (hase.utils.Debug.show_dirty_rects && sprite.is_dirty) {
@@ -79,6 +83,8 @@ class CharRenderer implements Interface
                         this.buffer.set(x, y, sym);
                 }
             }
+
+            common.free();
         }
 
         this.terminal.draw_area(rect, this.buffer);

@@ -106,10 +106,13 @@ class Bitmap implements hase.iface.Raster<Bool>
 
         var bounds:Rect = new Rect(0, 0, this.width, this.height);
 
-        if (!bounds.intersects(rect))
+        if (!bounds.intersects(rect)) {
+            bounds.free();
             return this;
+        }
 
         var real_rect:Rect = bounds > rect ? rect : bounds | rect;
+        bounds.free();
 
         var mask_first:Int = Bitmap.MASK_FULL & ~(calc_x_bit(real_rect.x) - 1);
         var mask_last:Int = calc_x_bit(real_rect.right) - 1;
@@ -131,6 +134,8 @@ class Bitmap implements hase.iface.Raster<Bool>
             for (x in (first + 1)...last)
                 this.data.data[x] = Bitmap.MASK_FULL;
         }
+
+        real_rect.free();
 
         return this;
     }

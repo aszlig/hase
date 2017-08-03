@@ -47,7 +47,16 @@ abstract Rect (RectData)
     public var bottom(get, never):Int;
 
     public inline function new(x:Int, y:Int, width:Int, height:Int)
+    {
+        #if macro
         this = new RectData(x, y, width, height);
+        #else
+        this = Pool.alloc(RectData, x, y, width, height);
+        #end
+    }
+
+    public inline function free():Rect
+        return cast #if macro this #else Pool.free(this) #end;
 
     private inline function get_x():Int
         return this.x;
@@ -84,6 +93,18 @@ abstract Rect (RectData)
 
     private inline function get_bottom():Int
         return Rect.y + Rect.height;
+
+    public function set(x:Int, y:Int, width:Int, height:Int):Rect
+    {
+        this.x = x;
+        this.y = y;
+        this.w = width;
+        this.h = height;
+        return cast this;
+    }
+
+    public inline function set_from_rect(other:Rect):Rect
+        return Rect.set(other.x, other.y, other.width, other.height);
 
     public inline function copy():Rect
         return new Rect(Rect.x, Rect.y, Rect.width, Rect.height);
@@ -165,10 +186,16 @@ abstract Rect (RectData)
     }
 
     @:op(A | B)
-    public inline static function intersection(r1:Rect, r2:Rect):Null<Rect>
+    public static function intersection(r1:Rect, r2:Rect):Null<Rect>
     {
         var r1_copy:Rect = r1.copy();
-        return r1_copy.impure_intersect_(r2) ? r1_copy : null;
+
+        if (r1_copy.impure_intersect_(r2)) {
+            return r1_copy;
+        } else {
+            r1_copy.free();
+            return null;
+        }
     }
 
     public inline function intersection_(other:Rect):Rect

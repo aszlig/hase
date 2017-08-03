@@ -34,16 +34,23 @@ class Motion extends Object
     public function new()
     {
         super();
-        this.forces = new List();
-        this.reset();
+
+        @:new_only {
+            this.forces   = new List();
+            this.velocity = new PVector(0.0, 0.0);
+            this.force    = new PVector(0.0, 0.0);
+            this.delta    = new PVector(0.0, 0.0);
+            this.mass     = 1.0;
+        }
+        @:renew_only this.reset();
     }
 
     public function reset():Void
     {
-        this.velocity = new PVector(0.0, 0.0);
-        this.force    = new PVector(0.0, 0.0);
-        this.delta    = new PVector(0.0, 0.0);
-        this.mass     = 1.0;
+        this.velocity.set(0.0, 0.0);
+        this.force.set(0.0, 0.0);
+        this.delta.set(0.0, 0.0);
+        this.mass = 1.0;
 
         this.forces.clear();
     }
@@ -96,32 +103,56 @@ class Motion extends Object
         if (this.parent == null)
             return;
 
-        var force:PVector = this.force;
+        var force:PVector = this.force.copy();
         var timediff:Float = td / 1000;
 
         for (f in this.forces) {
             switch (f) {
                 case Following(target, eagerness, stop_radius, into):
-                    var dist:PVector =
-                        (into ? this.parent.center_distance_to(target)
-                              : this.parent.distance_to(target)
-                        ) - this.delta;
+                    var dist:PVector = into
+                                     ? this.parent.center_distance_to(target)
+                                     : this.parent.distance_to(target);
+                    dist = dist.free() - this.delta;
 
                     // FIXME: This is not nice, because if we have too much
                     // acceleration, we might surpass the destination.
                     if (dist.length <= stop_radius) {
-                        force += ((dist + this.velocity)
-                               - this.velocity * stop_radius)
-                               * this.mass / timediff / stop_radius;
+                        var dv:PVector = dist + this.velocity;
+                        var vs:PVector = this.velocity * stop_radius;
+                        var ds:PVector = dv - vs;
+                        dv.free();
+                        vs.free();
+                        var dm:PVector = ds * this.mass;
+                        ds.free();
+                        dm = dm.free() / timediff;
+                        dm = dm.free() / stop_radius;
+                        dm = dm.free() + force;
+                        force.free();
+                        force = dm;
                     } else {
-                        force += dist * eagerness;
+                        var de:PVector = dist * eagerness;
+                        de = de.free() + force;
+                        force.free();
+                        force = de;
                     }
+                    dist.free();
             }
         }
 
-        this.velocity += (force / this.mass) * timediff;
+        var fm:PVector = force / this.mass;
+        fm = fm.free() * timediff;
+        fm = fm.free() + this.velocity;
+        this.velocity.set_from_vector(fm);
+        fm.free();
+
         var base:PVector = this.parent.abs_vector;
-        this.delta += (base + this.velocity) - base;
+        var db:PVector = base + this.velocity;
+        db = db.free() - base;
+        base.free();
+        db = db.free() + this.delta;
+        this.delta.set_from_vector(db);
+        db.free();
+
         this.move();
     }
 }

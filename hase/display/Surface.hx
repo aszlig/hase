@@ -72,7 +72,8 @@ class Surface extends Object
     {
         for (i in 0...this.dirty_idx) {
             if (this.dirties[i].intersects(rect)) {
-                this.dirties[i] &= rect;
+                this.dirties[i].set_from_rect(this.dirties[i] & rect);
+                rect.free();
                 return;
             }
         }
@@ -89,8 +90,9 @@ class Surface extends Object
         super.update(td);
 
         for (i in 0...this.dirty_idx) {
-            if (this.dirties[i].impure_intersect_(this.rect))
+            if (this.dirties[i].impure_intersect_(this.rect.free()))
                 this.terminal.renderer.render(this.dirties[i], this.sprites);
+            this.dirties[i].free();
         }
 
         this.dirty_idx = 0;

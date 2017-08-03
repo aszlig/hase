@@ -25,16 +25,16 @@ abstract Path (Array<PVector>)
     public inline function new(?path:Array<PVector>)
         this = path == null ? new Array() : path;
 
-    private function bresenham( from:PVector, to:PVector
+    private function bresenham( start:PVector, end:PVector
                               , f:Int -> Int -> Void
                               , is_cont:Bool = false
                               ):Void
     {
-        var x:Int = Math.round(from.x);
-        var y:Int = Math.round(from.y);
+        var x:Int = Math.round(start.x);
+        var y:Int = Math.round(start.y);
 
-        var end_x:Int = Math.round(to.x);
-        var end_y:Int = Math.round(to.y);
+        var end_x:Int = Math.round(end.x);
+        var end_y:Int = Math.round(end.y);
 
         var diff_x:Int = (x - end_x).intabs();
         var diff_y:Int = -(y - end_y).intabs();
@@ -85,16 +85,22 @@ abstract Path (Array<PVector>)
     public function pos_at<T>(offset:Float):PVector
     {
         var current:Float = 0.0;
-        var result:PVector = this[this.length - 1];
+        var result:PVector = this[this.length - 1].copy();
         var len_offset:Float = Path.get_length() * offset;
 
         for (i in 0...(this.length - 1)) {
             var inner:PVector = this[i + 1] - this[i];
             var newlen:Float = inner.length;
             if (newlen + current >= len_offset) {
-                result = this[i] + inner.normalize() * (len_offset - current);
+                var norm_inner:PVector = inner.normalize();
+                result.free();
+                result = norm_inner * (len_offset - current);
+                norm_inner.free();
+                result = this[i] + result.free();
+                inner.free();
                 break;
             }
+            inner.free();
             current += newlen;
         }
 
@@ -121,8 +127,11 @@ abstract Path (Array<PVector>)
     {
         var result:Float = 0;
 
-        for (i in 0...(this.length - 1))
-            result += (this[i + 1] - this[i]).length;
+        for (i in 0...(this.length - 1)) {
+            var dist:PVector = this[i + 1] - this[i];
+            result += dist.length;
+            dist.free();
+        }
 
         return result;
     }
@@ -134,10 +143,28 @@ abstract Path (Array<PVector>)
                                         , t:Float
                                         ):PVector
     {
-        var p0:PVector = end + 3 * (c1 - c2) - start;
-        var p1:PVector = 3 * (c2 - c1 - c1 + start);
-        var p2:PVector = 3 * (c1 - start);
-        return ((p0 * t + p1) * t + p2) * t + start;
+        var p0:PVector = c1 - c2;
+        p0 = p0.free() * 3;
+        p0 = p0.free() + end;
+        p0 = p0.free() - start;
+        p0 = p0.free() * t;
+
+        var p1:PVector = c2 - c1;
+        p1 = p1.free() - c1;
+        p1 = p1.free() + start;
+        p1 = p1.free() * 3;
+        p1 = p1.free() + p0;
+        p0.free();
+        p1 = p1.free() * t;
+
+        var p2:PVector = c1 - start;
+        p2 = p2.free() * 3;
+        p2 = p2.free() + p1;
+        p1.free();
+        p2 = p2.free() * t;
+        p2 = p2.free() + start;
+
+        return p2;
     }
 
     public static function
@@ -149,7 +176,7 @@ abstract Path (Array<PVector>)
             (start - c2) / 2,
             (c1 - end) / 2,
         ], function (a:PVector, b:Float) {
-            return Math.max(a.dot_product(a), b);
+            return Math.max(a.free().dot_product(a), b);
         }, 1.0) * 3.0);
 
         var path:Array<PVector> = new Array();
