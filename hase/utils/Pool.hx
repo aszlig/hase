@@ -30,8 +30,12 @@ class Pool
     private static var poolidx:Int = 0;
 
     private static function
-        resolve_params(params:Map<String, Type>, type:Type):Type
+        resolve_params(params:Map<String, Type>, type:Null<Type>):Type
     {
+        // Handle TDynamic(null)
+        if (type == null)
+            return null;
+
         return switch (type) {
             case TInst(_.get() => i, p) if (params.exists(i.name)):
                 params[i.name];
