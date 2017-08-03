@@ -60,6 +60,14 @@ class Renew
     macro public static function object(expr:Expr, params:Array<Expr>):Expr
     {
         var type:Type = Context.typeof(expr);
+
+        switch (type) {
+            case TMono(_):
+                Context.unify(Context.getExpectedType(), type);
+                type = Context.follow(type);
+            default:
+        }
+
         switch (type) {
             case TInst(ct, _):
                 if (!Renew.has_renewable_iface(ct.get()))
