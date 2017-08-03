@@ -69,6 +69,15 @@ class PooledSubclassWithInterface
     }
 }
 
+class PooledWithInterfaceAndParam<T> implements hase.iface.Pooling
+{
+    public var vals:Array<T>;
+    public var canary:Array<T>;
+
+    public function new(vals:Array<T>)
+        this.vals = vals;
+}
+
 class PoolTest extends haxe.unit.TestCase
 {
     public function test_just_alloc():Void
@@ -165,5 +174,57 @@ class PoolTest extends haxe.unit.TestCase
         this.assertEquals(123.0, obj.val);
         this.assertEquals("reset", obj.another);
         this.assertEquals(9.0, obj.canary);
+    }
+
+    public function test_pooling_with_interface_and_param():Void
+    {
+        var obj:PooledWithInterfaceAndParam<Int> =
+            PooledWithInterfaceAndParam.alloc([1, 2, 3]);
+
+        this.assertEquals(3, obj.vals.length);
+        this.assertEquals(1, obj.vals[0]);
+        this.assertEquals(2, obj.vals[1]);
+        this.assertEquals(3, obj.vals[2]);
+
+        obj.canary = [3, 2, 1];
+        obj.free();
+
+        obj = PooledWithInterfaceAndParam.alloc([4, 5, 6]);
+
+        this.assertEquals(3, obj.vals.length);
+        this.assertEquals(4, obj.vals[0]);
+        this.assertEquals(5, obj.vals[1]);
+        this.assertEquals(6, obj.vals[2]);
+
+        this.assertEquals(3, obj.canary.length);
+        this.assertEquals(3, obj.canary[0]);
+        this.assertEquals(2, obj.canary[1]);
+        this.assertEquals(1, obj.canary[2]);
+    }
+
+    public function test_pooling_with_interface_and_param_different_type():Void
+    {
+        var obj:PooledWithInterfaceAndParam<Float> =
+            PooledWithInterfaceAndParam.alloc([1.2, 2.4, 3.9]);
+
+        this.assertEquals(3, obj.vals.length);
+        this.assertEquals(1.2, obj.vals[0]);
+        this.assertEquals(2.4, obj.vals[1]);
+        this.assertEquals(3.9, obj.vals[2]);
+
+        obj.canary = [3.3, 2.2, 1.1];
+        obj.free();
+
+        obj = PooledWithInterfaceAndParam.alloc([4.8, 5.6, 6.1]);
+
+        this.assertEquals(3, obj.vals.length);
+        this.assertEquals(4.8, obj.vals[0]);
+        this.assertEquals(5.6, obj.vals[1]);
+        this.assertEquals(6.1, obj.vals[2]);
+
+        this.assertEquals(3, obj.canary.length);
+        this.assertEquals(3.3, obj.canary[0]);
+        this.assertEquals(2.2, obj.canary[1]);
+        this.assertEquals(1.1, obj.canary[2]);
     }
 }

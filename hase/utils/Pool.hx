@@ -99,7 +99,7 @@ class Pool
         };
 
         var cls:TypeDefinition = macro class $clsname {
-            public static var objects:Array<$objtype> = new Array();
+            public static var objects = new Array();
             public static var offset:Int = 0;
 
             public static function release(obj:$objtype):Void
@@ -107,11 +107,21 @@ class Pool
                 if (obj == null)
                     return;
 
-                var idx:Int = $i{clsname}.objects.indexOf(obj);
+                var idx:Int = $i{clsname}.objects.indexOf(cast obj);
                 if (idx == -1 || idx >= $i{clsname}.offset)
-                    $i{clsname}.objects[$i{clsname}.offset++] = obj;
+                    $i{clsname}.objects[$i{clsname}.offset++] = cast obj;
             }
         };
+
+        for (f in cls.fields) {
+            if (f.name == "release") {
+                switch (f.kind) {
+                    case FFun(attrs):
+                        attrs.params = fetchfun.params;
+                    default:
+                }
+            }
+        }
 
         cls.fields.push({
             name: "fetch",
