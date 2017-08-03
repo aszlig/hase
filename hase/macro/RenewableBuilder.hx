@@ -117,32 +117,82 @@ class RenewableBuilder
         return ft;
     }
 
+    private function remove_code(meta_cond:String, e:Expr):Expr
+    {
+        switch (e.expr) {
+            case EMeta(m, me):
+                if (m.name == ":" + meta_cond + "_only")
+                    return macro {};
+                switch (m.name) {
+                    case ":new_only" | ":renew_only":
+                        return ExprTools.map(
+                            me, this.remove_code.bind(meta_cond, _)
+                        );
+                    default:
+                }
+            default:
+        }
+        return ExprTools.map(e, this.remove_code.bind(meta_cond, _));
+    }
+
+    private function
+        remove_kind_conditions(ft:FieldType, meta:String):FieldType
+    {
+        switch (ft) {
+            case FFun(f):
+                var new_expr:Expr =
+                    ExprTools.map(f.expr, this.remove_code.bind(meta, _));
+                return FFun({
+                    args: f.args.copy(),
+                    ret: f.ret,
+                    expr: new_expr,
+                    params: f.params.copy()
+                });
+            default:
+                throw 'Unknown field kind ${ft} for removing meta conditions.';
+        }
+        return ft;
+    }
+
     private function build_renewable():Array<Field>
     {
+        var has_renew:Bool = false;
+
         for (f in this.fields) {
             if (f.name == "renew") {
                 f.name = this.ident;
                 this.is_constructor = false;
                 f.kind = this.process_kind(f.kind);
-                return this.fields;
+                has_renew = true;
             }
         }
 
         for (f in this.fields) {
             if (f.name == "new") {
-                this.is_constructor = true;
-                var new_kind:FieldType = this.process_kind(f.kind);
-                this.fields.push({
-                    name: this.ident,
-                    doc: f.doc,
-                    meta: f.meta,
-                    access: f.access,
-                    kind: new_kind,
-                    pos: Context.currentPos()
-                });
+                if (!has_renew) {
+                    this.is_constructor = true;
+
+                    var renew_kind:FieldType = this.process_kind(
+                        this.remove_kind_conditions(f.kind, "new")
+                    );
+
+                    f.kind = this.remove_kind_conditions(f.kind, "renew");
+
+                    this.fields.push({
+                        name: this.ident,
+                        doc: f.doc,
+                        meta: f.meta,
+                        access: f.access,
+                        kind: renew_kind,
+                        pos: Context.currentPos()
+                    });
+                }
                 return this.fields;
             }
         }
+
+        if (has_renew)
+            return this.fields;
 
         throw 'Class ${this.clsname} does not have a constructor'
             + " or a renew() method.";

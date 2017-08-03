@@ -94,6 +94,26 @@ abstract TestRenewAbstract (Int)
         return this;
 }
 
+class TestRenewMetaConditions implements hase.iface.Renewable
+{
+    public var val1:Int;
+    public var val2:Int;
+
+    public function new(val:Int)
+    {
+        if (val > 0) {
+            @:new_only {
+                this.val1 = val;
+                this.val2 = 0;
+            }
+            @:renew_only {
+                this.val1 = 0;
+                this.val2 = val;
+            }
+        }
+    }
+}
+
 class RenewableTest extends haxe.unit.TestCase
 {
     public function test_simple():Void
@@ -161,5 +181,15 @@ class RenewableTest extends haxe.unit.TestCase
         var obj = new TestRenewAbstract(567);
         this.assertEquals(567, obj.get_value());
         this.assertEquals(890, hase.utils.Renew.object(obj, 890).get_value());
+    }
+
+    public function test_renew_meta_conditions():Void
+    {
+        var obj = new TestRenewMetaConditions(123);
+        this.assertEquals(123, obj.val1);
+        this.assertEquals(0, obj.val2);
+        obj = hase.utils.Renew.object(obj, 321);
+        this.assertEquals(0, obj.val1);
+        this.assertEquals(321, obj.val2);
     }
 }
