@@ -37,7 +37,8 @@ class FrameAreaParserTest extends haxe.unit.TestCase
         this.assertEquals(row.length, actual.width);
         this.assertFalse(pos >= actual.height);
         actual.map_(function(x:Int, y:Int, sym:Symbol) {
-            if (y == pos) this.assertEquals(new Symbol(row.charCodeAt(x)), sym);
+            if (y == pos)
+                this.assertEquals(new Symbol(row.charCodeAt(x)), sym);
         });
     }
 

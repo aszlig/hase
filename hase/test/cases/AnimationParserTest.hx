@@ -33,7 +33,8 @@ class AnimationParserTest extends hase.test.SurfaceTestCase
     {
         this.assertEquals(row.length, actual.width);
         actual.map_(function(x:Int, y:Int, sym:Symbol) {
-            if (y == pos) this.assertEquals(new Symbol(row.charCodeAt(x)), sym);
+            if (y == pos)
+                this.assertEquals(new Symbol(row.charCodeAt(x)), sym);
         });
     }
 

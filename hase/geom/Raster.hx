@@ -45,7 +45,8 @@ class Raster<T> implements hase.iface.Raster<T>
     {
         while (this._width < new_width) {
             for (y in 1...(this._height + 1))
-                this.data.insert(y * this._width + (y - 1), this.default_value);
+                this.data.insert(y * this._width + (y - 1),
+                                 this.default_value);
             this._width++;
         }
 
@@ -177,8 +178,8 @@ class Raster<T> implements hase.iface.Raster<T>
             this.data.splice(y * this._width + pos, len);
     }
 
-    public function
-        extract(x:Int = 0, y:Int = 0, width:Int = -1, height:Int = -1):Raster<T>
+    public function extract(x:Int = 0, y:Int = 0,
+                            width:Int = -1, height:Int = -1):Raster<T>
     {
         var new_data:Array<T> = new Array();
 
@@ -215,8 +216,8 @@ class Raster<T> implements hase.iface.Raster<T>
 
     public inline static function
         create<T>(width:Int, height:Int, val:T, def:T):Raster<T>
-        return new
-              Raster(width, height, [for (_ in 0...(width * height)) val], def);
+        return new Raster(width, height,
+                          [for (_ in 0...(width * height)) val], def);
 
     public static function
         from_2d_array<T>(array:Array<Array<T>>, def:T):Raster<T>
