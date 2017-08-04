@@ -21,5 +21,7 @@ class Debug
 {
     public static var show_dirty_rects:Bool = false;
     public static var current_sprites:Map<String, Int> = new Map();
+
+    public static var show_font_cache:Bool = false;
 }
 #end

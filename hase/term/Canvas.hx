@@ -219,6 +219,32 @@ import hase.geom.Rect;
 
             hase.utils.Debug.current_sprites = new Map();
         }
+
+        if (hase.utils.Debug.show_font_cache) {
+            var stepsize:Int = Font.WIDTH * 80;
+            var maxsteps:Int = Math.ceil(this.font_canvas.width / stepsize);
+
+            var ystart:Int = this.canvas.height - maxsteps * Font.HEIGHT;
+
+            this.ctx.strokeStyle = "red";
+            this.ctx.strokeRect(
+                5, ystart - 10, stepsize + 5, maxsteps * Font.HEIGHT + 5
+            );
+
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(
+                5, ystart - 10, stepsize + 5, maxsteps * Font.HEIGHT + 5
+            );
+
+            for (i in 0...maxsteps) {
+                this.ctx.drawImage(
+                    this.font_canvas, stepsize * i, 0,
+                    stepsize, Font.HEIGHT,
+                    10, (ystart - 5) + Font.HEIGHT * i,
+                    stepsize, Font.HEIGHT
+                );
+            }
+        }
         #end
     }
 }

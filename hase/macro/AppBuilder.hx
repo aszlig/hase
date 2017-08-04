@@ -96,6 +96,17 @@ class AppBuilder
         }
     }
 
+    #if debug
+    private function debug_toggle(ident:String):Expr
+    {
+        var val:Expr = macro hase.utils.Debug.$ident;
+        return macro if (!($e{val} = !$e{val})) {
+            this.root.mark_dirty();
+            this.root.terminal.clear();
+        };
+    }
+    #end
+
     private inline function create_basefields():Array<Field>
     {
         var complex_fields:ComplexType = macro : {
@@ -123,23 +134,26 @@ class AppBuilder
                 this.init();
             }
 
+            #if debug
+            private function handle_debug_key(key:Key)
+            {
+                switch (key) {
+                    case Char("f".code):
+                        $e{this.debug_toggle("show_font_cache")};
+                    case Char("d".code):
+                        $e{this.debug_toggle("show_dirty_rects")};
+                    case _:
+                }
+            }
+            #end
+
             public inline function run():Void
             {
                 this.__timer = new hase.Timer(this.root);
                 this.__timer.on_tick = function(td:Float) {
                     #if debug
                     var key:Key = this.root.terminal.get_key();
-                    switch (key) {
-                        case Char("d".code):
-                            if (hase.utils.Debug.show_dirty_rects) {
-                                hase.utils.Debug.show_dirty_rects = false;
-                                this.root.mark_dirty();
-                                this.root.terminal.clear();
-                            } else {
-                                hase.utils.Debug.show_dirty_rects = true;
-                            };
-                        case _:
-                    }
+                    this.handle_debug_key(key);
                     this.on_keypress(key);
                     #else
                     this.on_keypress(this.root.terminal.get_key());
