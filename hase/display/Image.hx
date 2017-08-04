@@ -251,18 +251,21 @@ class Image implements hase.iface.Raster<Symbol>
         return val;
     }
 
-    public function map_(f:Int -> Int -> Symbol -> Void):Void
+    public inline function map_(f:Int -> Int -> Symbol -> Void):Void
     {
         for (y in 0...this.height)
             for (x in 0...this.width)
                 f(x, y, this.unsafe_get(x, y));
     }
 
-    public inline function merge_raster(raster:Raster<Symbol>):Void
+    public function merge_raster(raster:Raster<Symbol>):Void
     {
         this.width = raster.width;
         this.height = raster.height;
-        return raster.map_(this.set);
+
+        for (y in 0...raster.height)
+            for (x in 0...raster.width)
+                this.unsafe_set(x, y, raster.unsafe_get(x, y));
     }
 
     public inline static function from_raster(raster:Raster<Symbol>):Image
