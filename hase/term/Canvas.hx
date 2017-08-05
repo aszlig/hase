@@ -110,8 +110,8 @@ import hase.geom.Rect;
     {
         #if debug
         if (x * Font.WIDTH > this.canvas.width)
-            trace("X cursor value of " + x + " exceeds width of " +
-                  this.canvas.width + " pixels!");
+            trace('X cursor value of ${x} at ${x * Font.WIDTH}' +
+                  ' exceeds width of ${this.canvas.width} pixels!');
         #end
 
         return x * Font.WIDTH;
@@ -121,8 +121,8 @@ import hase.geom.Rect;
     {
         #if debug
         if (y * Font.HEIGHT > this.canvas.height)
-            trace("Y cursor value of " + y + " exceeds height of " +
-                  this.canvas.height + " pixels!");
+            trace('Y cursor value of ${y} at ${y * Font.HEIGHT}' +
+                  ' exceeds height of ${this.canvas.height} pixels!');
         #end
 
         return y * Font.HEIGHT;
