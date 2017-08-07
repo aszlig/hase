@@ -88,7 +88,7 @@ class Pool
 
         var fetchfun:Function = {
             args: ctor_args,
-            ret: macro : Null<$objtype>,
+            ret: macro : hase.mem.Types.Allocated<$objtype>,
             expr: macro {
                 if ($i{clsname}.offset == 0)
                     return new $typepath($a{params});
@@ -214,6 +214,14 @@ class Pool
     }
     #end
 
+    @:allow(hase.test.cases.PoolTest)
+    macro private static function get_pooled_objects(params:Array<Expr>):Expr
+    {
+        var type:Type = Pool.resolve_class_type(params);
+        var pool:Expr = Pool.get_or_create_pool(type);
+        return macro $e{pool}.objects;
+    }
+
     macro public static function alloc(params:Array<Expr>):Expr
     {
         var type:Type = params.length > 1 && Pool.is_class_type(params[0])
@@ -231,4 +239,7 @@ class Pool
 
         return macro @:pos(Context.currentPos()) $e{pool}.release($e{expr});
     }
+
+    macro public static function autofree(expr:Expr):Expr
+        return new hase.macro.AutoFree(expr).autofree();
 }

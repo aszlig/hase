@@ -16,6 +16,8 @@
  */
 package hase.test.cases;
 
+import hase.mem.Types;
+
 class Pooled implements hase.iface.Renewable
 {
     public var x:Int;
@@ -76,6 +78,19 @@ class PooledWithInterfaceAndParam<T> implements hase.iface.Pooling
 
     public function new(vals:Array<T>)
         this.vals = vals;
+}
+
+class ImplicitAlloc
+{
+    public var implicit(get, null):PooledWithInterface;
+
+    public function new() {}
+
+    private function get_implicit():Disposable<PooledWithInterface>
+        return PooledWithInterface.alloc(222.222);
+
+    public function implicit_fun():Disposable<PooledWithInterface>
+        return PooledWithInterface.alloc(333.333);
 }
 
 class PoolTest extends haxe.unit.TestCase
@@ -226,5 +241,60 @@ class PoolTest extends haxe.unit.TestCase
         this.assertEquals(3.3, obj.canary[0]);
         this.assertEquals(2.2, obj.canary[1]);
         this.assertEquals(1.1, obj.canary[2]);
+    }
+
+    public function test_autofree():Void
+    {
+        var reference:PooledWithInterface;
+        var unrelated = PooledWithInterface.alloc(444.444);
+        var result = hase.utils.Pool.autofree(PooledWithInterface.alloc(
+            (reference = PooledWithInterface.alloc(111.111)).val +
+            new ImplicitAlloc().implicit.val +
+            new ImplicitAlloc().implicit_fun().val +
+            unrelated.val
+        ));
+
+        var pool:Array<PooledWithInterface> =
+            hase.utils.Pool.get_pooled_objects(PooledWithInterface);
+
+        var pooled = Lambda.find(pool, function(x) return x.val == 222.222);
+        this.assertTrue(pooled != null);
+
+        this.assertEquals(1111, Math.round(result.val));
+        this.assertEquals(222.222, pooled.val);
+        this.assertFalse(Lambda.has(pool, reference));
+        this.assertFalse(Lambda.has(pool, unrelated));
+    }
+
+    public function test_autofree_scope():Void
+    {
+        var outer:PooledWithInterface;
+        var result = hase.utils.Pool.autofree({
+            outer = PooledWithInterface.alloc(1.0);
+            var inner:PooledWithInterface = PooledWithInterface.alloc(214.781);
+            outer.val + inner.val;
+        });
+
+        var pool:Array<PooledWithInterface> =
+            hase.utils.Pool.get_pooled_objects(PooledWithInterface);
+
+        var pooled = Lambda.find(pool, function(x) return x.val == 214.781);
+        this.assertTrue(pooled != null);
+
+        this.assertEquals(216, Math.round(result));
+        this.assertTrue(Lambda.has(pool, outer));
+        this.assertEquals(214.781, pooled.val);
+    }
+
+    public function test_autofree_var_collision():Void
+    {
+        var result = hase.utils.Pool.autofree({
+            var __tmp = 1;
+            var __result = 2;
+            var clash = PooledWithInterface.alloc(0.0);
+            __tmp + __result + clash.val;
+        });
+
+        this.assertEquals(3.0, result);
     }
 }
