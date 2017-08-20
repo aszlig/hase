@@ -110,6 +110,7 @@ class Pool
                 var idx:Int = $i{clsname}.objects.indexOf(cast obj);
                 if (idx == -1 || idx >= $i{clsname}.offset)
                     $i{clsname}.objects[$i{clsname}.offset++] = cast obj;
+                #if pool_free_destroy obj = null; #end
                 return obj;
             }
         };
