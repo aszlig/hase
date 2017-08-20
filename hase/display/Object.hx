@@ -20,6 +20,8 @@ import hase.geom.PVector;
 import hase.geom.Rect;
 import hase.ds.LinkedList;
 
+import hase.mem.Types;
+
 class Object implements hase.iface.Pooling
 {
     public var parent:Object;
@@ -166,7 +168,7 @@ class Object implements hase.iface.Pooling
     private inline function set_center_vector(vec:PVector):PVector
         return this.center_vector.set_from_vector(vec);
 
-    private function get_abs_vector():PVector
+    private function get_abs_vector():Disposable<PVector>
     {
         return this.parent == null
              ? new PVector(this.vector.x, this.vector.y)
@@ -189,7 +191,7 @@ class Object implements hase.iface.Pooling
             this.absolute_x, this.absolute_y, this.width, this.height
         );
 
-    public function center_distance_to(other:Object):PVector
+    public function center_distance_to(other:Object):Disposable<PVector>
     {
         var ov:PVector = other.abs_vector;
         var tv:PVector = this.abs_vector;
@@ -199,7 +201,7 @@ class Object implements hase.iface.Pooling
         return result;
     }
 
-    public function distance_to(other:Object):PVector
+    public function distance_to(other:Object):Disposable<PVector>
     {
         var or:Rect = other.abs_rect;
         var tr:Rect = this.abs_rect;

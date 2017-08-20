@@ -17,6 +17,7 @@
 package hase.geom;
 
 import hase.utils.Pool;
+import hase.mem.Types;
 
 class RectData implements hase.iface.Renewable
 {
@@ -34,7 +35,7 @@ class RectData implements hase.iface.Renewable
     }
 }
 
-abstract Rect (RectData)
+abstract Rect (Allocated<RectData>)
 {
     public var x(get, set):Int;
     public var y(get, set):Int;
@@ -106,7 +107,7 @@ abstract Rect (RectData)
     public inline function set_from_rect(other:Rect):Rect
         return Rect.set(other.x, other.y, other.width, other.height);
 
-    public inline function copy():Rect
+    public inline function copy():Disposable<Rect>
         return new Rect(Rect.x, Rect.y, Rect.width, Rect.height);
 
     public inline function intersects(other:Rect):Bool
@@ -123,7 +124,7 @@ abstract Rect (RectData)
             && Rect.y <= y && Rect.bottom > y;
     }
 
-    public inline function distance_to(other:Rect):PVector
+    public inline function distance_to(other:Rect):Disposable<PVector>
     {
         return new PVector(
               Rect.right < other.x ? other.x - Rect.right
@@ -186,7 +187,8 @@ abstract Rect (RectData)
     }
 
     @:op(A | B)
-    public static function intersection(r1:Rect, r2:Rect):Null<Rect>
+    public static function
+        intersection(r1:Rect, r2:Rect):Null<Disposable<Rect>>
     {
         var r1_copy:Rect = r1.copy();
 
@@ -205,7 +207,7 @@ abstract Rect (RectData)
     }
 
     @:op(A & B)
-    public inline static function union(r1:Rect, r2:Rect):Rect
+    public inline static function union(r1:Rect, r2:Rect):Disposable<Rect>
         return r1.copy().union_(r2);
 
     public inline function union_(other:Rect):Rect

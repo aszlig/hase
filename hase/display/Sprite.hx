@@ -17,6 +17,7 @@
 package hase.display;
 
 import hase.geom.Rect;
+import hase.mem.Types;
 
 class Sprite extends Object
 {
@@ -39,7 +40,7 @@ class Sprite extends Object
     private inline function set_ascii(val:Image):Image
         return this.ascii = this.mark_dirty(this.ascii, val);
 
-    private inline function get_render_rect():Rect
+    private inline function get_render_rect():Disposable<Rect>
     {
         return new Rect(
             this.absolute_x - this.center_x,

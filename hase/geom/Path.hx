@@ -16,6 +16,8 @@
  */
 package hase.geom;
 
+import hase.mem.Types;
+
 using hase.utils.Misc;
 
 abstract Path (Array<PVector>)
@@ -82,7 +84,7 @@ abstract Path (Array<PVector>)
         return m;
     }
 
-    public function pos_at<T>(offset:Float):PVector
+    public function pos_at<T>(offset:Float):Disposable<PVector>
     {
         var current:Float = 0.0;
         var result:PVector = this[this.length - 1].copy();
@@ -141,7 +143,7 @@ abstract Path (Array<PVector>)
                                         , c2:PVector
                                         , end:PVector
                                         , t:Float
-                                        ):PVector
+                                        ):Disposable<PVector>
     {
         var p0:PVector = c1 - c2;
         p0 = p0.free() * 3;

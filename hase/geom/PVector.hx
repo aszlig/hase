@@ -17,6 +17,7 @@
 package hase.geom;
 
 import hase.utils.Pool;
+import hase.mem.Types;
 
 class PVectorData implements hase.iface.Renewable
 {
@@ -30,7 +31,7 @@ class PVectorData implements hase.iface.Renewable
     }
 }
 
-abstract PVector (PVectorData)
+abstract PVector (Allocated<PVectorData>)
 {
     public var x(get, set):Float;
     public var y(get, set):Float;
@@ -83,7 +84,7 @@ abstract PVector (PVectorData)
     public inline function cross_product(other:PVector):Float
         return PVector.x * other.y - PVector.y * other.x;
 
-    public function normalize():PVector
+    public function normalize():Disposable<PVector>
         return (PVector.length == 0.0 || PVector.length == 1.0)
              ? new PVector(PVector.x, PVector.y)
              : PVector.divf(cast this, PVector.length);
@@ -91,7 +92,7 @@ abstract PVector (PVectorData)
     public inline function distance_to(other:PVector):Float
         return PVector.sub(cast this, other).length;
 
-    public function rotate(radians:Float):PVector
+    public function rotate(radians:Float):Disposable<PVector>
     {
         var cv:Float = Math.cos(radians);
         var sv:Float = Math.sin(radians);
@@ -101,30 +102,30 @@ abstract PVector (PVectorData)
         );
     }
 
-    public inline function rotate_deg(degrees:Float):PVector
+    public inline function rotate_deg(degrees:Float):Disposable<PVector>
         return PVector.rotate(hase.utils.Misc.deg2rad(degrees));
 
-    public inline function copy():PVector
+    public inline function copy():Disposable<PVector>
         return new PVector(PVector.x, PVector.y);
 
     @:op(A + B)
-    public static inline function add(a:PVector, b:PVector):PVector
+    public static inline function add(a:PVector, b:PVector):Disposable<PVector>
         return new PVector(a.x + b.x, a.y + b.y);
 
     @:op(A - B)
-    public static inline function sub(a:PVector, b:PVector):PVector
+    public static inline function sub(a:PVector, b:PVector):Disposable<PVector>
         return new PVector(a.x - b.x, a.y - b.y);
 
     @:commutative @:op(A * B)
-    public static inline function mulf(a:PVector, b:Float):PVector
+    public static inline function mulf(a:PVector, b:Float):Disposable<PVector>
         return new PVector(a.x * b, a.y * b);
 
     @:op(A / B)
-    public static inline function divf(a:PVector, b:Float):PVector
+    public static inline function divf(a:PVector, b:Float):Disposable<PVector>
         return new PVector(a.x / b, a.y / b);
 
     @:op(-A)
-    public static inline function inv(v:PVector):PVector
+    public static inline function inv(v:PVector):Disposable<PVector>
         return new PVector(-v.x, -v.y);
 
     @:op(A == B)
