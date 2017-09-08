@@ -107,6 +107,27 @@ class Pool
                 if (obj == null)
                     return obj;
 
+                /*
+                Here we check whether the object is already within the
+                effective range (from 0 to offset) of the pool and if not, we
+                simply assign it to the objects array at the position of
+                offset.
+
+                Note that whenever we exceed the bounds of the objects array,
+                this is equivalent to objects.push(), so we don't need to
+                explicitly cover this.
+
+                Quoting from https://haxe.org/manual/std-Array.html:
+
+                > If a write access is made with a positive index which is
+                > out of bounds, null (or the default value for basic types on
+                > static targets) is inserted at all positions between the last
+                > defined index and the newly written one.
+
+                The reason we don't check objects that are beyond the offset is
+                that everything that comes after the offset may already be
+                renewed using hase.utils.Renew().
+                */
                 var idx:Int = $i{clsname}.objects.indexOf(cast obj);
                 if (idx == -1 || idx >= $i{clsname}.offset)
                     $i{clsname}.objects[$i{clsname}.offset++] = cast obj;
