@@ -47,6 +47,27 @@ class AppBuilder
     private inline function strip_colon(val:String):String
         return val.charAt(0) == ":" ? val.substr(1) : val;
 
+    private function get_kv_meta_for(key:String):Null<Map<String, Expr>>
+    {
+        var params:Null<Array<Expr>> = this.meta.get(key);
+
+        if (params == null)
+            return null;
+
+        var result:Map<String, Expr> = new Map();
+        for (p in params) {
+            switch (p) {
+                case macro $i{key} = $val:
+                    result[key] = val;
+                case invalid:
+                    throw "Invalid expression " + invalid.toString()
+                        + " for " + key + " metadata.";
+
+            }
+        }
+        return result;
+    }
+
     private function create_statics():Array<Field>
     {
         var baseclass:ComplexType = Context.toComplexType(this.type);
@@ -61,6 +82,39 @@ class AppBuilder
             pos: Context.currentPos(),
         };
 
+        var useCanvas:Map<String, Expr> = this.get_kv_meta_for("use_canvas");
+        var canvasElem:Expr;
+
+        if (useCanvas.exists("id")) {
+            canvasElem = macro cast(
+                js.Browser.document.getElementById($e{useCanvas.get("id")}),
+                js.html.CanvasElement
+            );
+            switch (useCanvas.get("resize")) {
+                case macro false:
+                default:
+                    canvasElem = macro {
+                        var canvas:js.html.CanvasElement = $e{canvasElem};
+                        canvas.width = js.Browser.window.innerWidth;
+                        canvas.height = js.Browser.window.innerHeight;
+                        canvas;
+                    };
+            }
+        } else {
+            canvasElem = macro {
+                var canvas:js.html.CanvasElement =
+                    js.Browser.document.createCanvasElement();
+
+                canvas.style.position = "fixed";
+                canvas.style.top = "0";
+                canvas.style.left = "0";
+                canvas.width = js.Browser.window.innerWidth;
+                canvas.height = js.Browser.window.innerHeight;
+                js.Browser.document.body.appendChild(canvas);
+                canvas;
+            };
+        }
+
         var complex_statics:ComplexType = switch (this.target) {
             case "js": macro : {
                 public inline static function
@@ -73,21 +127,8 @@ class AppBuilder
                 public static function main():Void
                 {
                     js.Browser.window.onload = function(_) {
-                        var canvas:js.html.CanvasElement =
-                            js.Browser.document.createCanvasElement();
-
-                        canvas.style.position = "fixed";
-                        canvas.style.top = "0";
-                        canvas.style.left = "0";
-                        canvas.width = js.Browser.window.innerWidth;
-                        canvas.height = js.Browser.window.innerHeight;
-
-                        var app = from_canvas(canvas);
-
-                        js.Browser.document.body.appendChild(canvas);
-
-                        app.run();
-                    };
+                        from_canvas($e{canvasElem}).run();
+                    }
                 }
             };
             case "cpp" | "neko": macro : {
