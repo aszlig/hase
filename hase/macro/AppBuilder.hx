@@ -29,13 +29,23 @@ class AppBuilder
     private var target:String;
     private var type:Type;
     private var fields:Array<Field>;
+    private var meta:Map<String, Array<Expr>>;
 
     public function new(target:String, type:Type, fields:Array<Field>)
     {
         this.target = target;
         this.type = type;
         this.fields = fields;
+
+        var meta:Metadata = haxe.macro.TypeTools.getClass(type).meta.get();
+        var filtered:List<MetadataEntry> = Lambda.filter(meta, function(m) {
+            return m.name != ":build" && m.name != ":autoBuild";
+        });
+        this.meta = [for (m in filtered) this.strip_colon(m.name) => m.params];
     }
+
+    private inline function strip_colon(val:String):String
+        return val.charAt(0) == ":" ? val.substr(1) : val;
 
     private function create_statics():Array<Field>
     {
