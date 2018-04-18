@@ -252,6 +252,9 @@ class AppBuilder
         var type:Null<Type> = Context.getLocalType();
         var fields:Array<Field> = Context.getBuildFields();
 
+        if (type == null)
+            throw "Unable to get AppBuilder type.";
+
         var builder:AppBuilder = new AppBuilder(target, type, fields);
         return builder.build_application();
     }
