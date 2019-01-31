@@ -91,7 +91,13 @@ import hase.geom.Rect;
         if (key == null)
             return None;
 
-        return Char(key.charCode);
+        return switch (key.keyCode) {
+            case 37: ArrowLeft;
+            case 38: ArrowUp;
+            case 39: ArrowRight;
+            case 40: ArrowDown;
+            default: Char(key.charCode);
+        };
     }
 
     public function clear(?sym:hase.display.Symbol):Void
