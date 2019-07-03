@@ -902,4 +902,72 @@ class PathTest extends hase.test.SurfaceTestCase
             ], 0, 12
         );
     }
+
+    public function test_iter():Void
+    {
+        var shape = Path.bezier( new PVector(10, 10)
+                               , new PVector(8, 1)
+                               , new PVector(4, 8)
+                               , new PVector(7, 1)
+                               );
+
+        var area:hase.display.Sprite = this.create_sprite([]);
+
+        for (vec in shape) {
+            area.ascii.set(Std.int(vec.x), Std.int(vec.y), "x".code);
+            var shifted:PVector = vec + new PVector(2, 0);
+            area.ascii.set(Std.int(shifted.x), Std.int(shifted.y), "y".code);
+        }
+
+        this.root.add_child(area);
+        this.update();
+
+        this.assert_area(
+            [ "                  "
+            , "      xxyy        "
+            , "      x y         "
+            , "     xxyy         "
+            , "     xxyyy        "
+            , "       xxyy       "
+            , "        xxyy      "
+            , "         x y      "
+            , "         x y      "
+            , "         x y      "
+            , "          x y     "
+            , "                  "
+            ], 0, 0
+        );
+    }
+
+    public function test_partition():Void
+    {
+        var shape = Path.bezier( new PVector(10, 10)
+                               , new PVector(8, 8)
+                               , new PVector(6, 6)
+                               , new PVector(4, 4)
+                               );
+        shape.add(4, 8);
+
+        var area:hase.display.Sprite = this.create_sprite([]);
+
+        for (vec in shape.partition(0.2)) {
+            area.ascii.set(Std.int(vec.x), Std.int(vec.y), "x".code);
+            var shifted:PVector = vec + new PVector(2, 0);
+            area.ascii.set(Std.int(shifted.x), Std.int(shifted.y), "y".code);
+        }
+
+        this.root.add_child(area);
+        this.update();
+
+        this.assert_area(
+            [ "              "
+            , "    x y       "
+            , "    x y       "
+            , "      x y     "
+            , "              "
+            , "    x y x y   "
+            , "              "
+            ], 0, 3
+        );
+    }
 }

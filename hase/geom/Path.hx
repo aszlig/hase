@@ -84,6 +84,25 @@ abstract Path (Array<PVector>)
         return m;
     }
 
+    public inline function iterator():Iterator<PVector>
+        return this.iterator();
+
+    public inline function
+        partition(step_size:Float):Iterator<Disposable<PVector>>
+    {
+        var pos:Float = 0.0;
+
+        return {
+            next: function() {
+                pos += step_size;
+                return Path.pos_at(pos);
+            },
+            hasNext: function() {
+                return pos + step_size <= 1.0;
+            }
+        };
+    }
+
     public function pos_at<T>(offset:Float):Disposable<PVector>
     {
         var current:Float = 0.0;
