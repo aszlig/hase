@@ -47,14 +47,14 @@ class AppBuilder
     private inline function strip_colon(val:String):String
         return val.charAt(0) == ":" ? val.substr(1) : val;
 
-    private function get_kv_meta_for(key:String):Null<Map<String, Expr>>
+    private function get_kv_meta_for(key:String):Map<String, Expr>
     {
         var params:Null<Array<Expr>> = this.meta.get(key);
+        var result:Map<String, Expr> = new Map();
 
         if (params == null)
-            return null;
+            return result;
 
-        var result:Map<String, Expr> = new Map();
         for (p in params) {
             switch (p) {
                 case macro $i{key} = $val:
