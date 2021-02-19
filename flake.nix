@@ -159,5 +159,25 @@
       unit = mkPackageWithSystem system true false;
     });
     devShell = forAllSystems (system: mkPackageWithSystem system false true);
+
+    hydraJobs = let
+      hydraSystems = [ "x86_64-linux" ];
+      forAllHydraSystems = lib.genAttrs hydraSystems;
+    in {
+      build = forAllHydraSystems (system: self.packages.${system}.hase);
+      tests = forAllHydraSystems (system: self.checks.${system});
+      examples = forAllHydraSystems (system: {
+        js = self.packages.${system}.example-js.overrideAttrs (drv: {
+          postInstall = (drv.postInstall or "") + ''
+            mkdir -p "$out/nix-support"
+            echo "file example $out/share/hase-example example.html" \
+              > "$out/nix-support/hydra-build-products"
+          '';
+        });
+
+        neko = self.packages.${system}.example-neko;
+        cpp = self.packages.${system}.example-cpp;
+      });
+    };
   };
 }
