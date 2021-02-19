@@ -3,6 +3,8 @@
 
   outputs = { self, nixpkgs }: let
     inherit (nixpkgs) lib;
+    version = "0.1.0";
+
     systems = lib.attrNames (removeAttrs nixpkgs.legacyPackages [
       # Excluding architectures where OCaml is either broken or unsupported.
       "aarch64-linux" "armv6l-linux" "armv7l-linux"
@@ -27,11 +29,9 @@
       args = [ "haxe" "-main" main "-${targetLang}" file "-dce" "full" ];
     in lib.concatMapStringsSep " " lib.escapeShellArg args;
 
-    mkPackage = runTests: isShell: system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in pkgs.stdenv.mkDerivation rec {
+    mkPackage = pkgs: runTests: isShell: pkgs.stdenv.mkDerivation {
       pname = "hase";
-      version = "0.1.0";
+      inherit version;
       src = if isShell then null else self;
 
       nativeBuildInputs = [ pkgs.phantomjs ];
@@ -66,15 +66,98 @@
       };
     };
 
+    mkPackageWithSystem = system: mkPackage nixpkgs.legacyPackages.${system};
+
+    mkExample = system: target: let
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ self.overlay ];
+      };
+    in pkgs.buildHaseApplication ({
+      mainClass = "Example";
+      pname = "hase-example";
+      inherit version target;
+      src = ./example;
+
+      postInstall = ''
+        if [ "$target" = js ]; then
+          install -m 0644 -vD example.html "$installPath/example.html"
+        fi
+      '';
+    } // lib.optionalAttrs (target == "cpp") {
+      executableName = "hase-example";
+    });
+
   in {
     packages = forAllSystems (system: {
-      hase = mkPackage false false system;
+      hase = mkPackageWithSystem system false false;
+
+      example-js = mkExample system "js";
+      example-neko = mkExample system "neko";
+      example-cpp = mkExample system "cpp";
     });
+
+    overlay = final: prev: {
+      haxePackages = prev.haxePackages // {
+        hase = mkPackage prev false false;
+      };
+
+      buildHaseApplication =
+        { mainClass
+        , executableName ? lib.toLower mainClass
+        , pname ? executableName
+        , target ? "js"
+        , hxArgs ? []
+        , ...
+        }@attrs:
+      let
+        programSuffix = if target == "neko" then "n" else target;
+
+        drvAttrs = rec {
+          buildInputs = [ final.haxe final.haxePackages.hase ]
+                     ++ lib.optional (target == "cpp") final.hxcpp
+                     ++ (attrs.buildInputs or []);
+
+          inherit pname mainClass target hxArgs;
+
+          targetPath = "${executableName}.${programSuffix}";
+          installBinary = targetPath;
+          installPath = "${placeholder "out"}/share/${pname}";
+          installMode = "0644";
+
+          buildPhase = ''
+            runHook preBuild
+
+            haxe -main "$mainClass" -lib hase "-$target" "$targetPath" \
+              -dce full $hxArgs
+
+            runHook postBuild
+          '';
+
+          installPhase = ''
+            runHook preInstall
+
+            install -vD -m "$installMode" "$installBinary" \
+              "$installPath/$targetPath"
+
+            runHook postInstall
+          '';
+        } // lib.optionalAttrs (target == "cpp") {
+          targetPath = executableName;
+          installBinary = "${executableName}/${mainClass}";
+          installPath = "${placeholder "out"}/bin";
+          installMode = "0755";
+        };
+
+        finalAttrs = drvAttrs // removeAttrs attrs [ "buildInputs" ];
+
+      in final.stdenv.mkDerivation finalAttrs;
+    };
 
     defaultPackage = forAllSystems (system: self.packages.${system}.hase);
     checks = forAllSystems (system: {
-      unit = mkPackage true false system;
+      unit = mkPackageWithSystem system true false;
     });
-    devShell = forAllSystems (mkPackage false true);
+    devShell = forAllSystems (system: mkPackageWithSystem system false true);
   };
 }
